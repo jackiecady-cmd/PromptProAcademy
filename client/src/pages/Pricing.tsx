@@ -86,7 +86,7 @@ export default function Pricing() {
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl font-bold">Expert Consultation</CardTitle>
-              <CardDescription>1-on-1 guidance with a genealogist.</CardDescription>
+              <CardDescription>1-on-1 guidance with me using AI tools.</CardDescription>
               <div className="mt-4">
                 <span className="text-4xl font-bold">$99</span>
                 <span className="text-muted-foreground"> / hour</span>
@@ -95,14 +95,50 @@ export default function Pricing() {
             <CardContent>
               <ul className="space-y-4">
                 <CheckItem text="Personal Video Call" />
+                <CheckItem text="AI-Assisted Research" />
                 <CheckItem text="Complex Tree Breaking" />
-                <CheckItem text="Adoption Research Help" />
                 <CheckItem text="Custom Research Plan" />
               </ul>
             </CardContent>
             <CardFooter>
               <Button variant="secondary" className="w-full h-12">Book a Session</Button>
             </CardFooter>
+          </Card>
+        </div>
+
+        {/* Heritage Book Section */}
+        <div className="max-w-4xl mx-auto mt-16">
+          <Card className="border-2 border-accent/30 bg-gradient-to-br from-accent/5 to-primary/5">
+            <CardContent className="py-10">
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex-shrink-0">
+                  <div className="w-32 h-40 bg-gradient-to-br from-primary to-accent rounded-lg shadow-xl flex items-center justify-center text-white">
+                    <div className="text-center p-4">
+                      <div className="text-2xl font-serif font-bold">Your</div>
+                      <div className="text-sm">Family</div>
+                      <div className="text-2xl font-serif font-bold">Story</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <h3 className="text-2xl font-serif font-bold mb-2">Heritage Book</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Transform your DNA journey into a beautiful printed keepsake. Perfect as a gift for family members 
+                    who crave connection to their roots. Includes your complete analysis, migration maps, family tree, 
+                    and historical context—all professionally bound.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div>
+                      <span className="text-3xl font-bold">$99</span>
+                      <span className="text-muted-foreground"> starting</span>
+                    </div>
+                    <Button className="bg-accent hover:bg-accent/90 text-white">
+                      Learn More About Heritage Books
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
           </Card>
         </div>
       </div>
