@@ -192,7 +192,6 @@ Pick one of these templates and fill it in with your own family details. You're 
     description: "What to do when the AI gives you a confusing or incorrect answer",
     duration: "15 min",
     hasQuiz: true,
-    locked: true,
     content: `
 ## It Happens to Everyone!
 
@@ -243,7 +242,6 @@ Being a good prompt engineer means knowing when to push back politely!
     description: "Apply your new skills to work, hobbies, and daily life",
     duration: "20 min",
     hasQuiz: false,
-    locked: true,
     content: `
 ## Your Skills Work Everywhere!
 
@@ -284,8 +282,12 @@ export default function AcademyDashboard() {
   const starterLessons = lessons.filter(l => l.track === "starter");
   const foundationLessons = lessons.filter(l => l.track === "foundation");
   
+  const starterComplete = starterLessons.every(l => completedLessons.includes(l.id));
+  const foundationUnlocked = starterComplete;
+  
+  const availableLessons = foundationUnlocked ? lessons : starterLessons;
   const completedCount = completedLessons.length;
-  const totalCount = lessons.filter(l => !l.locked).length;
+  const totalCount = availableLessons.length;
   const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
   const handleCompleteLesson = (lessonId: string) => {
@@ -293,14 +295,23 @@ export default function AcademyDashboard() {
       const newCompleted = [...completedLessons, lessonId];
       setCompletedLessons(newCompleted);
       
-      if (newCompleted.length === 1 && !earnedBadges.includes("explorer")) {
-        setEarnedBadges([...earnedBadges, "explorer"]);
+      const newBadges = [...earnedBadges];
+      
+      if (newCompleted.length === 1 && !newBadges.includes("explorer")) {
+        newBadges.push("explorer");
       }
       
-      const starterComplete = starterLessons.every(l => newCompleted.includes(l.id));
-      if (starterComplete && !earnedBadges.includes("storyteller")) {
-        setEarnedBadges([...earnedBadges, "storyteller"]);
+      const allStarterComplete = starterLessons.every(l => newCompleted.includes(l.id));
+      if (allStarterComplete && !newBadges.includes("storyteller")) {
+        newBadges.push("storyteller");
       }
+      
+      const allFoundationComplete = foundationLessons.every(l => newCompleted.includes(l.id));
+      if (allFoundationComplete && !newBadges.includes("strategist")) {
+        newBadges.push("strategist");
+      }
+      
+      setEarnedBadges(newBadges);
     }
     setActiveLesson(null);
     setShowQuizResults(false);
@@ -482,26 +493,36 @@ export default function AcademyDashboard() {
 
               <TabsContent value="foundation" className="space-y-4 mt-4">
                 <p className="text-muted-foreground">Take your skills further - apply them to work and life!</p>
-                {foundationLessons.map((lesson, idx) => (
-                  <Card key={lesson.id} className={`${lesson.locked ? 'opacity-60' : 'cursor-pointer hover:shadow-md'} transition-shadow`} onClick={() => !lesson.locked && setActiveLesson(lesson.id)}>
-                    <CardContent className="py-4">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${lesson.locked ? 'bg-gray-200 text-gray-400' : completedLessons.includes(lesson.id) ? 'bg-green-500 text-white' : 'bg-purple-100 text-purple-600'}`}>
-                          {lesson.locked ? <Lock className="h-5 w-5" /> : completedLessons.includes(lesson.id) ? <CheckCircle2 className="h-5 w-5" /> : <span>{idx + 1}</span>}
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-medium">{lesson.title}</h3>
-                          <p className="text-sm text-muted-foreground">{lesson.description}</p>
-                          {lesson.locked && <Badge variant="outline" className="mt-1">Complete Starter Track to unlock</Badge>}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <span>{lesson.duration}</span>
-                          {!lesson.locked && <ChevronRight className="h-4 w-4" />}
-                        </div>
-                      </div>
+                {!foundationUnlocked && (
+                  <Card className="border-dashed border-2 border-blue-200 bg-blue-50/50">
+                    <CardContent className="py-4 text-center">
+                      <Lock className="h-6 w-6 mx-auto text-blue-400 mb-2" />
+                      <p className="text-sm text-blue-600">Complete all Starter lessons to unlock Foundation track!</p>
                     </CardContent>
                   </Card>
-                ))}
+                )}
+                {foundationLessons.map((lesson, idx) => {
+                  const isLocked = !foundationUnlocked;
+                  return (
+                    <Card key={lesson.id} className={`${isLocked ? 'opacity-60' : 'cursor-pointer hover:shadow-md'} transition-shadow`} onClick={() => !isLocked && setActiveLesson(lesson.id)}>
+                      <CardContent className="py-4">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isLocked ? 'bg-gray-200 text-gray-400' : completedLessons.includes(lesson.id) ? 'bg-green-500 text-white' : 'bg-purple-100 text-purple-600'}`}>
+                            {isLocked ? <Lock className="h-5 w-5" /> : completedLessons.includes(lesson.id) ? <CheckCircle2 className="h-5 w-5" /> : <span>{idx + 1}</span>}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-medium">{lesson.title}</h3>
+                            <p className="text-sm text-muted-foreground">{lesson.description}</p>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span>{lesson.duration}</span>
+                            {!isLocked && <ChevronRight className="h-4 w-4" />}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </TabsContent>
             </Tabs>
           </div>
