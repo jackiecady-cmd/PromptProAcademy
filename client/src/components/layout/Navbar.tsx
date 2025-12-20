@@ -21,7 +21,7 @@ export function Navbar() {
         <Link href="/">
           <a className="flex items-center gap-2 font-serif text-xl font-bold text-primary hover:opacity-90 transition-opacity">
             <Dna className="h-6 w-6 text-accent" />
-            <span>Ancestral Link</span>
+            <span>WhoamI</span>
           </a>
         </Link>
 

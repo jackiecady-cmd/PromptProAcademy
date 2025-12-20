@@ -26,8 +26,8 @@ export default function Home() {
             </span>
           </div>
           <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tight text-foreground max-w-3xl drop-shadow-sm">
-            Unlock Your Past. <br/>
-            <span className="text-primary">Discover Your Truth.</span>
+            Who am I? <br/>
+            <span className="text-primary">Find Your Answer.</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl font-light">
             We combine data from Ancestry, 23andMe, FamilyTreeDNA, and more to give you the deepest possible analysis of your heritage—all in one place.

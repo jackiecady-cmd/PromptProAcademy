@@ -1,4 +1,4 @@
-# Ancestral Link - DNA & Family History Platform
+# WhoamI - DNA & Family History Platform
 
 ## Overview
 A comprehensive platform that aggregates DNA data from multiple providers (Ancestry, 23andMe, FamilyTreeDNA) to provide unified family history analysis, migration mapping, and heritage discovery services.
