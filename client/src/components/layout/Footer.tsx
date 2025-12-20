@@ -24,8 +24,8 @@ export function Footer() {
             <h4 className="font-medium text-foreground">Resources</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/forum">Community Forum</Link></li>
-              <li><a href="#" className="hover:text-primary">DNA Calculators Guide</a></li>
-              <li><a href="#" className="hover:text-primary">Understanding Haplogroups</a></li>
+              <li><Link href="/prompts">AI Research Guides</Link></li>
+              <li><Link href="/contact">Contact Us</Link></li>
               <li><a href="#" className="hover:text-primary">Privacy Policy</a></li>
             </ul>
           </div>

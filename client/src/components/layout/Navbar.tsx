@@ -1,8 +1,9 @@
 import { Link, useLocation } from "wouter";
-import { Dna, Map, Users, CreditCard, Menu, X } from "lucide-react";
+import { Dna, Map, Users, CreditCard, Menu, X, Sparkles, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 
 export function Navbar() {
   const [location] = useLocation();
@@ -10,9 +11,10 @@ export function Navbar() {
 
   const navItems = [
     { href: "/", label: "Home", icon: Dna },
-    { href: "/dashboard", label: "My DNA Report", icon: Map },
-    { href: "/forum", label: "Community Forum", icon: Users },
-    { href: "/pricing", label: "Services & Pricing", icon: CreditCard },
+    { href: "/dashboard", label: "My Report", icon: Map },
+    { href: "/prompts", label: "AI Guides", icon: Sparkles, isNew: true },
+    { href: "/forum", label: "Community", icon: Users },
+    { href: "/pricing", label: "Pricing", icon: CreditCard },
   ];
 
   return (
@@ -30,13 +32,14 @@ export function Navbar() {
           {navItems.map((item) => (
             <Link key={item.href} href={item.href}>
               <a
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-1 ${
                   location === item.href
                     ? "text-primary font-bold"
                     : "text-muted-foreground"
                 }`}
               >
                 {item.label}
+                {(item as any).isNew && <Badge variant="secondary" className="text-[10px] px-1 py-0 h-4 bg-accent text-white">New</Badge>}
               </a>
             </Link>
           ))}
