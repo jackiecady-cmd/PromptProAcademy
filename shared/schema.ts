@@ -33,6 +33,23 @@ export const dnaReports = pgTable("dna_reports", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// PromptPro Academy - Learning Progress
+export const learnerProgress = pgTable("learner_progress", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull(),
+  lessonId: text("lesson_id").notNull(),
+  completed: boolean("completed").default(false),
+  score: integer("score"), // quiz score if applicable
+  completedAt: timestamp("completed_at"),
+});
+
+export const earnedBadges = pgTable("earned_badges", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull(),
+  badgeId: text("badge_id").notNull(), // 'explorer', 'storyteller', 'strategist', 'mentor'
+  earnedAt: timestamp("earned_at").defaultNow().notNull(),
+});
+
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -50,6 +67,16 @@ export const insertDnaReportSchema = createInsertSchema(dnaReports).omit({
   createdAt: true,
 });
 
+export const insertLearnerProgressSchema = createInsertSchema(learnerProgress).omit({
+  id: true,
+  completedAt: true,
+});
+
+export const insertEarnedBadgeSchema = createInsertSchema(earnedBadges).omit({
+  id: true,
+  earnedAt: true,
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -59,3 +86,9 @@ export type Order = typeof orders.$inferSelect;
 
 export type InsertDnaReport = z.infer<typeof insertDnaReportSchema>;
 export type DnaReport = typeof dnaReports.$inferSelect;
+
+export type InsertLearnerProgress = z.infer<typeof insertLearnerProgressSchema>;
+export type LearnerProgress = typeof learnerProgress.$inferSelect;
+
+export type InsertEarnedBadge = z.infer<typeof insertEarnedBadgeSchema>;
+export type EarnedBadge = typeof earnedBadges.$inferSelect;
