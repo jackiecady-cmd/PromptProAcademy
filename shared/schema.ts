@@ -93,6 +93,26 @@ export type LearnerProgress = typeof learnerProgress.$inferSelect;
 export type InsertEarnedBadge = z.infer<typeof insertEarnedBadgeSchema>;
 export type EarnedBadge = typeof earnedBadges.$inferSelect;
 
+// Subscriptions for recurring courses
+export const subscriptions = pgTable("subscriptions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull(),
+  courseType: text("course_type").notNull(), // 'latin', 'egyptian', etc.
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  stripeCustomerId: text("stripe_customer_id"),
+  status: text("status").notNull(), // 'active', 'canceled', 'past_due'
+  currentPeriodEnd: timestamp("current_period_end"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertSubscriptionSchema = createInsertSchema(subscriptions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
+export type Subscription = typeof subscriptions.$inferSelect;
+
 // Chat conversations for AI chatbot
 export const conversations = pgTable("conversations", {
   id: serial("id").primaryKey(),

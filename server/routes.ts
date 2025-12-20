@@ -237,6 +237,51 @@ export async function registerRoutes(
     }
   });
 
+  // Latin Course Subscription
+  app.post("/api/subscribe/latin", async (req, res) => {
+    try {
+      if (!stripe) {
+        return res.status(503).json({ error: "Payment service not configured" });
+      }
+
+      const baseUrl = process.env.REPL_SLUG && process.env.REPL_OWNER 
+        ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
+        : `http://localhost:${process.env.PORT || 5000}`;
+
+      // Create Stripe checkout session for subscription
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Sacred Latin Pronunciation Course",
+                description: "Monthly subscription - Master Latin pronunciation for rituals, prayers, and invocations",
+              },
+              unit_amount: 1900, // $19.00
+              recurring: {
+                interval: "month",
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "subscription",
+        success_url: `${baseUrl}/latin?success=true`,
+        cancel_url: `${baseUrl}/latin?canceled=true`,
+        metadata: {
+          courseType: "latin",
+        },
+      });
+
+      res.json({ sessionId: session.id, url: session.url });
+    } catch (error: any) {
+      console.error("Subscription error:", error);
+      res.status(400).json({ error: error.message });
+    }
+  });
+
   return httpServer;
 }
 

@@ -35,6 +35,7 @@ export function Footer() {
               <li><Link href="/forum">Community Forum</Link></li>
               <li><Link href="/prompts">AI Research Guides</Link></li>
               <li><Link href="/learn">PromptPro Academy</Link></li>
+              <li><Link href="/latin">Latin Pronunciation</Link></li>
               <li><Link href="/contact">Contact Us</Link></li>
             </ul>
           </div>

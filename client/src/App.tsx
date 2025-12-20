@@ -18,6 +18,7 @@ import AcademyCheckout from "@/pages/AcademyCheckout";
 import HeritageBookCheckout from "@/pages/HeritageBookCheckout";
 import AcademyForum from "@/pages/AcademyForum";
 import AcademyTutor from "@/pages/AcademyTutor";
+import LatinCourse from "@/pages/LatinCourse";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -40,6 +41,7 @@ function Router() {
           <Route path="/academy/checkout" component={AcademyCheckout} />
           <Route path="/academy/forum" component={AcademyForum} />
           <Route path="/academy/tutor" component={AcademyTutor} />
+          <Route path="/latin" component={LatinCourse} />
           <Route path="/contact" component={Contact} />
           <Route path="/admin" component={AdminSettings} />
           <Route component={NotFound} />
