@@ -109,34 +109,35 @@ export default function LearnPromptEngineering() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary/10 via-background to-accent/10 py-16 md:py-24">
+      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 py-16 md:py-24 text-white">
         <div className="container px-4 md:px-6 max-w-5xl">
           <div className="text-center mb-8">
-            <Badge className="mb-4 bg-accent/20 text-accent-foreground">
-              <TrendingUp className="h-3 w-3 mr-1" /> Growing Industry
+            <Badge className="mb-4 bg-white/20 text-white border-white/30">
+              A WhoamI Partner Program
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">
-              Learn to Work With AI
+            <h1 className="text-4xl md:text-6xl font-bold mb-2">
+              <span className="text-blue-300">Prompt</span>Pro Academy
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-blue-200 mb-4">Remote Work Training for the AI Era</p>
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
               You've already started using AI to discover your ancestry. 
-              Now turn that skill into something bigger—a new career, side income, or just confidence with technology.
+              Now turn that skill into something bigger—a new career, side income, or work-from-home flexibility.
             </p>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mt-12">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">$50-100</div>
-              <div className="text-sm text-muted-foreground">Per hour potential</div>
+            <div className="text-center bg-white/10 rounded-lg p-4">
+              <div className="text-3xl font-bold text-white">$50-100</div>
+              <div className="text-sm text-blue-200">Per hour potential</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">100%</div>
-              <div className="text-sm text-muted-foreground">Remote work</div>
+            <div className="text-center bg-white/10 rounded-lg p-4">
+              <div className="text-3xl font-bold text-white">100%</div>
+              <div className="text-sm text-blue-200">Remote work</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">No Degree</div>
-              <div className="text-sm text-muted-foreground">Required</div>
+            <div className="text-center bg-white/10 rounded-lg p-4">
+              <div className="text-3xl font-bold text-white">No Degree</div>
+              <div className="text-sm text-blue-200">Required</div>
             </div>
           </div>
         </div>
@@ -286,16 +287,18 @@ export default function LearnPromptEngineering() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-16 bg-gradient-to-r from-blue-800 to-indigo-800 text-white">
         <div className="container px-4 md:px-6 text-center">
-          <h2 className="text-3xl font-serif font-bold mb-4">Ready to Start Your Journey?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Start Your Journey?</h2>
           <p className="text-xl opacity-90 mb-8 max-w-xl mx-auto">
             Whether you're 45 or 75, it's never too late to learn a valuable new skill.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-primary hover:bg-white/90">
-              Start With Ancestry Research
-            </Button>
+            <Link href="/">
+              <Button size="lg" className="bg-white text-blue-800 hover:bg-white/90">
+                ← Back to WhoamI
+              </Button>
+            </Link>
             <Link href="/prompts">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 Browse AI Guides

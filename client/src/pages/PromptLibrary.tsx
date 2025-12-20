@@ -263,14 +263,14 @@ export default function PromptLibrary() {
         {/* Learn More CTA */}
         <Card className="max-w-2xl mx-auto mt-8 bg-gradient-to-r from-accent/10 to-primary/10 border-accent/30">
           <CardContent className="py-8 text-center">
-            <Sparkles className="h-8 w-8 mx-auto text-accent mb-4" />
-            <h3 className="text-xl font-serif font-bold mb-2">Enjoying Working With AI?</h3>
+            <Sparkles className="h-8 w-8 mx-auto text-blue-600 mb-4" />
+            <h3 className="text-xl font-bold mb-2">Enjoying Working With AI?</h3>
             <p className="text-muted-foreground mb-4">
-              Turn this new skill into a career. Learn professional prompt engineering and work from home.
+              Turn this new skill into a career. <strong>PromptPro Academy</strong> teaches professional prompt engineering for remote work.
             </p>
             <Link href="/learn">
-              <Button size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
-                Explore Career Training →
+              <Button size="lg" className="bg-blue-700 hover:bg-blue-800 text-white">
+                Visit PromptPro Academy →
               </Button>
             </Link>
           </CardContent>

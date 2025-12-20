@@ -25,7 +25,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/forum">Community Forum</Link></li>
               <li><Link href="/prompts">AI Research Guides</Link></li>
-              <li><Link href="/learn">Learn Prompt Engineering</Link></li>
+              <li><Link href="/learn">PromptPro Academy</Link></li>
               <li><Link href="/contact">Contact Us</Link></li>
             </ul>
           </div>
