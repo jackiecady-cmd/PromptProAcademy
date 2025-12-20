@@ -1,0 +1,82 @@
+{
+  "colorScheme": "light",
+  "fonts": [
+    {
+      "family": "Roboto",
+      "count": 157
+    },
+    {
+      "family": "sans-serif",
+      "count": 85
+    },
+    {
+      "family": "roboto",
+      "count": 73
+    },
+    {
+      "family": "Helvetica Neue",
+      "count": 8
+    },
+    {
+      "family": "Arial",
+      "count": 2
+    },
+    {
+      "family": "Libre Caslon Text",
+      "count": 1
+    }
+  ],
+  "colors": {
+    "primary": "#FA4616",
+    "accent": "#7D0A24",
+    "background": "#FFFFFF",
+    "textPrimary": "#7D0A24",
+    "link": "#7D0A24"
+  },
+  "typography": {
+    "fontFamilies": {
+      "primary": "Roboto",
+      "heading": "Roboto"
+    },
+    "fontStacks": {
+      "body": [
+        "Roboto",
+        "sans-serif"
+      ],
+      "heading": [
+        "Roboto",
+        "sans-serif"
+      ],
+      "paragraph": [
+        "Roboto",
+        "sans-serif"
+      ]
+    },
+    "fontSizes": {
+      "h1": "16px",
+      "h2": "19px",
+      "body": "18px"
+    }
+  },
+  "spacing": {
+    "baseUnit": 4,
+    "borderRadius": "4px"
+  },
+  "components": {},
+  "images": {
+    "logo": "https://www.familytreedna.com/common/img/header-footer/assets/ftdna-brand.svg",
+    "favicon": "https://www.familytreedna.com/favicon.ico",
+    "ogImage": "File saved at: attached_assets/ogImage.webp"
+  },
+  "__framework_hints": [],
+  "__llm_logo_reasoning": {
+    "selectedIndex": 0,
+    "reasoning": "Strong indicators: header logo linking to homepage, header location, visible, top-left position, highest logo on page, src contains brand name \"FamilyTreeDNA\", reasonable size. Score: 118 (clear winner by 104 points)",
+    "confidence": 0.9
+  },
+  "confidence": {
+    "buttons": 0,
+    "colors": 0,
+    "overall": 0
+  }
+}
