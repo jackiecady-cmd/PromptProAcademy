@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Lock, Sparkles, Copy, ExternalLink, Crown, Users, Globe, Dna } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
 
 const promptPacks = [
   {
@@ -256,6 +257,22 @@ export default function PromptLibrary() {
             <Button size="lg" className="bg-primary hover:bg-primary/90">
               Book Consultation - $99/hour
             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Learn More CTA */}
+        <Card className="max-w-2xl mx-auto mt-8 bg-gradient-to-r from-accent/10 to-primary/10 border-accent/30">
+          <CardContent className="py-8 text-center">
+            <Sparkles className="h-8 w-8 mx-auto text-accent mb-4" />
+            <h3 className="text-xl font-serif font-bold mb-2">Enjoying Working With AI?</h3>
+            <p className="text-muted-foreground mb-4">
+              Turn this new skill into a career. Learn professional prompt engineering and work from home.
+            </p>
+            <Link href="/learn">
+              <Button size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
+                Explore Career Training →
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </div>
