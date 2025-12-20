@@ -10,13 +10,13 @@ A comprehensive platform that aggregates DNA data from multiple providers (Ances
 - Admin settings page for payment gateway configuration
 
 ## Payment Integration Notes
-**IMPORTANT:** User opted not to use Replit's Stripe connector integration. Instead, using direct Stripe API integration with API keys stored as secrets.
+Stripe is now connected with API keys stored as secrets.
 
-### Required Secrets for Stripe:
-- `STRIPE_SECRET_KEY` - Your Stripe secret key (starts with `sk_`)
-- `STRIPE_WEBHOOK_SECRET` - Webhook signing secret for security (starts with `whsec_`)
+### Active Secrets:
+- `STRIPE_SECRET_KEY` - Connected ✓
+- `STRIPE_WEBHOOK_SECRET` - Connected ✓
 
-These need to be added via the Secrets panel in Replit or using the environment variable tools.
+The checkout flow redirects users to Stripe's hosted checkout page for maximum security and trust.
 
 ## Project Architecture
 - **Frontend:** React with Wouter routing, Tailwind CSS v4

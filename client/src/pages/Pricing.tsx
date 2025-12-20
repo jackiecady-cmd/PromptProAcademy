@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Info } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Pricing() {
   return (

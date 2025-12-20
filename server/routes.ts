@@ -10,20 +10,27 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-    apiVersion: "2024-12-18.acacia",
-  });
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeSecretKey) {
+    console.warn("Warning: STRIPE_SECRET_KEY not set. Payment features will be disabled.");
+  }
+  
+  const stripe = stripeSecretKey ? new Stripe(stripeSecretKey) : null;
 
   // Create checkout session
   app.post("/api/checkout/create-session", async (req, res) => {
     try {
+      if (!stripe) {
+        return res.status(503).json({ error: "Payment service not configured" });
+      }
+
       const { email, firstName, lastName, productType, amount } = req.body;
 
       // Validate input
       const schema = z.object({
         email: z.string().email(),
-        firstName: z.string(),
-        lastName: z.string(),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
         productType: z.string(),
         amount: z.number().positive(),
       });
@@ -49,6 +56,11 @@ export async function registerRoutes(
         status: "pending",
       });
 
+      // Determine base URL
+      const baseUrl = process.env.REPL_SLUG && process.env.REPL_OWNER 
+        ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
+        : `http://localhost:${process.env.PORT || 5000}`;
+
       // Create Stripe checkout session
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -66,8 +78,8 @@ export async function registerRoutes(
           },
         ],
         mode: "payment",
-        success_url: `${process.env.REPL_SLUG ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000'}/dashboard?success=true&order_id=${order.id}`,
-        cancel_url: `${process.env.REPL_SLUG ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000'}/checkout?canceled=true`,
+        success_url: `${baseUrl}/dashboard?success=true&order_id=${order.id}`,
+        cancel_url: `${baseUrl}/checkout?canceled=true`,
         customer_email: data.email,
         metadata: {
           orderId: order.id,
@@ -81,28 +93,56 @@ export async function registerRoutes(
       res.json({ sessionId: session.id, url: session.url });
     } catch (error: any) {
       console.error("Checkout error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid input data" });
+      }
       res.status(400).json({ error: error.message });
     }
   });
 
-  // Stripe webhook handler
+  // Stripe webhook handler - uses rawBody for signature verification
   app.post("/api/webhook/stripe", async (req, res) => {
+    if (!stripe) {
+      return res.status(503).json({ error: "Payment service not configured" });
+    }
+
     const sig = req.headers["stripe-signature"];
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    // Use rawBody which was captured by express.json() middleware
+    const rawBody = (req as any).rawBody;
+
+    if (!webhookSecret) {
+      console.warn("STRIPE_WEBHOOK_SECRET not configured, skipping signature verification");
+      // In development without webhook secret, still process the event
+      try {
+        const event = req.body;
+        await handleStripeEvent(event);
+        return res.json({ received: true });
+      } catch (err: any) {
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+      }
+    }
 
     let event: Stripe.Event;
 
     try {
       event = stripe.webhooks.constructEvent(
-        req.body,
+        rawBody,
         sig as string,
-        process.env.STRIPE_WEBHOOK_SECRET || ""
+        webhookSecret
       );
     } catch (err: any) {
       console.error("Webhook signature verification failed:", err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    // Handle the event
+    await handleStripeEvent(event);
+
+    res.json({ received: true });
+  });
+
+  async function handleStripeEvent(event: Stripe.Event) {
     switch (event.type) {
       case "checkout.session.completed":
         const session = event.data.object as Stripe.Checkout.Session;
@@ -110,24 +150,30 @@ export async function registerRoutes(
 
         if (orderId) {
           await storage.updateOrderStatus(orderId, "completed", new Date());
-          await storage.updateOrderStripeInfo(orderId, session.payment_intent as string);
-
-          // Here you would trigger report generation
+          await storage.updateOrderStripeInfo(orderId, session.payment_intent as string, session.id);
           console.log(`Order ${orderId} completed successfully`);
+        }
+        break;
+
+      case "checkout.session.expired":
+        const expiredSession = event.data.object as Stripe.Checkout.Session;
+        const expiredOrderId = expiredSession.metadata?.orderId;
+        if (expiredOrderId) {
+          await storage.updateOrderStatus(expiredOrderId, "expired");
+          console.log(`Order ${expiredOrderId} expired`);
         }
         break;
 
       case "payment_intent.payment_failed":
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         console.log("Payment failed:", paymentIntent.id);
+        // Find order by payment intent and mark as failed
         break;
 
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
-
-    res.json({ received: true });
-  });
+  }
 
   // Get user orders
   app.get("/api/orders/:email", async (req, res) => {
@@ -149,6 +195,15 @@ export async function registerRoutes(
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
+  });
+
+  // Health check
+  app.get("/api/health", (req, res) => {
+    res.json({ 
+      status: "ok", 
+      stripe: !!stripe,
+      timestamp: new Date().toISOString() 
+    });
   });
 
   return httpServer;
