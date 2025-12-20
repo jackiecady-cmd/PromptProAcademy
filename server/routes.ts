@@ -70,7 +70,7 @@ export async function registerRoutes(
               currency: "usd",
               product_data: {
                 name: getProductName(data.productType),
-                description: "DNA and Family History Analysis",
+                description: getProductDescription(data.productType),
               },
               unit_amount: data.amount,
             },
@@ -211,11 +211,32 @@ export async function registerRoutes(
 
 function getProductName(productType: string): string {
   const names: Record<string, string> = {
+    // WhoamI DNA Products
     base_analysis: "Base DNA Analysis Package",
     royal_blood: "Royal Blood Check",
     holocaust_survivor: "Holocaust Survivor Search",
     native_tribe: "Native Tribe Trace",
     ancient_dna: "Ancient DNA Match",
+    heritage_book: "Heritage Book - Printed Family Story",
+    // PromptPro Academy Products
+    academy_starter: "PromptPro Academy - Starter Course",
+    academy_foundation: "PromptPro Academy - Foundation Course",
+    academy_professional: "PromptPro Academy - Professional Certification",
   };
-  return names[productType] || "DNA Analysis Service";
+  return names[productType] || "WhoamI Service";
+}
+
+function getProductDescription(productType: string): string {
+  const descriptions: Record<string, string> = {
+    base_analysis: "Unified DNA report from multiple providers",
+    royal_blood: "Trace your royal ancestry connections",
+    holocaust_survivor: "Connect with Holocaust survivor records",
+    native_tribe: "Discover your indigenous heritage",
+    ancient_dna: "Match with ancient DNA samples",
+    heritage_book: "Your family history in a beautiful printed book",
+    academy_starter: "Learn AI basics through ancestry research",
+    academy_foundation: "Master prompt engineering fundamentals",
+    academy_professional: "Career-ready AI skills with certification",
+  };
+  return descriptions[productType] || "Premium service from WhoamI";
 }

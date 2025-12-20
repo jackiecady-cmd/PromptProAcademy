@@ -229,9 +229,9 @@ export default function LearnPromptEngineering() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Link href="/academy">
-                    <Button className={`w-full ${tier.popular ? 'bg-primary' : ''}`} variant={tier.popular ? 'default' : 'outline'}>
-                      Get Started
+                  <Link href="/academy/checkout">
+                    <Button className={`w-full ${tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`} variant={tier.popular ? 'default' : 'outline'}>
+                      Enroll Now
                     </Button>
                   </Link>
                 </CardFooter>

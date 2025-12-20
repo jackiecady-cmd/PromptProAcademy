@@ -14,6 +14,7 @@ import PromptLibrary from "@/pages/PromptLibrary";
 import Contact from "@/pages/Contact";
 import LearnPromptEngineering from "@/pages/LearnPromptEngineering";
 import AcademyDashboard from "@/pages/AcademyDashboard";
+import AcademyCheckout from "@/pages/AcademyCheckout";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -31,6 +32,7 @@ function Router() {
           <Route path="/prompts" component={PromptLibrary} />
           <Route path="/learn" component={LearnPromptEngineering} />
           <Route path="/academy" component={AcademyDashboard} />
+          <Route path="/academy/checkout" component={AcademyCheckout} />
           <Route path="/contact" component={Contact} />
           <Route path="/admin" component={AdminSettings} />
           <Route component={NotFound} />
