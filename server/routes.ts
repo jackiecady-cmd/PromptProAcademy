@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertUserSchema, insertOrderSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
+import { getChatbotResponse } from "./chatbot";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -204,6 +205,21 @@ export async function registerRoutes(
       stripe: !!stripe,
       timestamp: new Date().toISOString() 
     });
+  });
+
+  // AI Chatbot endpoint
+  app.post("/api/chat", async (req, res) => {
+    try {
+      const { message } = req.body;
+      if (!message || typeof message !== "string") {
+        return res.status(400).json({ error: "Message is required" });
+      }
+      const response = await getChatbotResponse(message);
+      res.json({ response });
+    } catch (error: any) {
+      console.error("Chat error:", error);
+      res.status(500).json({ error: "Failed to process message" });
+    }
   });
 
   return httpServer;

@@ -18,6 +18,7 @@ import AcademyCheckout from "@/pages/AcademyCheckout";
 import HeritageBookCheckout from "@/pages/HeritageBookCheckout";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ChatWidget } from "@/components/ChatWidget";
 
 function Router() {
   return (
@@ -51,6 +52,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router />
+        <ChatWidget />
       </TooltipProvider>
     </QueryClientProvider>
   );
