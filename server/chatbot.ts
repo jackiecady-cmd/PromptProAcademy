@@ -95,3 +95,88 @@ export async function getTutorResponse(userMessage: string): Promise<string> {
     return "I'm having trouble connecting right now. Please try again in a moment!";
   }
 }
+
+const LATIN_TRANSLATOR_PROMPT = `You are an expert in Classical and Ecclesiastical Latin, specializing in ritual, prayer, and sacred language. Your job is to help users translate phrases into Latin and provide pronunciation guidance.
+
+When given a phrase to translate:
+1. Provide the Latin translation
+2. Break it into syllables with stress markers
+3. For each word, indicate which syllables are stressed (capital letters) vs unstressed (lowercase)
+4. Provide a phonetic guide using English approximations
+
+Format your response as JSON with this structure:
+{
+  "latin": "the Latin phrase",
+  "meaning": "the English meaning",
+  "syllables": [
+    {"text": "DO", "stress": "high"},
+    {"text": "mi", "stress": "medium"},
+    {"text": "ne", "stress": "low"}
+  ],
+  "phonetic": "DOH-mee-neh",
+  "notes": "optional pronunciation notes"
+}
+
+For stress levels:
+- "high" = strongly emphasized (shown large)
+- "medium" = moderate emphasis (shown medium)  
+- "low" = soft/unstressed (shown small)
+
+Be accurate with ecclesiastical Latin pronunciation used in Catholic liturgy and ritual work.`;
+
+export interface LatinPhrase {
+  latin: string;
+  meaning: string;
+  syllables: { text: string; stress: "high" | "medium" | "low" }[];
+  phonetic: string;
+  notes?: string;
+}
+
+export async function translateToLatin(englishText: string): Promise<LatinPhrase> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: LATIN_TRANSLATOR_PROMPT },
+        { role: "user", content: `Translate this to Latin with pronunciation guide: "${englishText}"` }
+      ],
+      max_tokens: 500,
+      temperature: 0.3,
+    });
+
+    const content = response.choices[0]?.message?.content || "";
+    // Extract JSON from response
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    throw new Error("Invalid response format");
+  } catch (error) {
+    console.error("Latin translation error:", error);
+    throw error;
+  }
+}
+
+export async function generateLatinPrayer(intention: string, tone: string = "reverent"): Promise<LatinPhrase[]> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: LATIN_TRANSLATOR_PROMPT },
+        { role: "user", content: `Create a short Latin prayer (3-5 lines) for this intention: "${intention}". Tone should be ${tone}. Return as a JSON array of phrase objects, each with the structure specified.` }
+      ],
+      max_tokens: 1000,
+      temperature: 0.5,
+    });
+
+    const content = response.choices[0]?.message?.content || "";
+    const jsonMatch = content.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    throw new Error("Invalid response format");
+  } catch (error) {
+    console.error("Prayer generation error:", error);
+    throw error;
+  }
+}

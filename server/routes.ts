@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { insertUserSchema, insertOrderSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
-import { getChatbotResponse, getTutorResponse } from "./chatbot";
+import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer } from "./chatbot";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -234,6 +234,36 @@ export async function registerRoutes(
     } catch (error: any) {
       console.error("Tutor error:", error);
       res.status(500).json({ error: "Failed to process message" });
+    }
+  });
+
+  // Latin Translation API
+  app.post("/api/latin/translate", async (req, res) => {
+    try {
+      const { text } = req.body;
+      if (!text || typeof text !== "string") {
+        return res.status(400).json({ error: "Text is required" });
+      }
+      const result = await translateToLatin(text);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Latin translation error:", error);
+      res.status(500).json({ error: "Failed to translate" });
+    }
+  });
+
+  // Latin Prayer Generator
+  app.post("/api/latin/prayer", async (req, res) => {
+    try {
+      const { intention, tone } = req.body;
+      if (!intention || typeof intention !== "string") {
+        return res.status(400).json({ error: "Intention is required" });
+      }
+      const result = await generateLatinPrayer(intention, tone || "reverent");
+      res.json({ phrases: result });
+    } catch (error: any) {
+      console.error("Prayer generation error:", error);
+      res.status(500).json({ error: "Failed to generate prayer" });
     }
   });
 
