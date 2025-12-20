@@ -19,7 +19,9 @@ import {
   ChevronRight,
   Trophy,
   Sparkles,
-  ArrowLeft
+  ArrowLeft,
+  GraduationCap,
+  Users
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -554,15 +556,41 @@ export default function AcademyDashboard() {
               </CardContent>
             </Card>
 
+            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+              <CardContent className="py-6 text-center">
+                <GraduationCap className="h-8 w-8 mx-auto text-green-600 mb-3" />
+                <h3 className="font-bold mb-2">AI Tutor</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Get instant help with your questions from our AI tutor!
+                </p>
+                <Link href="/academy/tutor">
+                  <Button className="bg-green-600 hover:bg-green-700" size="sm">Ask the Tutor</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
+              <CardContent className="py-6 text-center">
+                <Users className="h-8 w-8 mx-auto text-purple-600 mb-3" />
+                <h3 className="font-bold mb-2">Student Forum</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Connect with fellow learners - ask questions, share tips!
+                </p>
+                <Link href="/academy/forum">
+                  <Button variant="outline" size="sm" className="border-purple-300 text-purple-700 hover:bg-purple-100">Visit Forum</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
             <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
               <CardContent className="py-6 text-center">
                 <MessageSquare className="h-8 w-8 mx-auto text-blue-600 mb-3" />
-                <h3 className="font-bold mb-2">Need Help?</h3>
+                <h3 className="font-bold mb-2">Need 1-on-1 Help?</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Book a 1-on-1 session and we'll practice together!
+                  Book a personal session and we'll practice together!
                 </p>
                 <Link href="/pricing">
-                  <Button variant="outline" size="sm">Book Session</Button>
+                  <Button variant="outline" size="sm">Book Session - $99/hr</Button>
                 </Link>
               </CardContent>
             </Card>

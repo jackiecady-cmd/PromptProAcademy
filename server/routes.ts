@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { insertUserSchema, insertOrderSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
-import { getChatbotResponse } from "./chatbot";
+import { getChatbotResponse, getTutorResponse } from "./chatbot";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -218,6 +218,21 @@ export async function registerRoutes(
       res.json({ response });
     } catch (error: any) {
       console.error("Chat error:", error);
+      res.status(500).json({ error: "Failed to process message" });
+    }
+  });
+
+  // AI Tutor endpoint for PromptPro Academy
+  app.post("/api/tutor", async (req, res) => {
+    try {
+      const { message } = req.body;
+      if (!message || typeof message !== "string") {
+        return res.status(400).json({ error: "Message is required" });
+      }
+      const response = await getTutorResponse(message);
+      res.json({ response });
+    } catch (error: any) {
+      console.error("Tutor error:", error);
       res.status(500).json({ error: "Failed to process message" });
     }
   });

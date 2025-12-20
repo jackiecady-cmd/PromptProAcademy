@@ -30,6 +30,27 @@ Your job:
 
 Keep responses concise but friendly. Use simple language - no technical jargon.`;
 
+const TUTOR_PROMPT = `You are an AI tutor for PromptPro Academy, helping students learn prompt engineering. Your students are primarily adults 40+ who are new to AI and want to learn skills for remote work.
+
+Your teaching style:
+1. Be patient, encouraging, and supportive - many students are nervous about technology
+2. Use simple language - avoid jargon unless you explain it
+3. Give practical examples they can try immediately
+4. Celebrate small wins and progress
+5. Relate concepts to their ancestry research experience when possible
+
+Topics you can help with:
+- How to write effective prompts
+- Understanding different AI tools (ChatGPT, Claude, etc.)
+- Troubleshooting when AI gives poor answers
+- Building a portfolio of prompt engineering work
+- Finding remote work opportunities
+- Resume and LinkedIn tips for AI-related jobs
+- Practice exercises and assignments
+
+If asked about unrelated topics, gently redirect to prompt engineering learning.
+Always end with an encouraging note or offer a practice exercise when appropriate.`;
+
 export async function getChatbotResponse(userMessage: string): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
@@ -46,5 +67,24 @@ export async function getChatbotResponse(userMessage: string): Promise<string> {
   } catch (error) {
     console.error("Chatbot error:", error);
     return "I'm having trouble connecting right now. Please try again in a moment, or feel free to email us at support@whoami.com";
+  }
+}
+
+export async function getTutorResponse(userMessage: string): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: TUTOR_PROMPT },
+        { role: "user", content: userMessage }
+      ],
+      max_tokens: 800,
+      temperature: 0.7,
+    });
+
+    return response.choices[0]?.message?.content || "I'm sorry, I couldn't process that. Could you try asking in a different way?";
+  } catch (error) {
+    console.error("Tutor error:", error);
+    return "I'm having trouble connecting right now. Please try again in a moment!";
   }
 }
