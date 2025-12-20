@@ -39,7 +39,9 @@ export default function Pricing() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button className="w-full h-12 text-lg bg-primary hover:bg-primary/90">Get Started</Button>
+              <Link href="/checkout" className="w-full">
+                <Button className="w-full h-12 text-lg bg-primary hover:bg-primary/90">Get Started</Button>
+              </Link>
             </CardFooter>
           </Card>
 

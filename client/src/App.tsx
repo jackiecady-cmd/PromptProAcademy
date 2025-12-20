@@ -8,6 +8,8 @@ import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
 import Forum from "@/pages/Forum";
 import Pricing from "@/pages/Pricing";
+import Checkout from "@/pages/Checkout";
+import AdminSettings from "@/pages/AdminSettings";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -21,6 +23,8 @@ function Router() {
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/forum" component={Forum} />
           <Route path="/pricing" component={Pricing} />
+          <Route path="/checkout" component={Checkout} />
+          <Route path="/admin" component={AdminSettings} />
           <Route component={NotFound} />
         </Switch>
       </main>
