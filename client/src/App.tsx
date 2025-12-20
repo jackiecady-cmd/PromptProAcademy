@@ -15,6 +15,7 @@ import Contact from "@/pages/Contact";
 import LearnPromptEngineering from "@/pages/LearnPromptEngineering";
 import AcademyDashboard from "@/pages/AcademyDashboard";
 import AcademyCheckout from "@/pages/AcademyCheckout";
+import HeritageBookCheckout from "@/pages/HeritageBookCheckout";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -29,6 +30,7 @@ function Router() {
           <Route path="/forum" component={Forum} />
           <Route path="/pricing" component={Pricing} />
           <Route path="/checkout" component={Checkout} />
+          <Route path="/checkout/heritage-book" component={HeritageBookCheckout} />
           <Route path="/prompts" component={PromptLibrary} />
           <Route path="/learn" component={LearnPromptEngineering} />
           <Route path="/academy" component={AcademyDashboard} />

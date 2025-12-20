@@ -132,9 +132,11 @@ export default function Pricing() {
                       <span className="text-3xl font-bold">$99</span>
                       <span className="text-muted-foreground"> starting</span>
                     </div>
-                    <Button className="bg-accent hover:bg-accent/90 text-white">
-                      Learn More About Heritage Books
-                    </Button>
+                    <Link href="/checkout/heritage-book">
+                      <Button className="bg-accent hover:bg-accent/90 text-white">
+                        Order Your Heritage Book
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
