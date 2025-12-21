@@ -86,6 +86,89 @@ Think about something you'd like to know about your family history. How would yo
     ]
   },
   {
+    id: "choosing-ai",
+    track: "starter",
+    title: "Know Your AI: Which One to Use When",
+    description: "Not all AIs are equal - learn which tool works best for different tasks",
+    duration: "12 min",
+    hasQuiz: true,
+    content: `
+## Which AI Should You Use?
+
+Here's something most people don't realize: **different AIs have different strengths.** Using the right one for the job makes all the difference.
+
+### The Big Players (and what they're good at)
+
+**Claude (Anthropic)** - The Reliable Worker
+- Best for: Step-by-step explanations, difficult math, research that requires accuracy
+- Strength: Does the actual work without cutting corners or pretending
+- Use when: You need something done correctly, no games
+- Great for: Complex ancestry research, document analysis, detailed instructions
+
+**ChatGPT (OpenAI)** - The Popular One
+- Note: Quality has decreased recently - not as reliable as it used to be
+- Still okay for: Basic questions, casual conversation
+- Watch out for: May give you generic answers
+
+**Grok (xAI)** - The Knowledge Collector
+- Strength: Access to more books, grimoires, historical texts, and obscure facts
+- Good for: Research into esoteric topics, finding rare information
+- Watch out for: Sometimes "plays pretend" - pretends to do work instead of actually doing it
+- Tip: Double-check that Grok actually performed the task!
+
+**DeepSeek** - The Rising Star
+- Strength: Strong reasoning, good at following complex instructions
+- Good for: Research tasks, analysis
+- Growing in popularity for a reason!
+
+**Kimi** - The Multilingual Helper
+- Strength: Great with multiple languages and long documents
+- Good for: Translation, processing large texts
+
+### Which Should You Start With?
+
+For this course and your ancestry research, we recommend **Claude** for serious work because:
+1. It works through problems step-by-step
+2. It explains its reasoning
+3. It doesn't pretend to do work - it actually does it
+4. It's great with complex family history research
+
+### Pro Tip: Use Multiple AIs
+
+Smart researchers use different AIs for different tasks:
+- **Claude** for detailed research and complex questions
+- **Grok** when you need obscure historical facts or rare book references
+- **DeepSeek** or **Kimi** for second opinions
+
+### The Warning Signs
+
+Watch out for AIs that:
+- Give you vague, generic answers
+- "Pretend" to search or calculate without showing work
+- Rush through without explaining
+- Make up information confidently
+
+Always verify important findings!
+    `,
+    quiz: [
+      {
+        question: "Which AI is recommended for complex, step-by-step work?",
+        options: ["ChatGPT", "Claude", "Grok", "Any AI works the same"],
+        correct: 1
+      },
+      {
+        question: "What should you watch out for with some AIs?",
+        options: [
+          "They're too slow",
+          "They might 'pretend' to do work instead of actually doing it",
+          "They cost too much",
+          "They only work on weekends"
+        ],
+        correct: 1
+      }
+    ]
+  },
+  {
     id: "basics",
     track: "starter",
     title: "The Magic Words: Be Specific",
