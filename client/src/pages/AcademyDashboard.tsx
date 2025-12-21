@@ -114,7 +114,8 @@ Here's something most people don't realize: **different AIs have different stren
 - Strength: Access to more books, grimoires, historical texts, and obscure facts
 - Good for: Research into esoteric topics, finding rare information
 - Watch out for: Sometimes "plays pretend" - pretends to do work instead of actually doing it
-- Tip: Double-check that Grok actually performed the task!
+- Warning: Has shown political bias that was factually incorrect - be aware of potential propaganda
+- Tip: Double-check that Grok actually performed the task and verify facts independently!
 
 **DeepSeek** - The Rising Star
 - Strength: Strong reasoning, good at following complex instructions
