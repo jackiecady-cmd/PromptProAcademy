@@ -24,7 +24,7 @@ export function Navbar() {
         { href: "/", label: "Home" },
         { href: "/journey", label: "DNA Journey" },
         { href: "/my-research", label: "My Research" },
-        { href: "/heritage-book-preview", label: "Heritage Book" },
+        { href: "/my-book", label: "Heritage Book" },
         { href: "/pricing", label: "Pricing" },
       ],
     },
@@ -35,9 +35,9 @@ export function Navbar() {
       bgColor: "bg-blue-600",
       links: [
         { href: "/academy", label: "Academy Home" },
-        { href: "/learn-prompt-engineering", label: "Lessons" },
-        { href: "/prompt-library", label: "Prompt Library" },
-        { href: "/academy-forum", label: "Community" },
+        { href: "/learn", label: "Lessons" },
+        { href: "/prompts", label: "Prompt Library" },
+        { href: "/academy/forum", label: "Community" },
       ],
     },
     {
@@ -46,7 +46,7 @@ export function Navbar() {
       color: "text-purple-700",
       bgColor: "bg-purple-700",
       links: [
-        { href: "/latin-course", label: "Latin Course" },
+        { href: "/latin", label: "Latin Course" },
       ],
     },
   ];
