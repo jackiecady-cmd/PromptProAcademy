@@ -31,9 +31,11 @@ export interface IStorage {
   getOrder(id: string): Promise<Order | undefined>;
   getOrdersByUserId(userId: string): Promise<Order[]>;
   getOrdersByEmail(email: string): Promise<Order[]>;
+  getAllOrders(): Promise<Order[]>;
   createOrder(order: InsertOrder): Promise<Order>;
   updateOrderStatus(id: string, status: string, completedAt?: Date): Promise<Order | undefined>;
   updateOrderStripeInfo(id: string, paymentIntentId?: string, sessionId?: string): Promise<Order | undefined>;
+  updateOrderFulfillment(id: string, fulfillmentStatus: string, vendorCost?: number): Promise<Order | undefined>;
 
   // DNA Reports
   getDnaReport(id: string): Promise<DnaReport | undefined>;
@@ -92,6 +94,10 @@ class DatabaseStorage implements IStorage {
     return await this.db.select().from(orders).where(eq(orders.email, email)).orderBy(desc(orders.createdAt));
   }
 
+  async getAllOrders(): Promise<Order[]> {
+    return await this.db.select().from(orders).orderBy(desc(orders.createdAt));
+  }
+
   async createOrder(order: InsertOrder): Promise<Order> {
     const result = await this.db.insert(orders).values(order).returning();
     return result[0];
@@ -112,6 +118,18 @@ class DatabaseStorage implements IStorage {
       .set({ 
         stripePaymentIntentId: paymentIntentId,
         stripeSessionId: sessionId,
+      })
+      .where(eq(orders.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async updateOrderFulfillment(id: string, fulfillmentStatus: string, vendorCost?: number): Promise<Order | undefined> {
+    const result = await this.db
+      .update(orders)
+      .set({ 
+        fulfillmentStatus,
+        vendorCost,
       })
       .where(eq(orders.id, id))
       .returning();

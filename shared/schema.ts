@@ -15,13 +15,18 @@ export const orders = pgTable("orders", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").references(() => users.id),
   email: text("email").notNull(),
-  productType: text("product_type").notNull(), // 'base_analysis', 'royal_blood', etc.
+  productType: text("product_type").notNull(), // 'base_analysis', 'royal_blood', 'heritage_book_standard', etc.
   amount: integer("amount").notNull(), // in cents
   status: text("status").notNull(), // 'pending', 'completed', 'failed'
   stripePaymentIntentId: text("stripe_payment_intent_id"),
   stripeSessionId: text("stripe_session_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),
+  fulfillmentStatus: text("fulfillment_status"), // 'pending', 'ordered_blurb', 'ordered_lulu', 'shipped', 'delivered'
+  vendorCost: integer("vendor_cost"), // actual cost paid to Blurb/Lulu in cents
+  trackingNumber: text("tracking_number"),
+  customerName: text("customer_name"),
+  shippingAddress: text("shipping_address"),
 });
 
 export const dnaReports = pgTable("dna_reports", {

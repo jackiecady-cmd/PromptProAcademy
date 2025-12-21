@@ -187,6 +187,28 @@ export async function registerRoutes(
     }
   });
 
+  // Get all orders (admin)
+  app.get("/api/orders/all", async (req, res) => {
+    try {
+      const orders = await storage.getAllOrders();
+      res.json(orders);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Update order fulfillment status (admin)
+  app.patch("/api/orders/:orderId/fulfillment", async (req, res) => {
+    try {
+      const { orderId } = req.params;
+      const { fulfillmentStatus, vendorCost } = req.body;
+      await storage.updateOrderFulfillment(orderId, fulfillmentStatus, vendorCost);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Get user reports
   app.get("/api/reports/user/:userId", async (req, res) => {
     try {
