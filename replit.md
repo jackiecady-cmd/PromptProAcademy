@@ -5,12 +5,22 @@ A dual-business platform:
 1. **WhoamI** - Aggregates DNA data from multiple providers (Ancestry, 23andMe, FamilyTreeDNA) for unified family history analysis
 2. **PromptPro Academy** - Teaches prompt engineering skills to adults 40+ seeking remote work opportunities
 
-## Recent Changes (Dec 20, 2025)
+## Recent Changes (Dec 21, 2025)
+- **DNA Journey** - AI-guided step-by-step ancestry research tool
+  - Walks users through FamilySearch, DNA testing, GEDmatch, DNAGenics
+  - Toddler-level prompts explaining raw DNA, zip files, calculators
+  - Shows users exactly where to click and what to do
+  - Recommends specific admixture calculators based on their heritage
+- **My Research** - Save family tree and DNA findings to database
+  - Add family members (name, relationship, birth/death year, birthplace, notes)
+  - Save DNA discoveries (ethnicity, matches, documents, stories)
+  - Track source of each finding (GEDmatch, DNAGenics, Ancestry, etc.)
+  - All saved data becomes content for Heritage Book
 - Full payment system with Stripe integration for both businesses
 - AI chatbot for customer support (handles common questions, escalates complex ones)
 - Heritage Book checkout for printed family history keepsakes
 - PromptPro Academy with interactive lessons, quizzes, and badge system
-- Learning dashboard with progress tracking
+- Sacred Latin Pronunciation Course ($19/month subscription)
 
 ## Live URL
 https://ancestry-canvas--jackiecady.replit.app/
@@ -53,6 +63,8 @@ https://ancestry-canvas--jackiecady.replit.app/
 - users, orders, dnaReports
 - learnerProgress, earnedBadges (for Academy)
 - conversations, messages (for chatbot)
+- familyMembers (family tree storage)
+- dnaFindings (DNA discoveries storage)
 
 ## User Preferences
 - Burgundy/orange for WhoamI, Blue for PromptPro Academy
