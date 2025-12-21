@@ -615,11 +615,18 @@ export default function MyResearch() {
                   </p>
                 </div>
               </div>
-              <Link href="/checkout/heritage-book">
-                <Button className="bg-white text-[#7D0A24] hover:bg-amber-100 font-bold px-8">
-                  Order Heritage Book
-                </Button>
-              </Link>
+              <div className="flex gap-3">
+                <Link href="/my-book">
+                  <Button variant="outline" className="border-white text-white hover:bg-white/20">
+                    Preview Book
+                  </Button>
+                </Link>
+                <Link href="/checkout/heritage-book">
+                  <Button className="bg-white text-[#7D0A24] hover:bg-amber-100 font-bold px-8">
+                    Order Heritage Book
+                  </Button>
+                </Link>
+              </div>
             </div>
           </CardContent>
         </Card>

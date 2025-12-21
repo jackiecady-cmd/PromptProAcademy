@@ -21,6 +21,7 @@ import AcademyTutor from "@/pages/AcademyTutor";
 import LatinCourse from "@/pages/LatinCourse";
 import DNAJourney from "@/pages/DNAJourney";
 import MyResearch from "@/pages/MyResearch";
+import HeritageBookPreview from "@/pages/HeritageBookPreview";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -46,6 +47,7 @@ function Router() {
           <Route path="/latin" component={LatinCourse} />
           <Route path="/journey" component={DNAJourney} />
           <Route path="/my-research" component={MyResearch} />
+          <Route path="/my-book" component={HeritageBookPreview} />
           <Route path="/contact" component={Contact} />
           <Route path="/admin" component={AdminSettings} />
           <Route component={NotFound} />
