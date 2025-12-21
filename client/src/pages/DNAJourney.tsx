@@ -152,58 +152,62 @@ GEDmatch.com is a FREE website where people from ALL companies (Ancestry, 23andM
     icon: Sparkles,
     guidance: `Now your DNA is uploaded. Let's find your cousins and learn about your ancestry!
 
-**What you'll see on GEDmatch:**
+**THE SECRET WEAPON: ADMIXTURE CALCULATORS**
 
-1. **DNA Matches** - These are real people who share your DNA
-   - The top matches are closest relatives
-   - Even distant matches can tell you about your family history
+This is where it gets exciting! Admixture calculators look at EVERY LINE of your chromosome and tell you exactly what's there - every piece of you from around the world.
 
-2. **Let AI help you figure out which calculators to use**
+**Step 1: Upload to DNAGenics.com**
+DNAGenics has powerful admixture calculators that can reveal hidden heritage.
+1. Go to **DNAGenics.com**
+2. Create a free account
+3. Upload your .zip file (same one from Ancestry/23andMe)
+4. Run the admixture calculators
 
-This is the SECRET SAUCE! Ask ChatGPT something like:
+**Step 2: Ask AI which calculators to try**
 
-"I just uploaded my DNA to GEDmatch. I'm interested in learning more about:
-- My ancestors being from [place names]
-- My family having [surnames you know]
-- My ancestry being [like mulatto/mixed heritage/Irish/etc.]
+Here's where prompt engineering helps! Ask ChatGPT:
 
-Which GEDmatch calculators should I try to better understand my heritage?"
+"I uploaded my DNA to DNAGenics and GEDmatch. My family has surnames like [your surnames]. I think I might have [mixed heritage/Jewish/African/Native American/etc.] ancestry. Some clues I have:
+- [Any family stories, nicknames, or hints]
+- [Places your family is from]
+- [Anything that seems odd or secretive]
 
-ChatGPT will recommend specific calculators based on YOUR situation. For example, if you have surnames indicating mixed heritage, it might say:
-- "Try the African Calculator to see African ancestry %"
-- "Try the European Calculator for Irish/European heritage"
-- "Try the MDLP calculator which is good for mixed ancestry"
+Which admixture calculators should I run to find out more?"
 
-3. **Use those specific calculators**
-   - Go back to GEDmatch (you're logged in)
-   - Look for "Calculators" or "Tools"
-   - Pick the ones ChatGPT recommended
-   - Upload your raw DNA file
-   - See your results!
+**Real example:** One researcher had a grandfather who called her grandmother "Chaka" - meaning chocolate. Her white-passing grandmother had hidden Black ancestry. The admixture calculators revealed the truth, and Black cousins started appearing in DNA matches!
 
-4. **Message your matches**
-   - Find someone with a similar surname to yours
-   - Click "Contact" or "Message"
-   - Say: "Hi! I see we share DNA. Are you related to [Your Last Name]? I'm researching my family history and would love to know how we're connected."
-   - They might tell you about shared ancestors!
+**Step 3: Look for patterns**
+The calculators might show:
+- "15% Ashkenazi Jewish" - you have Jewish ancestors
+- "8% West African" - you have African heritage
+- "3% Native American" - indigenous ancestry
+- Specific regions like "Jerusalem/Palestine" in historical records
 
-5. **Document what you find**
-   - Interesting match? Save it!
-   - Found an ancestor? Save it!
-   - Got a new clue? Save it!
-   - All goes in your Heritage Book
+**Step 4: Connect the clues**
+Look at your family tree AND your DNA results together:
+- An ancestor from "Jerusalem, Palestine" in the 1940s? Combined with Jewish DNA = confirmation
+- A town named after Native American tribes where you were born? Look for those connections
+- Black cousins appearing in your DNA matches? Your family may have hidden that heritage
 
-**What's "cM" or "centimorgans"?** Ask ChatGPT: "What does centimorgan mean? How close is a DNA match if we share X centiMorgans?"
+**Step 5: Message your matches**
+- Find someone with a similar surname
+- Click "Contact" or "Message"  
+- Say: "Hi! I see we share DNA. Are you related to [Your Last Name]? I'm researching my family history."
 
-**Key discoveries to look for:**
-- "I have a DNA match named Susan Smith who shares my great-grandfather"
-- "The calculators show I'm 15% West African heritage"
-- "A match's mother was from Ireland - maybe that's where my ancestors came from too"
+**Step 6: Document EVERYTHING**
+- Every calculator result
+- Every interesting match
+- Every clue or story
+- This becomes your Heritage Book!
 
-This is where YOUR unique family story emerges!`,
+**PRO TIP: Treat AI like a teammate**
+Don't just tell AI what to do - work WITH it. Share details, ask follow-up questions, let it connect the dots. AI remembers little details and can give you big ideas. The better your prompts, the better your discoveries!
+
+**Need help with prompts?** Check out PromptPro Academy to learn how to talk to AI effectively!`,
     links: [
-      { label: "GEDmatch.com - Where to find calculators", url: "https://www.gedmatch.com" },
-      { label: "GEDmatch FAQ", url: "https://www.gedmatch.com/faq.php" }
+      { label: "DNAGenics.com - Admixture Calculators", url: "https://www.dnagenics.com" },
+      { label: "GEDmatch.com - More calculators", url: "https://www.gedmatch.com" },
+      { label: "PromptPro Academy - Learn to work with AI", url: "/academy" }
     ]
   },
   { 
