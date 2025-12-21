@@ -57,7 +57,7 @@ const journeySteps = [
 
 **As you add people**, FamilySearch will suggest records and show you hints.
 
-**Not sure about names or dates?** Ask ChatGPT! Just type: "Help me understand what information I need to start a family tree" or "What should I know about my parents/grandparents before adding them?"`,
+**Not sure about names or dates?** Use the AI chat box on this page! Just type: "Help me understand what information I need to start a family tree" or "What should I know about my parents/grandparents before adding them?"`,
     links: [
       { label: "Go to FamilySearch.org", url: "https://www.familysearch.org" },
       { label: "FamilySearch Getting Started", url: "https://www.familysearch.org/en/help/helpcenter" }
@@ -82,7 +82,7 @@ const journeySteps = [
 - Finds distant cousins in the database
 - Shows your ethnicity/where your ancestors came from
 
-**Don't understand DNA terms?** Ask ChatGPT: "Explain DNA testing to someone who's never done it before" or "What's the difference between Ancestry DNA and 23andMe?"`,
+**Don't understand DNA terms?** Ask in the chat box: "Explain DNA testing to someone who's never done it before" or "What's the difference between Ancestry DNA and 23andMe?"`,
     links: [
       { label: "Ancestry.com DNA", url: "https://www.ancestry.com/dna" },
       { label: "23andMe DNA Test", url: "https://www.23andme.com" },
@@ -136,7 +136,7 @@ GEDmatch.com is a FREE website where people from ALL companies (Ancestry, 23andM
 - **FamilyTreeDNA** - Good for finding very distant cousins. Go to familytreedna.com, upload your zip file (free)
 - **MyHeritage** - Another option if you want. Upload at myheritage.com
 
-**Need help?** Ask ChatGPT: "I have a .zip file from Ancestry/23andMe - what do I do with it?" or "What does 'raw DNA' mean?"`,
+**Need help?** Ask in the chat box: "I have a .zip file from Ancestry/23andMe - what do I do with it?" or "What does 'raw DNA' mean?"`,
     links: [
       { label: "GEDmatch.com - Upload here!", url: "https://www.gedmatch.com" },
       { label: "Ancestry.com - Get your DNA download", url: "https://www.ancestry.com" },
@@ -165,7 +165,7 @@ DNAGenics has powerful admixture calculators that can reveal hidden heritage.
 
 **Step 2: Ask AI which calculators to try**
 
-Here's where prompt engineering helps! Ask ChatGPT:
+Here's where prompt engineering helps! Ask in the chat box:
 
 "I uploaded my DNA to DNAGenics and GEDmatch. My family has surnames like [your surnames]. I think I might have [mixed heritage/Jewish/African/Native American/etc.] ancestry. Some clues I have:
 - [Any family stories, nicknames, or hints]
@@ -245,7 +245,7 @@ Don't just tell AI what to do - work WITH it. Share details, ask follow-up quest
 
 **Use the "Save a Finding" box on the right** - it will all go into your Heritage Book.
 
-**Questions?** Ask ChatGPT: "How do I organize my family history research?" or "What should I include in a family history book?"`,
+**Questions?** Ask in the chat box: "How do I organize my family history research?" or "What should I include in a family history book?"`,
     links: []
   },
   { 
