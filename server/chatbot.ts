@@ -157,6 +157,73 @@ export async function translateToLatin(englishText: string): Promise<LatinPhrase
   }
 }
 
+const DNA_GUIDE_PROMPT = `You are a friendly, knowledgeable guide helping users discover their family history and ancestry through DNA testing and genealogy research. Your users range from complete beginners to those with some experience.
+
+Your role:
+1. Guide them step-by-step through the ancestry research process
+2. Recommend specific websites and tools (FamilySearch, Ancestry, 23andMe, MyHeritage, GEDmatch, etc.)
+3. Explain how to extract and upload DNA data between platforms
+4. Suggest DNA calculators and analysis tools
+5. Help them interpret results and find connections
+6. Encourage them to document findings for their Heritage Book
+
+Key resources to recommend:
+- FamilySearch.org (FREE) - Start here for building family tree, has billions of records
+- Ancestry.com - DNA testing + largest database
+- 23andMe - Health + ancestry DNA
+- MyHeritage - Good for European ancestry
+- GEDmatch - Free DNA comparison tool, upload from other sites
+- DNApainter - Chromosome mapping
+- FamilyTreeDNA - Deep ancestry (Y-DNA, mtDNA)
+
+Research steps to guide them through:
+1. Start with what they know (parents, grandparents)
+2. Build tree on FamilySearch (free)
+3. Take DNA test if haven't already
+4. Upload DNA to multiple sites (GEDmatch, MyHeritage, FamilyTreeDNA)
+5. Use ethnicity estimates and DNA matches
+6. Document discoveries as they go
+7. Create their Heritage Book
+
+Be encouraging and patient. Celebrate their discoveries. Use simple language.
+When they share findings, acknowledge them enthusiastically and suggest next steps.
+Always remind them to save important discoveries for their Heritage Book.`;
+
+export async function getDNAGuideResponse(
+  userMessage: string, 
+  currentStep: number,
+  history: { role: string; content: string }[]
+): Promise<string> {
+  try {
+    const stepContext = [
+      "starting their family tree",
+      "choosing/understanding DNA testing",
+      "uploading DNA results to multiple platforms",
+      "analyzing results with calculators and tools",
+      "documenting their findings",
+      "preparing for their Heritage Book"
+    ][currentStep - 1] || "researching their ancestry";
+
+    const messages = [
+      { role: "system" as const, content: DNA_GUIDE_PROMPT + `\n\nThe user is currently on step ${currentStep}: ${stepContext}. Guide them accordingly.` },
+      ...history.map(h => ({ role: h.role as "user" | "assistant", content: h.content })),
+      { role: "user" as const, content: userMessage }
+    ];
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages,
+      max_tokens: 600,
+      temperature: 0.7,
+    });
+
+    return response.choices[0]?.message?.content || "I'm sorry, I couldn't process that. Could you try asking in a different way?";
+  } catch (error) {
+    console.error("DNA Guide error:", error);
+    return "I'm having trouble connecting right now. Please try again in a moment!";
+  }
+}
+
 export async function generateLatinPrayer(intention: string, tone: string = "reverent", deity?: string): Promise<LatinPhrase[]> {
   try {
     let prompt = `Create a short Latin prayer (3-5 lines) for this intention: "${intention}". Tone should be ${tone}.`;

@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { insertUserSchema, insertOrderSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
-import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer } from "./chatbot";
+import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getDNAGuideResponse } from "./chatbot";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -233,6 +233,25 @@ export async function registerRoutes(
       res.json({ response });
     } catch (error: any) {
       console.error("Tutor error:", error);
+      res.status(500).json({ error: "Failed to process message" });
+    }
+  });
+
+  // DNA Research Guide
+  app.post("/api/dna-guide", async (req, res) => {
+    try {
+      const { message, currentStep, history } = req.body;
+      if (!message || typeof message !== "string") {
+        return res.status(400).json({ error: "Message is required" });
+      }
+      const response = await getDNAGuideResponse(
+        message, 
+        currentStep || 1,
+        history || []
+      );
+      res.json({ response });
+    } catch (error: any) {
+      console.error("DNA Guide error:", error);
       res.status(500).json({ error: "Failed to process message" });
     }
   });
