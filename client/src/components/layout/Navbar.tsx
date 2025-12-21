@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Dna, Map, Users, CreditCard, Menu, X, Sparkles, MessageSquare } from "lucide-react";
+import { Dna, Map, Users, CreditCard, Menu, Compass, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -11,8 +11,8 @@ export function Navbar() {
 
   const navItems = [
     { href: "/", label: "Home", icon: Dna },
+    { href: "/journey", label: "Start Journey", icon: Compass, isNew: true },
     { href: "/dashboard", label: "My Report", icon: Map },
-    { href: "/prompts", label: "AI Guides", icon: Sparkles, isNew: true },
     { href: "/forum", label: "Community", icon: Users },
     { href: "/pricing", label: "Pricing", icon: CreditCard },
   ];
