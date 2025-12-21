@@ -20,27 +20,28 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/">
-          <a className="flex items-center gap-2 font-serif text-xl font-bold text-primary hover:opacity-90 transition-opacity">
-            <Dna className="h-6 w-6 text-accent" />
-            <span>WhoamI</span>
-          </a>
+        <Link 
+          href="/"
+          className="flex items-center gap-2 font-serif text-xl font-bold text-primary hover:opacity-90 transition-opacity"
+        >
+          <Dna className="h-6 w-6 text-accent" />
+          <span>WhoamI</span>
         </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <a
-                className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-1 ${
-                  location === item.href
-                    ? "text-primary font-bold"
-                    : "text-muted-foreground"
-                }`}
-              >
-                {item.label}
-                {(item as any).isNew && <Badge variant="secondary" className="text-[10px] px-1 py-0 h-4 bg-accent text-white">New</Badge>}
-              </a>
+            <Link 
+              key={item.href} 
+              href={item.href}
+              className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-1 ${
+                location === item.href
+                  ? "text-primary font-bold"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {item.label}
+              {(item as any).isNew && <Badge variant="secondary" className="text-[10px] px-1 py-0 h-4 bg-accent text-white">New</Badge>}
             </Link>
           ))}
           <Button variant="default" className="bg-primary hover:bg-primary/90 text-white shadow-md">
@@ -60,16 +61,16 @@ export function Navbar() {
             <SheetContent side="right">
               <div className="flex flex-col gap-6 mt-6">
                 {navItems.map((item) => (
-                  <Link key={item.href} href={item.href}>
-                    <a
-                      className={`flex items-center gap-2 text-lg font-medium ${
-                        location === item.href ? "text-primary" : "text-muted-foreground"
-                      }`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <item.icon className="h-5 w-5" />
-                      {item.label}
-                    </a>
+                  <Link 
+                    key={item.href} 
+                    href={item.href}
+                    className={`flex items-center gap-2 text-lg font-medium ${
+                      location === item.href ? "text-primary" : "text-muted-foreground"
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    {item.label}
                   </Link>
                 ))}
                 <Button className="w-full bg-accent hover:bg-accent/90">Get Started</Button>

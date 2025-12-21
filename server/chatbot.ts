@@ -157,13 +157,19 @@ export async function translateToLatin(englishText: string): Promise<LatinPhrase
   }
 }
 
-export async function generateLatinPrayer(intention: string, tone: string = "reverent"): Promise<LatinPhrase[]> {
+export async function generateLatinPrayer(intention: string, tone: string = "reverent", deity?: string): Promise<LatinPhrase[]> {
   try {
+    let prompt = `Create a short Latin prayer (3-5 lines) for this intention: "${intention}". Tone should be ${tone}.`;
+    if (deity) {
+      prompt += ` Address this prayer to ${deity}, using appropriate invocations and epithets for this deity/entity.`;
+    }
+    prompt += ` Return as a JSON array of phrase objects, each with the structure specified.`;
+    
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: LATIN_TRANSLATOR_PROMPT },
-        { role: "user", content: `Create a short Latin prayer (3-5 lines) for this intention: "${intention}". Tone should be ${tone}. Return as a JSON array of phrase objects, each with the structure specified.` }
+        { role: "user", content: prompt }
       ],
       max_tokens: 1000,
       temperature: 0.5,

@@ -255,11 +255,11 @@ export async function registerRoutes(
   // Latin Prayer Generator
   app.post("/api/latin/prayer", async (req, res) => {
     try {
-      const { intention, tone } = req.body;
+      const { intention, tone, deity } = req.body;
       if (!intention || typeof intention !== "string") {
         return res.status(400).json({ error: "Intention is required" });
       }
-      const result = await generateLatinPrayer(intention, tone || "reverent");
+      const result = await generateLatinPrayer(intention, tone || "reverent", deity);
       res.json({ phrases: result });
     } catch (error: any) {
       console.error("Prayer generation error:", error);

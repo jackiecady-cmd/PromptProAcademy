@@ -139,6 +139,7 @@ export default function LatinCourse() {
   const [translating, setTranslating] = useState(false);
   
   const [prayerIntention, setPrayerIntention] = useState("");
+  const [prayerDeity, setPrayerDeity] = useState("");
   const [prayerTone, setPrayerTone] = useState("reverent");
   const [generatedPrayer, setGeneratedPrayer] = useState<LatinPhrase[]>([]);
   const [generatingPrayer, setGeneratingPrayer] = useState(false);
@@ -184,7 +185,11 @@ export default function LatinCourse() {
       const response = await fetch("/api/latin/prayer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ intention: prayerIntention, tone: prayerTone }),
+        body: JSON.stringify({ 
+          intention: prayerIntention, 
+          tone: prayerTone,
+          deity: prayerDeity || undefined
+        }),
       });
       const data = await response.json();
       setGeneratedPrayer(data.phrases || []);
@@ -389,6 +394,17 @@ export default function LatinCourse() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div>
+                  <label className="text-sm text-slate-300 mb-2 block">Addressed To (Optional)</label>
+                  <Input
+                    placeholder="e.g., Hecate, Mars, Isis, Odin, the Ancestors, the Universe..."
+                    value={prayerDeity}
+                    onChange={(e) => setPrayerDeity(e.target.value)}
+                    className="bg-slate-900 border-slate-600"
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Leave blank for a general prayer</p>
+                </div>
+
                 <div>
                   <label className="text-sm text-slate-300 mb-2 block">Your Intention</label>
                   <Textarea
