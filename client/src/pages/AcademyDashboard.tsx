@@ -109,6 +109,9 @@ Here's something most people don't realize: **different AIs have different stren
 - Note: Quality has decreased recently - not as reliable as it used to be
 - Still okay for: Basic questions, casual conversation
 - Watch out for: May give you generic answers
+- Privacy concern: Has been known to report users to authorities - guardrails are very strict
+- Data concern: Partners with Palantir (surveillance/data company) - be mindful of what you share
+- Tip: Don't share personal identifying information with any AI, but especially this one
 
 **Grok (xAI)** - The Knowledge Collector
 - Strength: Access to more books, grimoires, historical texts, and obscure facts
