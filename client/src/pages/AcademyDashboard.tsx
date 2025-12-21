@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -274,11 +275,28 @@ The fact that you're learning this puts you ahead of many people - including tho
 ];
 
 export default function AcademyDashboard() {
+  const [email, setEmail] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeLesson, setActiveLesson] = useState<string | null>(null);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
   const [showQuizResults, setShowQuizResults] = useState(false);
   const [earnedBadges, setEarnedBadges] = useState<string[]>([]);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("academy_email");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogin = () => {
+    if (email.includes("@")) {
+      localStorage.setItem("academy_email", email);
+      setIsLoggedIn(true);
+    }
+  };
 
   const currentLesson = lessons.find(l => l.id === activeLesson);
   const starterLessons = lessons.filter(l => l.track === "starter");
@@ -332,6 +350,49 @@ export default function AcademyDashboard() {
     });
     return correct;
   };
+
+  // Login screen
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 flex items-center justify-center p-4">
+        <Card className="max-w-md w-full">
+          <CardHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+              <GraduationCap className="h-8 w-8 text-white" />
+            </div>
+            <CardTitle className="text-2xl">PromptPro Academy</CardTitle>
+            <CardDescription>
+              Enter your email to access courses and track your progress
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Email Address</label>
+              <Input
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                data-testid="input-academy-email"
+              />
+            </div>
+            <Button 
+              onClick={handleLogin} 
+              className="w-full bg-blue-600 hover:bg-blue-700"
+              disabled={!email.includes("@")}
+              data-testid="button-academy-login"
+            >
+              Access Academy
+            </Button>
+            <p className="text-xs text-center text-muted-foreground">
+              Your progress will be saved automatically
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (activeLesson && currentLesson) {
     return (
