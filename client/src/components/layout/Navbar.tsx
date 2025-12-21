@@ -1,20 +1,54 @@
 import { Link, useLocation } from "wouter";
-import { Dna, Map, Users, CreditCard, Menu, Compass, FolderHeart } from "lucide-react";
+import { Dna, GraduationCap, BookOpen, Menu, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
-  const navItems = [
-    { href: "/", label: "Home", icon: Dna },
-    { href: "/journey", label: "Start Journey", icon: Compass, isNew: true },
-    { href: "/my-research", label: "My Research", icon: FolderHeart },
-    { href: "/forum", label: "Community", icon: Users },
-    { href: "/pricing", label: "Pricing", icon: CreditCard },
+  const businesses = [
+    {
+      name: "DNA & Genealogy",
+      icon: Dna,
+      color: "text-[#8B1538]",
+      bgColor: "bg-[#8B1538]",
+      links: [
+        { href: "/", label: "Home" },
+        { href: "/journey", label: "DNA Journey" },
+        { href: "/my-research", label: "My Research" },
+        { href: "/heritage-book-preview", label: "Heritage Book" },
+        { href: "/pricing", label: "Pricing" },
+      ],
+    },
+    {
+      name: "PromptPro Academy",
+      icon: GraduationCap,
+      color: "text-blue-600",
+      bgColor: "bg-blue-600",
+      links: [
+        { href: "/academy", label: "Academy Home" },
+        { href: "/learn-prompt-engineering", label: "Lessons" },
+        { href: "/prompt-library", label: "Prompt Library" },
+        { href: "/academy-forum", label: "Community" },
+      ],
+    },
+    {
+      name: "Sacred Latin",
+      icon: BookOpen,
+      color: "text-purple-700",
+      bgColor: "bg-purple-700",
+      links: [
+        { href: "/latin-course", label: "Latin Course" },
+      ],
+    },
   ];
 
   return (
@@ -22,58 +56,93 @@ export function Navbar() {
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <Link 
           href="/"
-          className="flex items-center gap-2 font-serif text-xl font-bold text-primary hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 font-serif text-xl font-bold text-[#8B1538] hover:opacity-90 transition-opacity"
+          data-testid="link-home-logo"
         >
-          <Dna className="h-6 w-6 text-accent" />
+          <Dna className="h-6 w-6 text-orange-500" />
           <span>WhoamI</span>
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6">
-          {navItems.map((item) => (
-            <Link 
-              key={item.href} 
-              href={item.href}
-              className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-1 ${
-                location === item.href
-                  ? "text-primary font-bold"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {item.label}
-              {(item as any).isNew && <Badge variant="secondary" className="text-[10px] px-1 py-0 h-4 bg-accent text-white">New</Badge>}
-            </Link>
+        <div className="hidden md:flex items-center gap-2">
+          {businesses.map((business) => (
+            <DropdownMenu key={business.name}>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className={`flex items-center gap-1 ${business.color} hover:bg-gray-100`}
+                  data-testid={`dropdown-${business.name.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <business.icon className="h-4 w-4" />
+                  <span className="text-sm font-medium">{business.name}</span>
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-48">
+                {business.links.map((link) => (
+                  <DropdownMenuItem key={link.href} asChild>
+                    <Link 
+                      href={link.href}
+                      className={`w-full cursor-pointer ${location === link.href ? 'font-bold' : ''}`}
+                      data-testid={`link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                    >
+                      {link.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           ))}
-          <Button variant="default" className="bg-primary hover:bg-primary/90 text-white shadow-md">
-            Get Started
-          </Button>
+          <Link href="/contact">
+            <Button 
+              variant="outline" 
+              size="sm"
+              data-testid="link-contact"
+            >
+              Contact
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Nav */}
         <div className="md:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" data-testid="button-mobile-menu">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="w-80">
               <div className="flex flex-col gap-6 mt-6">
-                {navItems.map((item) => (
-                  <Link 
-                    key={item.href} 
-                    href={item.href}
-                    className={`flex items-center gap-2 text-lg font-medium ${
-                      location === item.href ? "text-primary" : "text-muted-foreground"
-                    }`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    {item.label}
-                  </Link>
+                {businesses.map((business) => (
+                  <div key={business.name} className="space-y-2">
+                    <div className={`flex items-center gap-2 ${business.color} font-semibold text-lg border-b pb-2`}>
+                      <business.icon className="h-5 w-5" />
+                      {business.name}
+                    </div>
+                    <div className="pl-4 space-y-2">
+                      {business.links.map((link) => (
+                        <Link 
+                          key={link.href} 
+                          href={link.href}
+                          className={`block text-base ${
+                            location === link.href ? business.color + " font-medium" : "text-muted-foreground"
+                          }`}
+                          onClick={() => setIsOpen(false)}
+                          data-testid={`mobile-link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 ))}
-                <Button className="w-full bg-accent hover:bg-accent/90">Get Started</Button>
+                <Link href="/contact" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full" variant="outline" data-testid="mobile-link-contact">
+                    Contact Us
+                  </Button>
+                </Link>
               </div>
             </SheetContent>
           </Sheet>
