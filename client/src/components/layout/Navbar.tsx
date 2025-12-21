@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
   const businesses = [
@@ -51,6 +51,10 @@ export function Navbar() {
     },
   ];
 
+  const handleNavClick = (href: string) => {
+    setLocation(href);
+  };
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
@@ -65,34 +69,36 @@ export function Navbar() {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-2">
-          {businesses.map((business) => (
-            <DropdownMenu key={business.name}>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className={`flex items-center gap-1 ${business.color} hover:bg-gray-100`}
-                  data-testid={`dropdown-${business.name.toLowerCase().replace(/\s+/g, '-')}`}
-                >
-                  <business.icon className="h-4 w-4" />
-                  <span className="text-sm font-medium">{business.name}</span>
-                  <ChevronDown className="h-3 w-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="w-48">
-                {business.links.map((link) => (
-                  <DropdownMenuItem key={link.href} asChild>
-                    <Link 
-                      href={link.href}
-                      className={`w-full cursor-pointer ${location === link.href ? 'font-bold' : ''}`}
+          {businesses.map((business) => {
+            const IconComponent = business.icon;
+            return (
+              <DropdownMenu key={business.name}>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className={`flex items-center gap-1 ${business.color} hover:bg-gray-100`}
+                    data-testid={`dropdown-${business.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    <IconComponent className="h-4 w-4" />
+                    <span className="text-sm font-medium">{business.name}</span>
+                    <ChevronDown className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-48">
+                  {business.links.map((link) => (
+                    <DropdownMenuItem 
+                      key={link.href}
+                      onClick={() => handleNavClick(link.href)}
+                      className={`cursor-pointer ${location === link.href ? 'font-bold' : ''}`}
                       data-testid={`link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
                     >
                       {link.label}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ))}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          })}
           <Link href="/contact">
             <Button 
               variant="outline" 
@@ -115,29 +121,32 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="right" className="w-80">
               <div className="flex flex-col gap-6 mt-6">
-                {businesses.map((business) => (
-                  <div key={business.name} className="space-y-2">
-                    <div className={`flex items-center gap-2 ${business.color} font-semibold text-lg border-b pb-2`}>
-                      <business.icon className="h-5 w-5" />
-                      {business.name}
+                {businesses.map((business) => {
+                  const IconComponent = business.icon;
+                  return (
+                    <div key={business.name} className="space-y-2">
+                      <div className={`flex items-center gap-2 ${business.color} font-semibold text-lg border-b pb-2`}>
+                        <IconComponent className="h-5 w-5" />
+                        {business.name}
+                      </div>
+                      <div className="pl-4 space-y-2">
+                        {business.links.map((link) => (
+                          <Link 
+                            key={link.href} 
+                            href={link.href}
+                            className={`block text-base ${
+                              location === link.href ? business.color + " font-medium" : "text-muted-foreground"
+                            }`}
+                            onClick={() => setIsOpen(false)}
+                            data-testid={`mobile-link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                          >
+                            {link.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                    <div className="pl-4 space-y-2">
-                      {business.links.map((link) => (
-                        <Link 
-                          key={link.href} 
-                          href={link.href}
-                          className={`block text-base ${
-                            location === link.href ? business.color + " font-medium" : "text-muted-foreground"
-                          }`}
-                          onClick={() => setIsOpen(false)}
-                          data-testid={`mobile-link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <Link href="/contact" onClick={() => setIsOpen(false)}>
                   <Button className="w-full" variant="outline" data-testid="mobile-link-contact">
                     Contact Us
