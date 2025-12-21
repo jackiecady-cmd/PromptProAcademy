@@ -4,12 +4,18 @@ import {
   users,
   orders,
   dnaReports,
+  familyMembers,
+  dnaFindings,
   type User,
   type InsertUser,
   type Order,
   type InsertOrder,
   type DnaReport,
   type InsertDnaReport,
+  type FamilyMember,
+  type InsertFamilyMember,
+  type DnaFinding,
+  type InsertDnaFinding,
 } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
@@ -33,6 +39,17 @@ export interface IStorage {
   getDnaReport(id: string): Promise<DnaReport | undefined>;
   getReportsByUserId(userId: string): Promise<DnaReport[]>;
   createDnaReport(report: InsertDnaReport): Promise<DnaReport>;
+
+  // Family Tree
+  getFamilyMembersByEmail(email: string): Promise<FamilyMember[]>;
+  createFamilyMember(member: InsertFamilyMember): Promise<FamilyMember>;
+  updateFamilyMember(id: string, member: Partial<InsertFamilyMember>): Promise<FamilyMember | undefined>;
+  deleteFamilyMember(id: string): Promise<void>;
+
+  // DNA Findings
+  getDnaFindingsByEmail(email: string): Promise<DnaFinding[]>;
+  createDnaFinding(finding: InsertDnaFinding): Promise<DnaFinding>;
+  deleteDnaFinding(id: string): Promise<void>;
 }
 
 class DatabaseStorage implements IStorage {
@@ -114,6 +131,39 @@ class DatabaseStorage implements IStorage {
   async createDnaReport(report: InsertDnaReport): Promise<DnaReport> {
     const result = await this.db.insert(dnaReports).values(report).returning();
     return result[0];
+  }
+
+  // Family Tree
+  async getFamilyMembersByEmail(email: string): Promise<FamilyMember[]> {
+    return await this.db.select().from(familyMembers).where(eq(familyMembers.email, email)).orderBy(familyMembers.createdAt);
+  }
+
+  async createFamilyMember(member: InsertFamilyMember): Promise<FamilyMember> {
+    const result = await this.db.insert(familyMembers).values(member).returning();
+    return result[0];
+  }
+
+  async updateFamilyMember(id: string, member: Partial<InsertFamilyMember>): Promise<FamilyMember | undefined> {
+    const result = await this.db.update(familyMembers).set(member).where(eq(familyMembers.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteFamilyMember(id: string): Promise<void> {
+    await this.db.delete(familyMembers).where(eq(familyMembers.id, id));
+  }
+
+  // DNA Findings
+  async getDnaFindingsByEmail(email: string): Promise<DnaFinding[]> {
+    return await this.db.select().from(dnaFindings).where(eq(dnaFindings.email, email)).orderBy(desc(dnaFindings.createdAt));
+  }
+
+  async createDnaFinding(finding: InsertDnaFinding): Promise<DnaFinding> {
+    const result = await this.db.insert(dnaFindings).values(finding).returning();
+    return result[0];
+  }
+
+  async deleteDnaFinding(id: string): Promise<void> {
+    await this.db.delete(dnaFindings).where(eq(dnaFindings.id, id));
   }
 }
 

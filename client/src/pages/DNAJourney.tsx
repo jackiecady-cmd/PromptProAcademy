@@ -571,6 +571,22 @@ Ready? Let's start! 👇`
               </Card>
             )}
 
+            {/* My Research CTA */}
+            <Card className="bg-gradient-to-br from-amber-100 to-orange-100 border-amber-300">
+              <CardContent className="py-6 text-center">
+                <FileText className="h-8 w-8 mx-auto mb-2 text-[#7D0A24]" />
+                <h3 className="font-bold mb-1 text-[#7D0A24]">Save Permanently</h3>
+                <p className="text-xs text-muted-foreground mb-3">
+                  Save family tree & DNA findings to your account
+                </p>
+                <Link href="/my-research">
+                  <Button variant="outline" className="w-full border-[#7D0A24] text-[#7D0A24]">
+                    Go to My Research
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
             {/* Heritage Book CTA */}
             {currentStep === 6 && (
               <Card className="bg-gradient-to-br from-[#7D0A24] to-[#9B1B30] text-white">

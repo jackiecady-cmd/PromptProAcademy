@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertOrderSchema } from "@shared/schema";
+import { insertUserSchema, insertOrderSchema, insertFamilyMemberSchema, insertDnaFindingSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
 import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getDNAGuideResponse } from "./chatbot";
@@ -328,6 +328,103 @@ export async function registerRoutes(
     } catch (error: any) {
       console.error("Subscription error:", error);
       res.status(400).json({ error: error.message });
+    }
+  });
+
+  // ========== Family Tree API ==========
+  
+  // Get family members
+  app.get("/api/family/:email", async (req, res) => {
+    try {
+      const { email } = req.params;
+      const members = await storage.getFamilyMembersByEmail(decodeURIComponent(email));
+      res.json(members);
+    } catch (error: any) {
+      console.error("Get family error:", error);
+      res.status(500).json({ error: "Failed to get family members" });
+    }
+  });
+
+  // Add family member
+  app.post("/api/family", async (req, res) => {
+    try {
+      const data = insertFamilyMemberSchema.parse(req.body);
+      const member = await storage.createFamilyMember(data);
+      res.json(member);
+    } catch (error: any) {
+      console.error("Add family member error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid data" });
+      }
+      res.status(500).json({ error: "Failed to add family member" });
+    }
+  });
+
+  // Update family member
+  app.put("/api/family/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const member = await storage.updateFamilyMember(id, req.body);
+      if (!member) {
+        return res.status(404).json({ error: "Member not found" });
+      }
+      res.json(member);
+    } catch (error: any) {
+      console.error("Update family member error:", error);
+      res.status(500).json({ error: "Failed to update family member" });
+    }
+  });
+
+  // Delete family member
+  app.delete("/api/family/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteFamilyMember(id);
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Delete family member error:", error);
+      res.status(500).json({ error: "Failed to delete family member" });
+    }
+  });
+
+  // ========== DNA Findings API ==========
+
+  // Get findings
+  app.get("/api/findings/:email", async (req, res) => {
+    try {
+      const { email } = req.params;
+      const findings = await storage.getDnaFindingsByEmail(decodeURIComponent(email));
+      res.json(findings);
+    } catch (error: any) {
+      console.error("Get findings error:", error);
+      res.status(500).json({ error: "Failed to get findings" });
+    }
+  });
+
+  // Add finding
+  app.post("/api/findings", async (req, res) => {
+    try {
+      const data = insertDnaFindingSchema.parse(req.body);
+      const finding = await storage.createDnaFinding(data);
+      res.json(finding);
+    } catch (error: any) {
+      console.error("Add finding error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid data" });
+      }
+      res.status(500).json({ error: "Failed to add finding" });
+    }
+  });
+
+  // Delete finding
+  app.delete("/api/findings/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteDnaFinding(id);
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Delete finding error:", error);
+      res.status(500).json({ error: "Failed to delete finding" });
     }
   });
 
