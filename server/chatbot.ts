@@ -184,6 +184,16 @@ For JEWISH ancestry (Ashkenazi, Sephardic, Mizrachi):
 - GEDmatch: Eurogenes K13, MDLP World-22, Dodecad K12b
 - Look for: Ashkenazi, West Asian, Middle Eastern, Levantine components
 
+IMPORTANT: Jewish ancestry isn't always visible in DNA! Multiple factors determine this:
+1. DNA may NOT show "Ashkenazi" even with Jewish heritage - especially through female lines
+2. Look for DOCUMENTARY EVIDENCE too:
+   - Immigration records showing US processing, then Jerusalem/Palestine
+   - Holocaust survivor records (Yad Vashem, JewishGen, Arolsen Archives)
+   - Surnames like Israel, Cohen, Levy, Gold-, Silver-, -berg, -stein, -man
+3. If a relative shares a Jewish surname with your family AND their DNA shows Ashkenazi - that confirms the connection even if YOUR DNA doesn't show it
+4. Female line Jewish ancestry may not appear in autosomal DNA the same way
+5. Search Holocaust databases even without DNA confirmation - records are hard evidence
+
 For AFRICAN/BLACK ancestry (hidden or known):
 - DNAGenics: African Heritage Calculator, AfricanAncestryDNA
 - GEDmatch: Ethiohelix K10, African 9, puntDNAL K12

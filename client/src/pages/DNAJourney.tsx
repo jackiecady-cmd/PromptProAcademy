@@ -183,18 +183,33 @@ The calculators might show:
 - "3% Native American" - indigenous ancestry
 - Specific regions like "Jerusalem/Palestine" in historical records
 
-**Step 4: Connect the clues**
+**IMPORTANT: DNA isn't everything!**
+Jewish ancestry may NOT show in your DNA even if you have it:
+- Female line ancestry doesn't always appear the same way
+- If a relative (like a half-sibling) with the same surname shows Ashkenazi, that confirms YOUR connection too
+- Look for surnames like Israel, Cohen, Levy, Gold-, Silver-, -berg, -stein
+
+**Step 4: Search Holocaust Records (even without DNA proof)**
+Documentary evidence is just as powerful as DNA:
+- **Yad Vashem** - Holocaust victims database (yadvashem.org)
+- **JewishGen** - Jewish genealogy records (jewishgen.org)
+- **Arolsen Archives** - Nazi persecution records (arolsen-archives.org)
+- **FamilySearch** - Look for records showing "Jerusalem, Palestine" or European processing
+
+Example: If you find a family member processed in the US, then processed again in Jerusalem/Palestine in the 1940s - that's evidence of Jewish heritage regardless of what your DNA shows.
+
+**Step 5: Connect the clues**
 Look at your family tree AND your DNA results together:
-- An ancestor from "Jerusalem, Palestine" in the 1940s? Combined with Jewish DNA = confirmation
-- A town named after Native American tribes where you were born? Look for those connections
+- An ancestor from "Jerusalem, Palestine" in the 1940s? That's evidence even WITHOUT Jewish DNA showing
+- A relative with a Jewish surname whose DNA shows Ashkenazi? That confirms your family line
 - Black cousins appearing in your DNA matches? Your family may have hidden that heritage
 
-**Step 5: Message your matches**
+**Step 6: Message your matches**
 - Find someone with a similar surname
 - Click "Contact" or "Message"  
 - Say: "Hi! I see we share DNA. Are you related to [Your Last Name]? I'm researching my family history."
 
-**Step 6: Document EVERYTHING**
+**Step 7: Document EVERYTHING**
 - Every calculator result
 - Every interesting match
 - Every clue or story
@@ -207,6 +222,9 @@ Don't just tell AI what to do - work WITH it. Share details, ask follow-up quest
     links: [
       { label: "DNAGenics.com - Admixture Calculators", url: "https://www.dnagenics.com" },
       { label: "GEDmatch.com - More calculators", url: "https://www.gedmatch.com" },
+      { label: "Yad Vashem - Holocaust Database", url: "https://www.yadvashem.org/collections/database-of-names.html" },
+      { label: "JewishGen - Jewish Genealogy", url: "https://www.jewishgen.org" },
+      { label: "Arolsen Archives - Nazi Records", url: "https://arolsen-archives.org" },
       { label: "PromptPro Academy - Learn to work with AI", url: "/academy" }
     ]
   },
