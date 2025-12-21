@@ -94,50 +94,116 @@ const journeySteps = [
     title: "Upload Your Results", 
     description: "Share DNA across multiple sites",
     icon: Globe,
-    guidance: `Once you get your DNA results back (4-6 weeks), you can upload them to other sites for FREE to get more matches!
+    guidance: `Great! Your DNA results are in. Now here's the secret - you can take that data and use it on OTHER free websites to find MORE matches and more information!
 
-**What to do:**
-1. Go to your DNA results on the site where you tested
-2. Look for "Download raw DNA" or "Download results" 
-3. Save the file to your computer (it's usually a .zip file - don't open it!)
-4. Go to **GEDmatch.com** (FREE site that compares DNA from all companies)
-5. Click "Upload your DNA"
-6. Select your downloaded file and follow steps
+**Step 1: Find your DNA download (this is your "raw DNA")**
 
-**Then repeat for:**
-- **MyHeritage** (if you didn't test there) 
-- **FamilyTreeDNA** - good for finding very distant cousins
-- **DNAPainter** - helps you visualize your chromosome matches
+If you tested with **Ancestry.com:**
+1. Log in to Ancestry.com
+2. Click "DNA" at the top
+3. Click "Settings" 
+4. Scroll down to "Download your DNA"
+5. Click the button and wait a few seconds
+6. You'll get a file called something like "AncestryDNA_results.zip" - SAVE THIS FILE to your computer
+7. DON'T OPEN THE ZIP FILE - leave it as is!
 
-**Confused about "raw DNA data"?** Ask ChatGPT: "What is raw DNA data and how do I download it?" or "How do I upload DNA results from Ancestry to GEDmatch?"`,
+If you tested with **23andMe:**
+1. Log in to 23andMe
+2. Click your name (top right)
+3. Go to "Settings"
+4. Scroll down to "Download your raw data"
+5. You may need to click through a warning (that's normal)
+6. Save the .zip file to your computer
+7. DON'T OPEN IT!
+
+**Step 2: Upload to GEDmatch (this is where the magic happens)**
+
+GEDmatch.com is a FREE website where people from ALL companies (Ancestry, 23andMe, MyHeritage) upload their DNA so they can find matches across all platforms.
+
+1. Go to **GEDmatch.com**
+2. Sign up for a free account (top left "register")
+3. Click "Upload DNA"
+4. Choose your file (the .zip file you just downloaded)
+5. Follow the steps - it will process your DNA
+6. Once done, you can see your matches!
+
+**Why do this?** 
+- Some people only tested on one company but your relative tested on another
+- GEDmatch has calculators that show you more details about your ethnicity
+- You find cousins you wouldn't find on just one site
+
+**Step 3: Optional - Upload to more sites (if you want more matches)**
+- **FamilyTreeDNA** - Good for finding very distant cousins. Go to familytreedna.com, upload your zip file (free)
+- **MyHeritage** - Another option if you want. Upload at myheritage.com
+
+**Need help?** Ask ChatGPT: "I have a .zip file from Ancestry/23andMe - what do I do with it?" or "What does 'raw DNA' mean?"`,
     links: [
-      { label: "GEDmatch.com", url: "https://www.gedmatch.com" },
-      { label: "FamilyTreeDNA", url: "https://www.familytreedna.com" },
-      { label: "DNAPainter", url: "https://www.dnapainter.com" },
-      { label: "MyHeritage", url: "https://www.myheritage.com/dna" }
+      { label: "GEDmatch.com - Upload here!", url: "https://www.gedmatch.com" },
+      { label: "Ancestry.com - Get your DNA download", url: "https://www.ancestry.com" },
+      { label: "23andMe - Get your DNA download", url: "https://www.23andme.com" },
+      { label: "FamilyTreeDNA - Upload option #2", url: "https://www.familytreedna.com" },
+      { label: "MyHeritage - Upload option #3", url: "https://www.myheritage.com" }
     ]
   },
   { 
     id: 4, 
     title: "Analyze & Discover", 
-    description: "Use tools to find connections",
+    description: "Find connections & understand your results",
     icon: Sparkles,
-    guidance: `Now you have your DNA on multiple sites. Here's where the magic happens.
+    guidance: `Now your DNA is uploaded. Let's find your cousins and learn about your ancestry!
 
-**What to explore:**
-1. **DNA Matches** - Look for "DNA Matches" on each site. These are real people who share your DNA
-2. **Message them** - Say "Hi, I think we're related to the [Your Last Name] family, are you?" 
-3. **Use Calculators:**
-   - GEDmatch has "One-to-One Compare" (free!) - see exactly how you match someone
-   - "Ethnic Calculators" show what percentage of your DNA comes from different regions
-4. **Read the Hints** - GEDmatch and Ancestry suggest matches to your tree
+**What you'll see on GEDmatch:**
 
-**Stuck understanding a match?** Ask ChatGPT: "I found a DNA match - how do I figure out if they're my cousin?" or "What does cM (centimorgans) mean?"
+1. **DNA Matches** - These are real people who share your DNA
+   - The top matches are closest relatives
+   - Even distant matches can tell you about your family history
 
-**Finding your story:** Start messaging matches. Someone's great-grandmother might be YOUR great-grandmother. That's where the real discoveries happen!`,
+2. **Let AI help you figure out which calculators to use**
+
+This is the SECRET SAUCE! Ask ChatGPT something like:
+
+"I just uploaded my DNA to GEDmatch. I'm interested in learning more about:
+- My ancestors being from [place names]
+- My family having [surnames you know]
+- My ancestry being [like mulatto/mixed heritage/Irish/etc.]
+
+Which GEDmatch calculators should I try to better understand my heritage?"
+
+ChatGPT will recommend specific calculators based on YOUR situation. For example, if you have surnames indicating mixed heritage, it might say:
+- "Try the African Calculator to see African ancestry %"
+- "Try the European Calculator for Irish/European heritage"
+- "Try the MDLP calculator which is good for mixed ancestry"
+
+3. **Use those specific calculators**
+   - Go back to GEDmatch (you're logged in)
+   - Look for "Calculators" or "Tools"
+   - Pick the ones ChatGPT recommended
+   - Upload your raw DNA file
+   - See your results!
+
+4. **Message your matches**
+   - Find someone with a similar surname to yours
+   - Click "Contact" or "Message"
+   - Say: "Hi! I see we share DNA. Are you related to [Your Last Name]? I'm researching my family history and would love to know how we're connected."
+   - They might tell you about shared ancestors!
+
+5. **Document what you find**
+   - Interesting match? Save it!
+   - Found an ancestor? Save it!
+   - Got a new clue? Save it!
+   - All goes in your Heritage Book
+
+**What's "cM" or "centimorgans"?** Ask ChatGPT: "What does centimorgan mean? How close is a DNA match if we share X centiMorgans?"
+
+**Key discoveries to look for:**
+- "I have a DNA match named Susan Smith who shares my great-grandfather"
+- "The calculators show I'm 15% West African heritage"
+- "A match's mother was from Ireland - maybe that's where my ancestors came from too"
+
+This is where YOUR unique family story emerges!`,
     links: [
-      { label: "GEDmatch Tools Guide", url: "https://www.gedmatch.com/guide.php" },
-      { label: "Understanding DNA Matches", url: "https://help.ancestry.com/s/article/DNA-Match-Help" }
+      { label: "GEDmatch.com - Where to find calculators", url: "https://www.gedmatch.com" },
+      { label: "GEDmatch FAQ", url: "https://www.gedmatch.com/faq.php" }
     ]
   },
   { 
