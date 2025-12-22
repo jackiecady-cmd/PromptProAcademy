@@ -187,3 +187,98 @@ export type FamilyMember = typeof familyMembers.$inferSelect;
 
 export type InsertDnaFinding = z.infer<typeof insertDnaFindingSchema>;
 export type DnaFinding = typeof dnaFindings.$inferSelect;
+
+// Vibe Code Academy - Semesters/Courses
+export const vibeCodeSemesters = pgTable("vibe_code_semesters", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  semesterNumber: integer("semester_number").notNull(),
+  price: integer("price").notNull(), // in cents
+  isActive: boolean("is_active").default(true),
+});
+
+// Vibe Code Academy - Lessons within semesters
+export const vibeCodeLessons = pgTable("vibe_code_lessons", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  semesterId: varchar("semester_id").references(() => vibeCodeSemesters.id).notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  content: text("content").notNull(),
+  lessonOrder: integer("lesson_order").notNull(),
+  videoUrl: text("video_url"),
+  hasQuiz: boolean("has_quiz").default(false),
+  quizQuestions: text("quiz_questions"), // JSON stringified
+});
+
+// Vibe Code Academy - Student enrollment and progress
+export const vibeCodeEnrollments = pgTable("vibe_code_enrollments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull(),
+  semesterId: varchar("semester_id").references(() => vibeCodeSemesters.id).notNull(),
+  status: text("status").notNull(), // 'active', 'completed', 'paused'
+  enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+  stripePaymentId: text("stripe_payment_id"),
+});
+
+// Vibe Code Academy - Lesson progress
+export const vibeCodeProgress = pgTable("vibe_code_progress", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull(),
+  lessonId: varchar("lesson_id").references(() => vibeCodeLessons.id).notNull(),
+  completed: boolean("completed").default(false),
+  quizScore: integer("quiz_score"),
+  completedAt: timestamp("completed_at"),
+});
+
+// Vibe Code Academy - Certificates
+export const vibeCodeCertificates = pgTable("vibe_code_certificates", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull(),
+  semesterId: varchar("semester_id").references(() => vibeCodeSemesters.id).notNull(),
+  certificateNumber: text("certificate_number").notNull(),
+  issuedAt: timestamp("issued_at").defaultNow().notNull(),
+  studentName: text("student_name").notNull(),
+});
+
+// Insert Schemas for Vibe Code Academy
+export const insertVibeCodeSemesterSchema = createInsertSchema(vibeCodeSemesters).omit({
+  id: true,
+});
+
+export const insertVibeCodeLessonSchema = createInsertSchema(vibeCodeLessons).omit({
+  id: true,
+});
+
+export const insertVibeCodeEnrollmentSchema = createInsertSchema(vibeCodeEnrollments).omit({
+  id: true,
+  enrolledAt: true,
+  completedAt: true,
+});
+
+export const insertVibeCodeProgressSchema = createInsertSchema(vibeCodeProgress).omit({
+  id: true,
+  completedAt: true,
+});
+
+export const insertVibeCodeCertificateSchema = createInsertSchema(vibeCodeCertificates).omit({
+  id: true,
+  issuedAt: true,
+});
+
+// Types for Vibe Code Academy
+export type InsertVibeCodeSemester = z.infer<typeof insertVibeCodeSemesterSchema>;
+export type VibeCodeSemester = typeof vibeCodeSemesters.$inferSelect;
+
+export type InsertVibeCodeLesson = z.infer<typeof insertVibeCodeLessonSchema>;
+export type VibeCodeLesson = typeof vibeCodeLessons.$inferSelect;
+
+export type InsertVibeCodeEnrollment = z.infer<typeof insertVibeCodeEnrollmentSchema>;
+export type VibeCodeEnrollment = typeof vibeCodeEnrollments.$inferSelect;
+
+export type InsertVibeCodeProgress = z.infer<typeof insertVibeCodeProgressSchema>;
+export type VibeCodeProgress = typeof vibeCodeProgress.$inferSelect;
+
+export type InsertVibeCodeCertificate = z.infer<typeof insertVibeCodeCertificateSchema>;
+export type VibeCodeCertificate = typeof vibeCodeCertificates.$inferSelect;
