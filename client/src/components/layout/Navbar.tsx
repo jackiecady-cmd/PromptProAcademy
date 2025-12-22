@@ -36,6 +36,7 @@ export function Navbar() {
       links: [
         { href: "/academy", label: "Academy Home" },
         { href: "/learn", label: "Lessons" },
+        { href: "/academy/tutor", label: "AI Tutor" },
         { href: "/prompts", label: "Prompt Library" },
         { href: "/academy/forum", label: "Community" },
       ],
