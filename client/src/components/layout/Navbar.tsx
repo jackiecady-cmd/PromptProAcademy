@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Dna, GraduationCap, BookOpen, Menu, ChevronDown, Code } from "lucide-react";
+import { Dna, GraduationCap, BookOpen, Menu, ChevronDown, Code, PenTool } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -60,6 +60,19 @@ export function Navbar() {
         { href: "/vibe-code/curriculum", label: "Curriculum" },
         { href: "/vibe-code/tutor", label: "AI Tutor" },
         { href: "/vibe-code/enroll", label: "Enroll Now" },
+      ],
+    },
+    {
+      name: "My Side",
+      icon: PenTool,
+      color: "text-amber-600",
+      bgColor: "bg-amber-600",
+      links: [
+        { href: "/my-side", label: "Home" },
+        { href: "/my-side/archetypes", label: "Archetypes" },
+        { href: "/my-side/stories", label: "Read Stories" },
+        { href: "/my-side/write", label: "Write Your Story" },
+        { href: "/my-side/subscribe", label: "Subscribe" },
       ],
     },
   ];

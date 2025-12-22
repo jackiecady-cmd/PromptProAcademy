@@ -282,3 +282,103 @@ export type VibeCodeProgress = typeof vibeCodeProgress.$inferSelect;
 
 export type InsertVibeCodeCertificate = z.infer<typeof insertVibeCodeCertificateSchema>;
 export type VibeCodeCertificate = typeof vibeCodeCertificates.$inferSelect;
+
+// My Side of the Story - Archetypes (character templates)
+export const storyArchetypes = pgTable("story_archetypes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  imageUrl: text("image_url"),
+  category: text("category").notNull(), // 'protagonist', 'antagonist', 'mentor', 'shadow', etc.
+  traits: text("traits"), // JSON array of personality traits
+  colorTheme: text("color_theme"), // hex color for the archetype
+});
+
+// My Side of the Story - Writer profiles (anonymous)
+export const storyWriters = pgTable("story_writers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull().unique(),
+  penName: text("pen_name").notNull(),
+  bio: text("bio"),
+  totalEarnings: integer("total_earnings").default(0), // in cents
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// My Side of the Story - Stories
+export const stories = pgTable("stories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  writerId: varchar("writer_id").references(() => storyWriters.id).notNull(),
+  title: text("title").notNull(),
+  synopsis: text("synopsis"),
+  content: text("content").notNull(), // JSON of story panels/pages
+  archetypeIds: text("archetype_ids"), // JSON array of archetype IDs used
+  status: text("status").notNull(), // 'draft', 'submitted', 'published', 'archived'
+  isAnonymous: boolean("is_anonymous").default(true),
+  contentWarnings: text("content_warnings"), // JSON array of warnings
+  viewCount: integer("view_count").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  publishedAt: timestamp("published_at"),
+});
+
+// My Side of the Story - Reader subscriptions
+export const storySubscriptions = pgTable("story_subscriptions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull(),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  stripeCustomerId: text("stripe_customer_id"),
+  status: text("status").notNull(), // 'active', 'canceled', 'past_due'
+  currentPeriodEnd: timestamp("current_period_end"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// My Side of the Story - Story reads (for tracking/payments to writers)
+export const storyReads = pgTable("story_reads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  storyId: varchar("story_id").references(() => stories.id).notNull(),
+  readerEmail: text("reader_email").notNull(),
+  readAt: timestamp("read_at").defaultNow().notNull(),
+});
+
+// Insert Schemas for My Side of the Story
+export const insertStoryArchetypeSchema = createInsertSchema(storyArchetypes).omit({
+  id: true,
+});
+
+export const insertStoryWriterSchema = createInsertSchema(storyWriters).omit({
+  id: true,
+  totalEarnings: true,
+  createdAt: true,
+});
+
+export const insertStorySchema = createInsertSchema(stories).omit({
+  id: true,
+  viewCount: true,
+  createdAt: true,
+  publishedAt: true,
+});
+
+export const insertStorySubscriptionSchema = createInsertSchema(storySubscriptions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertStoryReadSchema = createInsertSchema(storyReads).omit({
+  id: true,
+  readAt: true,
+});
+
+// Types for My Side of the Story
+export type InsertStoryArchetype = z.infer<typeof insertStoryArchetypeSchema>;
+export type StoryArchetype = typeof storyArchetypes.$inferSelect;
+
+export type InsertStoryWriter = z.infer<typeof insertStoryWriterSchema>;
+export type StoryWriter = typeof storyWriters.$inferSelect;
+
+export type InsertStory = z.infer<typeof insertStorySchema>;
+export type Story = typeof stories.$inferSelect;
+
+export type InsertStorySubscription = z.infer<typeof insertStorySubscriptionSchema>;
+export type StorySubscription = typeof storySubscriptions.$inferSelect;
+
+export type InsertStoryRead = z.infer<typeof insertStoryReadSchema>;
+export type StoryRead = typeof storyReads.$inferSelect;
