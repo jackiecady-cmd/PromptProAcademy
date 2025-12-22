@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { insertUserSchema, insertOrderSchema, insertFamilyMemberSchema, insertDnaFindingSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
-import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getDNAGuideResponse } from "./chatbot";
+import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getDNAGuideResponse, getVibeCodeTutorResponse } from "./chatbot";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -447,6 +447,110 @@ export async function registerRoutes(
     } catch (error: any) {
       console.error("Delete finding error:", error);
       res.status(500).json({ error: "Failed to delete finding" });
+    }
+  });
+
+  // Vibe Code Academy - AI Tutor
+  app.post("/api/vibe-code/tutor", async (req, res) => {
+    try {
+      const { message } = req.body;
+      if (!message) {
+        return res.status(400).json({ error: "Message is required" });
+      }
+
+      const response = await getVibeCodeTutorResponse(message);
+      res.json({ response });
+    } catch (error: any) {
+      console.error("Vibe Code tutor error:", error);
+      res.status(500).json({ error: "Failed to get tutor response" });
+    }
+  });
+
+  // Vibe Code Academy - Enrollment
+  app.post("/api/vibe-code/enroll", async (req, res) => {
+    try {
+      if (!stripe) {
+        return res.status(503).json({ error: "Payment service not configured" });
+      }
+
+      const { email, firstName, lastName, semesterId } = req.body;
+
+      const schema = z.object({
+        email: z.string().email(),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+        semesterId: z.string(),
+      });
+
+      const data = schema.parse({ email, firstName, lastName, semesterId });
+
+      // Create or get user
+      let user = await storage.getUserByEmail(data.email);
+      if (!user) {
+        user = await storage.createUser({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        });
+      }
+
+      // Price for semester 1
+      const amount = 29900; // $299
+
+      // Create order
+      const order = await storage.createOrder({
+        userId: user.id,
+        email: data.email,
+        productType: `vibe_code_${data.semesterId}`,
+        amount: amount,
+        status: "pending",
+      });
+
+      // Determine base URL
+      const baseUrl = process.env.REPLIT_DEPLOYMENT === "1"
+        ? `https://${process.env.REPLIT_DEV_DOMAIN || ''}`
+        : process.env.REPL_SLUG && process.env.REPL_OWNER 
+          ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
+          : `http://localhost:${process.env.PORT || 5000}`;
+
+      // Create Stripe checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Vibe Code Academy - Semester 1",
+                description: "Foundations of Vibe Coding - 8 week course with certificate",
+              },
+              unit_amount: amount,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "payment",
+        success_url: `${baseUrl}/vibe-code?success=true&enrolled=true`,
+        cancel_url: `${baseUrl}/vibe-code/enroll?canceled=true`,
+        customer_email: data.email,
+        metadata: {
+          orderId: order.id,
+          userId: user.id,
+          courseType: "vibe_code",
+          semesterId: data.semesterId,
+        },
+      });
+
+      // Update order with Stripe session ID
+      await storage.updateOrderStripeInfo(order.id, undefined, session.id);
+
+      res.json({ sessionId: session.id, url: session.url });
+    } catch (error: any) {
+      console.error("Vibe Code enrollment error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid input data" });
+      }
+      res.status(400).json({ error: error.message });
     }
   });
 

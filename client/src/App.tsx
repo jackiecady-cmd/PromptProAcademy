@@ -22,6 +22,10 @@ import LatinCourse from "@/pages/LatinCourse";
 import DNAJourney from "@/pages/DNAJourney";
 import MyResearch from "@/pages/MyResearch";
 import HeritageBookPreview from "@/pages/HeritageBookPreview";
+import VibeCodeAcademy from "@/pages/VibeCodeAcademy";
+import VibeCodeCurriculum from "@/pages/VibeCodeCurriculum";
+import VibeCodeEnroll from "@/pages/VibeCodeEnroll";
+import VibeCodeTutor from "@/pages/VibeCodeTutor";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -50,6 +54,10 @@ function Router() {
           <Route path="/my-book" component={HeritageBookPreview} />
           <Route path="/contact" component={Contact} />
           <Route path="/admin" component={AdminSettings} />
+          <Route path="/vibe-code" component={VibeCodeAcademy} />
+          <Route path="/vibe-code/curriculum" component={VibeCodeCurriculum} />
+          <Route path="/vibe-code/enroll" component={VibeCodeEnroll} />
+          <Route path="/vibe-code/tutor" component={VibeCodeTutor} />
           <Route component={NotFound} />
         </Switch>
       </main>
