@@ -53,31 +53,6 @@ export function Navbar() {
         { href: "/latin", label: "Latin Course" },
       ],
     },
-    {
-      name: "Vibe Code",
-      icon: Code,
-      color: "text-pink-600",
-      bgColor: "bg-pink-600",
-      links: [
-        { href: "/vibe-code", label: "Academy Home" },
-        { href: "/vibe-code/curriculum", label: "Curriculum" },
-        { href: "/vibe-code/tutor", label: "AI Tutor" },
-        { href: "/vibe-code/enroll", label: "Enroll Now" },
-      ],
-    },
-    {
-      name: "My Side",
-      icon: PenTool,
-      color: "text-amber-600",
-      bgColor: "bg-amber-600",
-      links: [
-        { href: "/my-side", label: "Home" },
-        { href: "/my-side/archetypes", label: "Archetypes" },
-        { href: "/my-side/stories", label: "Read Stories" },
-        { href: "/my-side/write", label: "Write Your Story" },
-        { href: "/my-side/subscribe", label: "Subscribe" },
-      ],
-    },
   ];
 
   const handleNavClick = (href: string) => {
