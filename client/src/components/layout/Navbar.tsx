@@ -85,31 +85,28 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-        <Link 
-          href="/"
-          className="flex items-center gap-2 font-serif text-xl font-bold text-[#8B1538] hover:opacity-90 transition-opacity"
-          data-testid="link-home-logo"
-        >
-          <Dna className="h-6 w-6 text-orange-500" />
-          <span>WhoamI</span>
-        </Link>
-
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-2">
+    <nav className="sticky top-0 z-50 w-full bg-white shadow-sm">
+      {/* Top bar with business tabs */}
+      <div className="border-b bg-gray-50">
+        <div className="container flex items-center justify-center gap-1 px-4 py-2 overflow-x-auto">
           {businesses.map((business) => {
             const IconComponent = business.icon;
+            const isActive = business.links.some(link => location === link.href);
             return (
               <DropdownMenu key={business.name}>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className={`flex items-center gap-1 ${business.color} hover:bg-gray-100`}
-                    data-testid={`dropdown-${business.name.toLowerCase().replace(/\s+/g, '-')}`}
+                    size="sm"
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-full transition-all ${
+                      isActive 
+                        ? `${business.bgColor} text-white hover:opacity-90` 
+                        : `${business.color} hover:bg-gray-200`
+                    }`}
+                    data-testid={`tab-${business.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     <IconComponent className="h-4 w-4" />
-                    <span className="text-sm font-medium">{business.name}</span>
+                    <span className="text-xs font-semibold whitespace-nowrap">{business.name}</span>
                     <ChevronDown className="h-3 w-3" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -128,6 +125,22 @@ export function Navbar() {
               </DropdownMenu>
             );
           })}
+        </div>
+      </div>
+      
+      {/* Main nav bar */}
+      <div className="container flex h-14 items-center justify-between px-4 md:px-6">
+        <Link 
+          href="/"
+          className="flex items-center gap-2 font-serif text-xl font-bold text-[#8B1538] hover:opacity-90 transition-opacity"
+          data-testid="link-home-logo"
+        >
+          <Dna className="h-6 w-6 text-orange-500" />
+          <span>WhoamI</span>
+        </Link>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-3">
           <Link href="/contact">
             <Button 
               variant="outline" 
