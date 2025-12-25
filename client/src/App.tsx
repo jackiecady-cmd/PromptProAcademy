@@ -22,15 +22,6 @@ import LatinCourse from "@/pages/LatinCourse";
 import DNAJourney from "@/pages/DNAJourney";
 import MyResearch from "@/pages/MyResearch";
 import HeritageBookPreview from "@/pages/HeritageBookPreview";
-import VibeCodeAcademy from "@/pages/VibeCodeAcademy";
-import VibeCodeCurriculum from "@/pages/VibeCodeCurriculum";
-import VibeCodeEnroll from "@/pages/VibeCodeEnroll";
-import VibeCodeTutor from "@/pages/VibeCodeTutor";
-import MySideHome from "@/pages/MySideHome";
-import MySideArchetypes from "@/pages/MySideArchetypes";
-import MySideStories from "@/pages/MySideStories";
-import MySideWrite from "@/pages/MySideWrite";
-import MySideSubscribe from "@/pages/MySideSubscribe";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -59,15 +50,6 @@ function Router() {
           <Route path="/my-book" component={HeritageBookPreview} />
           <Route path="/contact" component={Contact} />
           <Route path="/admin" component={AdminSettings} />
-          <Route path="/vibe-code" component={VibeCodeAcademy} />
-          <Route path="/vibe-code/curriculum" component={VibeCodeCurriculum} />
-          <Route path="/vibe-code/enroll" component={VibeCodeEnroll} />
-          <Route path="/vibe-code/tutor" component={VibeCodeTutor} />
-          <Route path="/my-side" component={MySideHome} />
-          <Route path="/my-side/archetypes" component={MySideArchetypes} />
-          <Route path="/my-side/stories" component={MySideStories} />
-          <Route path="/my-side/write" component={MySideWrite} />
-          <Route path="/my-side/subscribe" component={MySideSubscribe} />
           <Route component={NotFound} />
         </Switch>
       </main>
