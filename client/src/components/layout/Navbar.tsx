@@ -19,7 +19,8 @@ export function Navbar() {
 
   const businesses = [
     {
-      name: "DNA & Genealogy",
+      name: "DNA",
+      fullName: "DNA & Genealogy",
       icon: Dna,
       color: "text-[#8B1538]",
       bgColor: "bg-[#8B1538]",
@@ -32,7 +33,8 @@ export function Navbar() {
       ],
     },
     {
-      name: "PromptPro Academy",
+      name: "PromptPro",
+      fullName: "PromptPro Academy",
       icon: GraduationCap,
       color: "text-blue-600",
       bgColor: "bg-blue-600",
@@ -45,7 +47,8 @@ export function Navbar() {
       ],
     },
     {
-      name: "Sacred Latin",
+      name: "Latin",
+      fullName: "Sacred Latin",
       icon: BookOpen,
       color: "text-purple-700",
       bgColor: "bg-purple-700",
@@ -186,7 +189,7 @@ export function Navbar() {
                     <div key={business.name} className="space-y-2">
                       <div className={`flex items-center gap-2 ${business.color} font-semibold text-lg border-b pb-2`}>
                         <IconComponent className="h-5 w-5" />
-                        {business.name}
+                        {business.fullName}
                       </div>
                       <div className="pl-4 space-y-2">
                         {business.links.map((link) => (
