@@ -1,15 +1,20 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertOrderSchema, insertFamilyMemberSchema, insertDnaFindingSchema } from "@shared/schema";
+import { insertOrderSchema, insertFamilyMemberSchema, insertDnaFindingSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
 import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getDNAGuideResponse, getVibeCodeTutorResponse } from "./chatbot";
+import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  
+  // Set up Replit Auth
+  await setupAuth(app);
+  registerAuthRoutes(app);
   
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
   if (!stripeSecretKey) {

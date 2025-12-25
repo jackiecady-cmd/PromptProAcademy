@@ -3,13 +3,8 @@ import { pgTable, text, varchar, integer, timestamp, boolean, serial } from "dri
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: text("email").notNull().unique(),
-  firstName: text("first_name").notNull(),
-  lastName: text("last_name").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+import { users, sessions } from "./models/auth";
+export * from "./models/auth";
 
 export const orders = pgTable("orders", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -56,11 +51,6 @@ export const earnedBadges = pgTable("earned_badges", {
 });
 
 // Insert Schemas
-export const insertUserSchema = createInsertSchema(users).omit({
-  id: true,
-  createdAt: true,
-});
-
 export const insertOrderSchema = createInsertSchema(orders).omit({
   id: true,
   createdAt: true,
@@ -83,9 +73,6 @@ export const insertEarnedBadgeSchema = createInsertSchema(earnedBadges).omit({
 });
 
 // Types
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type Order = typeof orders.$inferSelect;
 

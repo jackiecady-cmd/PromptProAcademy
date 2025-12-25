@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Dna, GraduationCap, BookOpen, Menu, ChevronDown, Code, PenTool } from "lucide-react";
+import { Dna, GraduationCap, BookOpen, Menu, ChevronDown, Code, PenTool, LogIn, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -8,11 +8,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/use-auth";
 
 export function Navbar() {
   const [location, setLocation] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { user, isLoading, isAuthenticated } = useAuth();
 
   const businesses = [
     {
@@ -134,6 +137,48 @@ export function Navbar() {
               Contact
             </Button>
           </Link>
+          
+          {isLoading ? (
+            <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+          ) : isAuthenticated && user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="flex items-center gap-2" data-testid="button-user-menu">
+                  {user.profileImageUrl ? (
+                    <img src={user.profileImageUrl} alt="" className="w-6 h-6 rounded-full" />
+                  ) : (
+                    <User className="h-4 w-4" />
+                  )}
+                  <span className="text-sm">{user.firstName || 'Account'}</span>
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem className="text-muted-foreground text-sm">
+                  {user.email}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => window.location.href = '/api/logout'}
+                  className="cursor-pointer text-red-600"
+                  data-testid="button-logout"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Log Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button 
+              onClick={() => window.location.href = '/api/login'}
+              size="sm"
+              className="bg-[#8B1538] hover:bg-[#6d102c]"
+              data-testid="button-login"
+            >
+              <LogIn className="h-4 w-4 mr-2" />
+              Log In
+            </Button>
+          )}
         </div>
 
         {/* Mobile Nav */}
@@ -178,6 +223,42 @@ export function Navbar() {
                     Contact Us
                   </Button>
                 </Link>
+                
+                {isAuthenticated && user ? (
+                  <div className="pt-4 border-t">
+                    <div className="flex items-center gap-3 mb-3">
+                      {user.profileImageUrl ? (
+                        <img src={user.profileImageUrl} alt="" className="w-8 h-8 rounded-full" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                          <User className="h-4 w-4 text-gray-500" />
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-medium text-sm">{user.firstName} {user.lastName}</p>
+                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                      </div>
+                    </div>
+                    <Button 
+                      onClick={() => window.location.href = '/api/logout'}
+                      className="w-full" 
+                      variant="outline"
+                      data-testid="mobile-button-logout"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Log Out
+                    </Button>
+                  </div>
+                ) : (
+                  <Button 
+                    onClick={() => window.location.href = '/api/login'}
+                    className="w-full bg-[#8B1538] hover:bg-[#6d102c]"
+                    data-testid="mobile-button-login"
+                  >
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Log In
+                  </Button>
+                )}
               </div>
             </SheetContent>
           </Sheet>
