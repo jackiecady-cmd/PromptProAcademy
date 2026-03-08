@@ -117,6 +117,12 @@ export default function UploadDNA() {
               <p className="text-amber-200 text-lg mt-1">Upload your .zip file from any DNA testing provider</p>
             </div>
           </div>
+          <Link href="/dna-hub">
+            <Button variant="outline" size="sm" className="border-white/50 text-white hover:bg-white/20 mt-2" data-testid="link-back-hub">
+              <ArrowRight className="mr-1 h-3 w-3 rotate-180" />
+              Back to DNA Tools Hub
+            </Button>
+          </Link>
         </div>
       </div>
 

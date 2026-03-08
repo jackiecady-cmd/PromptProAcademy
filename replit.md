@@ -9,12 +9,11 @@ A multi-business platform with three live offerings:
 **Note:** Vibe Code Academy and My Side of the Story have been removed from this codebase - they will be built as a separate website.
 
 ## Recent Changes
+- DNA Tools Hub page (/dna-hub) — central dashboard connecting all internal tools and external DNA sites (GEDmatch, DNAGenics, FamilySearch, Ancestry, 23andMe, MyHeritage, FamilyTreeDNA, LivingDNA, plus historical records)
+- "Back to DNA Tools Hub" links on Upload DNA, DNA Journey, and My Research pages for easy navigation
 - Dedicated Upload DNA page (/upload-dna) — prominent hero CTA and nav link for raw DNA .zip uploads
 - FAQ section on Home page with 5 accordion Q&A items
 - First 20 users free promo ($0.00 checkout bypassing Stripe, with atomic DB transaction)
-- Removed Vibe Code Academy and My Side of the Story from this codebase (to be built as separate website)
-- Simplified navigation to show only 3 live businesses
-- Clean mobile-friendly top navigation with dropdown menus
 
 ## Live URL
 https://ancestry-canvas--jackiecady.replit.app/
@@ -24,7 +23,7 @@ https://ancestry-canvas--jackiecady.replit.app/
 ### WhoamI DNA & Genealogy (Burgundy theme)
 - DIY research with AI guidance
 - Heritage Books: $99-$249 (print-on-demand via Blurb/Lulu)
-- Routes: /, /upload-dna, /journey, /my-research, /my-book, /pricing
+- Routes: /, /dna-hub, /upload-dna, /journey, /my-research, /my-book, /pricing
 
 ### PromptPro Academy (Blue theme)
 - Starter: $29 - Learn AI through ancestry research
@@ -54,7 +53,7 @@ https://ancestry-canvas--jackiecady.replit.app/
 
 ## Navigation Structure
 Navbar has dropdown menus for each business:
-- DNA & Genealogy → Home, Upload DNA, DNA Journey, My Research, Heritage Book, Pricing
+- DNA & Genealogy → Home, DNA Tools Hub, Upload DNA, DNA Journey, My Research, Heritage Book, Pricing
 - PromptPro Academy → Academy Home, Lessons, AI Tutor, Prompt Library, Community
 - Sacred Latin → Latin Course
 

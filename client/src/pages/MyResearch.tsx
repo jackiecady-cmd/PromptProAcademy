@@ -18,7 +18,8 @@ import {
   BookOpen,
   Sparkles,
   MapPin,
-  Calendar
+  Calendar,
+  ArrowRight
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -285,6 +286,12 @@ export default function MyResearch() {
                 <h1 className="text-3xl font-serif font-bold">My Research</h1>
               </div>
               <p className="text-amber-200">Family Tree & DNA Discoveries</p>
+              <Link href="/dna-hub">
+                <Button variant="outline" size="sm" className="border-white/50 text-white hover:bg-white/20 mt-3" data-testid="link-research-hub">
+                  <ArrowRight className="mr-1 h-3 w-3 rotate-180" />
+                  Back to DNA Tools Hub
+                </Button>
+              </Link>
             </div>
             <div className="text-right">
               <p className="text-sm text-amber-200">Logged in as</p>

@@ -26,6 +26,7 @@ export function Navbar() {
       bgColor: "bg-[#8B1538]",
       links: [
         { href: "/", label: "Home" },
+        { href: "/dna-hub", label: "DNA Tools Hub" },
         { href: "/upload-dna", label: "Upload DNA" },
         { href: "/journey", label: "DNA Journey" },
         { href: "/my-research", label: "My Research" },

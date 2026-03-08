@@ -437,7 +437,13 @@ Ready? Let's start! 👇`
             <Dna className="h-8 w-8" />
             <h1 className="text-3xl font-serif font-bold">Your DNA Discovery Journey</h1>
           </div>
-          <p className="text-amber-200">Step-by-step guidance to discover your own family story</p>
+          <p className="text-amber-200 mb-3">Step-by-step guidance to discover your own family story</p>
+          <Link href="/dna-hub">
+            <Button variant="outline" size="sm" className="border-white/50 text-white hover:bg-white/20" data-testid="link-journey-hub">
+              <ArrowRight className="mr-1 h-3 w-3 rotate-180" />
+              Back to DNA Tools Hub
+            </Button>
+          </Link>
         </div>
       </div>
 

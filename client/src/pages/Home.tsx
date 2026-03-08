@@ -118,9 +118,10 @@ export default function Home() {
                 First 20 Users Free
               </Button>
             </Link>
-            <Link href="/dashboard">
-              <Button size="lg" variant="outline" className="bg-background/50 backdrop-blur-sm hover:bg-background/80 text-lg h-14">
-                View Sample Report
+            <Link href="/dna-hub">
+              <Button size="lg" variant="outline" className="bg-background/50 backdrop-blur-sm hover:bg-background/80 text-lg h-14" data-testid="button-hero-hub">
+                <Globe className="mr-2 h-5 w-5" />
+                DNA Tools Hub
               </Button>
             </Link>
           </div>
