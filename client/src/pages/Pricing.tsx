@@ -1,12 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Info } from "lucide-react";
+import { Check, Info, Gift, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Pricing() {
   return (
     <div className="min-h-screen bg-background py-20">
       <div className="container px-4 md:px-6">
+        <div className="max-w-4xl mx-auto mb-10" data-testid="banner-first-20-free">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 p-8 md:p-10 text-white shadow-2xl shadow-emerald-500/20">
+            <Sparkles className="absolute top-4 right-4 h-8 w-8 opacity-30 animate-pulse" />
+            <Sparkles className="absolute bottom-4 left-4 h-6 w-6 opacity-20 animate-pulse" />
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex-shrink-0 bg-white/20 backdrop-blur-sm rounded-full p-5">
+                <Gift className="h-10 w-10 text-white" />
+              </div>
+              <div className="text-center md:text-left flex-1">
+                <h2 className="text-3xl md:text-4xl font-serif font-bold mb-2">First 20 Users Free!</h2>
+                <p className="text-lg text-white/90">
+                  Be one of the first 20 users and get your Base Analysis completely free — 
+                  <span className="font-bold text-white"> $0.00</span>. No credit card required.
+                </p>
+              </div>
+              <div className="text-center flex-shrink-0">
+                <div className="text-5xl font-bold">$0.00</div>
+                <div className="text-sm text-white/80 mt-1">for first 20 users</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6">Choose Your Depth of Discovery</h1>
           <p className="text-xl text-muted-foreground">
@@ -17,16 +40,19 @@ export default function Pricing() {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Base Plan */}
-          <Card className="border-2 border-primary shadow-xl scale-105 z-10 relative">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-white px-4 py-1 rounded-full text-sm font-bold shadow-md">
-              Most Popular
+          <Card className="border-2 border-emerald-500 shadow-xl scale-105 z-10 relative">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-1 rounded-full text-sm font-bold shadow-md">
+              First 20 Users Free
             </div>
             <CardHeader>
               <CardTitle className="text-2xl font-bold">Base Analysis</CardTitle>
               <CardDescription>The essential starting point for everyone.</CardDescription>
-              <div className="mt-4">
-                <span className="text-4xl font-bold">$20</span>
-                <span className="text-muted-foreground"> / one-time</span>
+              <div className="mt-4" data-testid="price-base-analysis">
+                <span className="text-4xl font-bold text-emerald-600">$0.00</span>
+                <span className="text-muted-foreground"> / free for first 20</span>
+                <div className="mt-1">
+                  <span className="text-sm text-muted-foreground line-through">$20 / one-time</span>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
