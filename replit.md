@@ -9,7 +9,8 @@ A multi-business platform with three live offerings:
 **Note:** Vibe Code Academy and My Side of the Story have been removed from this codebase - they will be built as a separate website.
 
 ## Recent Changes
-- DNA Tools Hub page (/dna-hub) — central dashboard connecting all internal tools and external DNA sites (GEDmatch, DNAGenics, FamilySearch, Ancestry, 23andMe, MyHeritage, FamilyTreeDNA, LivingDNA, plus historical records)
+- Redesigned My Research page — person-centered with expandable cards showing each person's DNA findings underneath them. Findings linked to specific family members via familyMemberId. Quick links to FamilySearch, GEDmatch, DNAGenics, Ancestry. Deleting a member moves their findings to General Findings (no data loss).
+- DNA Tools Hub page (/dna-hub) — central dashboard connecting all internal tools and external DNA sites
 - "Back to DNA Tools Hub" links on Upload DNA, DNA Journey, and My Research pages for easy navigation
 - Dedicated Upload DNA page (/upload-dna) — prominent hero CTA and nav link for raw DNA .zip uploads
 - FAQ section on Home page with 5 accordion Q&A items

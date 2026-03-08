@@ -58,6 +58,7 @@ export interface IStorage {
 
   // DNA Findings
   getDnaFindingsByEmail(email: string): Promise<DnaFinding[]>;
+  getDnaFindingsByMember(familyMemberId: string): Promise<DnaFinding[]>;
   createDnaFinding(finding: InsertDnaFinding): Promise<DnaFinding>;
   deleteDnaFinding(id: string): Promise<void>;
 
@@ -179,12 +180,17 @@ class DatabaseStorage implements IStorage {
   }
 
   async deleteFamilyMember(id: string): Promise<void> {
+    await this.db.update(dnaFindings).set({ familyMemberId: null }).where(eq(dnaFindings.familyMemberId, id));
     await this.db.delete(familyMembers).where(eq(familyMembers.id, id));
   }
 
   // DNA Findings
   async getDnaFindingsByEmail(email: string): Promise<DnaFinding[]> {
     return await this.db.select().from(dnaFindings).where(eq(dnaFindings.email, email)).orderBy(desc(dnaFindings.createdAt));
+  }
+
+  async getDnaFindingsByMember(familyMemberId: string): Promise<DnaFinding[]> {
+    return await this.db.select().from(dnaFindings).where(eq(dnaFindings.familyMemberId, familyMemberId)).orderBy(desc(dnaFindings.createdAt));
   }
 
   async createDnaFinding(finding: InsertDnaFinding): Promise<DnaFinding> {

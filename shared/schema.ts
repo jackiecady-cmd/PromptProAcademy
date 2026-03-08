@@ -172,6 +172,7 @@ export const familyMembers = pgTable("family_members", {
 export const dnaFindings = pgTable("dna_findings", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   email: text("email").notNull(),
+  familyMemberId: varchar("family_member_id"),
   title: text("title").notNull(),
   category: text("category").notNull(),
   content: text("content").notNull(),
