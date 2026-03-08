@@ -449,6 +449,63 @@ export async function registerRoutes(
     }
   });
 
+  // Bulk add family members
+  app.post("/api/family/bulk", async (req, res) => {
+    try {
+      const { email, members } = req.body;
+      if (!email || !Array.isArray(members) || members.length === 0) {
+        return res.status(400).json({ error: "Email and members array required" });
+      }
+      const saved = [];
+      for (const m of members) {
+        if (!m.name || !m.relationship) continue;
+        const data = insertFamilyMemberSchema.parse({
+          email,
+          name: m.name,
+          relationship: m.relationship,
+          birthYear: m.birthYear || null,
+          birthPlace: m.birthPlace || null,
+          deathYear: m.deathYear || null,
+          notes: m.notes || null,
+        });
+        const member = await storage.createFamilyMember(data);
+        saved.push(member);
+      }
+      res.json({ saved: saved.length, members: saved });
+    } catch (error: any) {
+      console.error("Bulk add family error:", error);
+      res.status(500).json({ error: "Failed to bulk add family members" });
+    }
+  });
+
+  // Bulk add findings
+  app.post("/api/findings/bulk", async (req, res) => {
+    try {
+      const { email, findings: findingsData } = req.body;
+      if (!email || !Array.isArray(findingsData) || findingsData.length === 0) {
+        return res.status(400).json({ error: "Email and findings array required" });
+      }
+      const saved = [];
+      for (const f of findingsData) {
+        if (!f.title || !f.content) continue;
+        const data = insertDnaFindingSchema.parse({
+          email,
+          title: f.title,
+          category: f.category || "discovery",
+          content: f.content,
+          source: f.source || null,
+          familyMemberId: f.familyMemberId || null,
+        });
+        const finding = await storage.createDnaFinding(data);
+        saved.push(finding);
+      }
+      res.json({ saved: saved.length, findings: saved });
+    } catch (error: any) {
+      console.error("Bulk add findings error:", error);
+      res.status(500).json({ error: "Failed to bulk add findings" });
+    }
+  });
+
   // Add family member
   app.post("/api/family", async (req, res) => {
     try {

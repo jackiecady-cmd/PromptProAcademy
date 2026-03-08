@@ -252,6 +252,12 @@ export default function MyResearch() {
   const [findingDialogOpen, setFindingDialogOpen] = useState(false);
   const [findingForMemberId, setFindingForMemberId] = useState<string | null>(null);
   const [generalFindingsOpen, setGeneralFindingsOpen] = useState(false);
+  const [bulkMemberOpen, setBulkMemberOpen] = useState(false);
+  const [bulkFindingsOpen, setBulkFindingsOpen] = useState(false);
+  const [bulkMemberText, setBulkMemberText] = useState("");
+  const [bulkFindingsText, setBulkFindingsText] = useState("");
+  const [bulkSource, setBulkSource] = useState("");
+  const [bulkImporting, setBulkImporting] = useState(false);
   const { toast } = useToast();
 
   const [newMember, setNewMember] = useState({
@@ -382,6 +388,98 @@ export default function MyResearch() {
     }
   };
 
+  const bulkImportMembers = async () => {
+    if (!bulkMemberText.trim()) return;
+    setBulkImporting(true);
+    const lines = bulkMemberText.split("\n").filter(l => l.trim());
+    const members = lines.map(line => {
+      const parts = line.split(/[,\t|]/).map(p => p.trim());
+      const name = parts[0] || "";
+      const relText = (parts[1] || "").toLowerCase();
+      let relationship = "other";
+      if (relText.includes("mother") && !relText.includes("grand") && !relText.includes("great")) relationship = "mother";
+      else if (relText.includes("father") && !relText.includes("grand") && !relText.includes("great")) relationship = "father";
+      else if (relText.includes("grandmother") || relText.includes("grandma")) {
+        if (relText.includes("paternal") || relText.includes("father")) relationship = "grandmother_paternal";
+        else relationship = "grandmother_maternal";
+      }
+      else if (relText.includes("grandfather") || relText.includes("grandpa")) {
+        if (relText.includes("paternal") || relText.includes("father")) relationship = "grandfather_paternal";
+        else relationship = "grandfather_maternal";
+      }
+      else if (relText.includes("great-grand") || relText.includes("great grand")) {
+        if (relText.includes("mother") || relText.includes("woman") || relText.includes("female")) relationship = "great_grandmother_mm";
+        else relationship = "great_grandfather_mm";
+      }
+      else if (relText.includes("sibling") || relText.includes("brother") || relText.includes("sister")) relationship = "sibling";
+      else if (relText.includes("spouse") || relText.includes("husband") || relText.includes("wife")) relationship = "spouse";
+      else if (relText.includes("child") || relText.includes("son") || relText.includes("daughter")) relationship = "child";
+      else if (relText.includes("aunt") || relText.includes("uncle")) relationship = "aunt_uncle";
+      else if (relText.includes("cousin")) relationship = "cousin";
+      else if (relText.includes("self") || relText.includes("me")) relationship = "self";
+      const birthYear = parts[2] || null;
+      const birthPlace = parts[3] || null;
+      return { name, relationship, birthYear, birthPlace };
+    }).filter(m => m.name);
+
+    try {
+      const res = await fetch("/api/family/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, members }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setFamilyMembers([...familyMembers, ...data.members]);
+        setBulkMemberText("");
+        setBulkMemberOpen(false);
+        toast({ title: `${data.saved} family members imported!`, description: "They've all been saved to your tree." });
+      } else {
+        const err = await res.json().catch(() => null);
+        toast({ title: "Import failed", description: err?.error || "Please check your data and try again.", variant: "destructive" });
+      }
+    } catch (error) {
+      console.error("Bulk import failed:", error);
+      toast({ title: "Import failed", description: "Something went wrong. Please try again.", variant: "destructive" });
+    }
+    setBulkImporting(false);
+  };
+
+  const bulkImportFindings = async () => {
+    if (!bulkFindingsText.trim()) return;
+    setBulkImporting(true);
+    const lines = bulkFindingsText.split("\n").filter(l => l.trim());
+    const findingsToSave = lines.map(line => {
+      const parts = line.split(/[,\t|]/).map(p => p.trim());
+      if (parts.length >= 2) {
+        return { title: parts[0], content: parts.slice(1).join(" — "), category: "discovery", source: bulkSource || null };
+      }
+      return { title: line.trim(), content: line.trim(), category: "discovery", source: bulkSource || null };
+    }).filter(f => f.title);
+
+    try {
+      const res = await fetch("/api/findings/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, findings: findingsToSave }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setFindings([...data.findings, ...findings]);
+        setBulkFindingsText("");
+        setBulkFindingsOpen(false);
+        toast({ title: `${data.saved} findings imported!`, description: "All your results have been saved." });
+      } else {
+        const err = await res.json().catch(() => null);
+        toast({ title: "Import failed", description: err?.error || "Please check your data and try again.", variant: "destructive" });
+      }
+    } catch (error) {
+      console.error("Bulk findings import failed:", error);
+      toast({ title: "Import failed", description: "Something went wrong. Please try again.", variant: "destructive" });
+    }
+    setBulkImporting(false);
+  };
+
   const getRelationshipLabel = (value: string) =>
     relationshipOptions.find(r => r.value === value)?.label || value;
 
@@ -472,7 +570,23 @@ export default function MyResearch() {
               <p className="text-xs text-muted-foreground">Total Findings</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap justify-end">
+            <Button
+              variant="outline"
+              className="border-[#7D0A24] text-[#7D0A24]"
+              onClick={() => setBulkMemberOpen(true)}
+              data-testid="button-bulk-import"
+            >
+              <Plus className="h-4 w-4 mr-1" /> Paste a List
+            </Button>
+            <Button
+              variant="outline"
+              className="border-[#FA4616] text-[#FA4616]"
+              onClick={() => setBulkFindingsOpen(true)}
+              data-testid="button-bulk-findings"
+            >
+              <Plus className="h-4 w-4 mr-1" /> Paste DNA Results
+            </Button>
             <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-[#7D0A24] hover:bg-[#9B1B30]" data-testid="button-add-member">
@@ -820,6 +934,115 @@ export default function MyResearch() {
             >
               <Save className="h-4 w-4 mr-2" /> Save Finding
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={bulkMemberOpen} onOpenChange={setBulkMemberOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Paste Your Family List</DialogTitle>
+            <DialogDescription>
+              Copy names from FamilySearch, Ancestry, or anywhere else and paste them below. One person per line.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs space-y-2">
+              <p className="font-bold text-[#7D0A24]">Format: Name, Relationship, Birth Year, Birth Place</p>
+              <p className="text-muted-foreground">You can use commas, tabs, or pipes to separate fields. Only the name is required — we'll figure out the rest.</p>
+              <div className="bg-white rounded p-2 font-mono text-xs border">
+                <p>Mary Elizabeth Smith, Grandmother, 1895, Dublin Ireland</p>
+                <p>John Henry Smith, Grandfather, 1890, Cork Ireland</p>
+                <p>Sarah Jane Williams, Mother, 1925</p>
+                <p>Robert James Smith, Father</p>
+                <p>Anna Cohen, Great-Grandmother</p>
+              </div>
+              <p className="text-muted-foreground">Or just paste names — each will be saved as "Other Relative":</p>
+              <div className="bg-white rounded p-2 font-mono text-xs border">
+                <p>Mary Smith</p>
+                <p>John Smith</p>
+                <p>Sarah Williams</p>
+              </div>
+            </div>
+            <Textarea
+              placeholder="Paste your family list here — one person per line..."
+              value={bulkMemberText}
+              onChange={(e) => setBulkMemberText(e.target.value)}
+              rows={8}
+              className="font-mono text-sm"
+              data-testid="input-bulk-members"
+            />
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">
+                {bulkMemberText.split("\n").filter(l => l.trim()).length} people detected
+              </p>
+              <Button
+                onClick={bulkImportMembers}
+                className="bg-[#7D0A24] hover:bg-[#9B1B30]"
+                disabled={bulkImporting || !bulkMemberText.trim()}
+                data-testid="button-bulk-import-save"
+              >
+                {bulkImporting ? "Importing..." : "Import All"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={bulkFindingsOpen} onOpenChange={setBulkFindingsOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Paste DNA Results & Findings</DialogTitle>
+            <DialogDescription>
+              Copy your results from GEDmatch, DNAGenics, or any calculator and paste them below. One result per line.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-xs space-y-2">
+              <p className="font-bold text-[#FA4616]">Paste anything — ethnicity results, match names, calculator output</p>
+              <p className="text-muted-foreground">Each line becomes a separate finding. Use commas to separate a title from details:</p>
+              <div className="bg-white rounded p-2 font-mono text-xs border">
+                <p>15% Ashkenazi Jewish, GEDmatch Eurogenes K13 calculator</p>
+                <p>8% West African, DNAGenics admixture result</p>
+                <p>3rd cousin match: Sarah Cohen, shared 45 cM</p>
+                <p>Haplogroup H1a — maternal line European</p>
+                <p>Found record: Solomon Levy, arrived NYC 1892</p>
+              </div>
+            </div>
+            <div>
+              <Label className="text-xs">Where are these results from?</Label>
+              <Select value={bulkSource} onValueChange={setBulkSource}>
+                <SelectTrigger className="mt-1" data-testid="select-bulk-source">
+                  <SelectValue placeholder="Select source (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sourceOptions.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Textarea
+              placeholder="Paste your DNA results here — one per line..."
+              value={bulkFindingsText}
+              onChange={(e) => setBulkFindingsText(e.target.value)}
+              rows={8}
+              className="font-mono text-sm"
+              data-testid="input-bulk-findings"
+            />
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">
+                {bulkFindingsText.split("\n").filter(l => l.trim()).length} findings detected
+              </p>
+              <Button
+                onClick={bulkImportFindings}
+                className="bg-[#FA4616] hover:bg-[#FA4616]/90"
+                disabled={bulkImporting || !bulkFindingsText.trim()}
+                data-testid="button-bulk-findings-save"
+              >
+                {bulkImporting ? "Importing..." : "Import All"}
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
