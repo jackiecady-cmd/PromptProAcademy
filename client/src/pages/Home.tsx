@@ -1,8 +1,80 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Dna, Globe, ShieldCheck, Database, Users, Gift } from "lucide-react";
+import { ArrowRight, Dna, Globe, ShieldCheck, Database, Users, Gift, HelpCircle, ChevronDown, MessageSquare, Calculator, Search, Upload } from "lucide-react";
+import { useState } from "react";
 import heroImage from "@assets/generated_images/abstract_dna_helix_merging_with_tree_roots.png";
 import mapImage from "@assets/generated_images/stylized_world_migration_map.png";
+
+const faqItems = [
+  {
+    question: "I can't find all my missing relatives. Where else can I look?",
+    answer: `If you've tested with one company but haven't found everyone, try uploading your raw DNA to multiple free sites — each one has different people in their database:
+
+• **GEDmatch.com** (free) — People from ALL DNA companies upload here. This is the #1 place to find missing matches across Ancestry, 23andMe, and MyHeritage.
+• **FamilyTreeDNA.com** (free transfer) — Upload your raw DNA file to access their database of millions.
+• **MyHeritage.com** (free upload) — Another large database, especially strong for European ancestry.
+• **FamilySearch.org** (free) — Not DNA-based, but has billions of genealogy records that can help you find relatives by name and documents.
+• **LivingDNA.com** — Good for British and African ancestry in particular.
+
+**Pro tip:** Use the AI Help Chat on your DNA Journey page! Just ask something like: "I tested with Ancestry but can't find my grandmother's side of the family. What should I try?" — the AI can suggest specific strategies based on your situation.`,
+    icon: Search,
+  },
+  {
+    question: "How do I use the DNA admixture calculators in the app?",
+    answer: `Our DNA Journey (Step 4: Analyze & Discover) walks you through using powerful admixture calculators that reveal your deep ancestry. Here's how:
+
+1. **Go to your DNA Journey** — Click "DNA & Genealogy" in the menu, then "DNA Journey"
+2. **Navigate to Step 4** — Click the "Analyze & Discover" step
+3. **Follow the instructions** to upload your raw DNA .zip file to **DNAGenics.com** and **GEDmatch.com** — both have free admixture calculators
+4. **Ask the AI Chat** which calculators to try — type something like: "I think I might have Jewish/African/Native American ancestry. Which admixture calculators should I run?"
+
+The calculators analyze every segment of your chromosomes and can reveal heritage that the big companies miss — like specific Middle Eastern, African, or indigenous connections.`,
+    icon: Calculator,
+  },
+  {
+    question: "What is 'raw DNA' and how do I download it?",
+    answer: `"Raw DNA" is the actual data file from your DNA test. It's a file (usually a .zip) that contains your genetic information in a format that other websites can read.
+
+**To download from Ancestry.com:**
+1. Log in → Click "DNA" → Click "Settings"
+2. Scroll to "Download your DNA" → Click the button
+3. Save the .zip file — don't open it!
+
+**To download from 23andMe:**
+1. Log in → Click your name → "Settings"
+2. Scroll to "Download your raw data"
+3. Save the .zip file
+
+Once you have this file, you can upload it directly to our platform on the DNA Journey page (Step 3), or to sites like GEDmatch and DNAGenics for deeper analysis.`,
+    icon: Upload,
+  },
+  {
+    question: "Can the AI chatbot help me interpret my DNA results?",
+    answer: `Yes! Our AI research guide is specifically trained to help you understand DNA results and genealogy research. You can find it on the DNA Journey page.
+
+**Great questions to ask the AI:**
+• "I got my ethnicity results and it shows 15% Ashkenazi Jewish — what does that mean for my family?"
+• "I found a DNA match with the surname Cohen. How are we likely related?"
+• "My admixture calculator shows 8% West African but my family is white-passing. What could this mean?"
+• "Help me understand what haplogroups are and what mine tells me"
+• "I think my grandmother hid part of our heritage. How can I use DNA to find out?"
+
+The AI remembers your conversation, so share details and it can connect dots you might miss. The better your prompts, the better the discoveries!`,
+    icon: MessageSquare,
+  },
+  {
+    question: "What if my DNA doesn't show heritage I expected?",
+    answer: `This is more common than you'd think! DNA results don't always show everything. Here's why:
+
+• **DNA is random** — You only inherit about 50% from each parent. Some heritage can "skip" in the DNA you received.
+• **Female-line ancestry** may not show the same way in ethnicity estimates.
+• **Small percentages** (under 5%) can disappear in a few generations.
+• **Documentary evidence is just as powerful** — If your family records show a connection, that's real even if DNA doesn't reflect it.
+
+**What to do:** Look at your DNA matches instead of just the ethnicity pie chart. If a relative with the same surname shows the heritage, that confirms YOUR connection too. Also, try the admixture calculators on DNAGenics — they often catch things the big companies miss.`,
+    icon: HelpCircle,
+  },
+];
 
 export default function Home() {
   return (
@@ -137,6 +209,37 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section className="py-24 bg-background" data-testid="section-faq">
+        <div className="container px-4 md:px-6 max-w-4xl">
+          <div className="text-center mb-12">
+            <HelpCircle className="h-10 w-10 mx-auto mb-4 text-primary" />
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">Frequently Asked Questions</h2>
+            <p className="text-lg text-muted-foreground">
+              Common questions about DNA research, our tools, and getting the most from your results.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {faqItems.map((item, index) => (
+              <FAQItem key={index} item={item} index={index} />
+            ))}
+          </div>
+
+          <div className="text-center mt-10 p-6 bg-muted/30 rounded-xl border">
+            <p className="text-muted-foreground mb-4">
+              Still have questions? Our AI research guide can help with your specific situation.
+            </p>
+            <Link href="/journey">
+              <Button className="bg-primary hover:bg-primary/90" data-testid="button-faq-ask-ai">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Ask the AI Guide
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Community Callout */}
       <section className="py-24 bg-primary text-primary-foreground">
         <div className="container px-4 md:px-6 text-center">
@@ -166,6 +269,44 @@ function FeatureCard({ icon: Icon, title, description }: { icon: any, title: str
       <p className="text-muted-foreground leading-relaxed">
         {description}
       </p>
+    </div>
+  );
+}
+
+function FAQItem({ item, index }: { item: typeof faqItems[0], index: number }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const Icon = item.icon;
+
+  return (
+    <div
+      className="border rounded-xl overflow-hidden bg-card hover:shadow-sm transition-shadow"
+      data-testid={`faq-item-${index}`}
+    >
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center gap-4 p-5 text-left"
+        data-testid={`faq-toggle-${index}`}
+      >
+        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+          <Icon className="h-5 w-5 text-primary" />
+        </div>
+        <span className="flex-1 font-medium text-foreground text-lg">{item.question}</span>
+        <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""}`} />
+      </button>
+      {isOpen && (
+        <div className="px-5 pb-5" data-testid={`faq-answer-${index}`}>
+          <div className="pl-14 border-t pt-4">
+            <div
+              className="text-muted-foreground leading-relaxed whitespace-pre-wrap text-sm"
+              dangerouslySetInnerHTML={{
+                __html: item.answer
+                  .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>')
+                  .replace(/\n/g, '<br/>')
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
