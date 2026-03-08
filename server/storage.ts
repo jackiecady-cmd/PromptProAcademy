@@ -17,7 +17,7 @@ import {
   type DnaFinding,
   type InsertDnaFinding,
 } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 
 const { Pool } = pg;
 
@@ -52,6 +52,10 @@ export interface IStorage {
   getDnaFindingsByEmail(email: string): Promise<DnaFinding[]>;
   createDnaFinding(finding: InsertDnaFinding): Promise<DnaFinding>;
   deleteDnaFinding(id: string): Promise<void>;
+
+  // Promo
+  countFreePromoOrders(): Promise<number>;
+  claimFreePromoOrder(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }>;
 }
 
 class DatabaseStorage implements IStorage {
@@ -182,6 +186,67 @@ class DatabaseStorage implements IStorage {
 
   async deleteDnaFinding(id: string): Promise<void> {
     await this.db.delete(dnaFindings).where(eq(dnaFindings.id, id));
+  }
+
+  async countFreePromoOrders(): Promise<number> {
+    const result = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(orders)
+      .where(
+        and(
+          eq(orders.productType, "base_analysis_free"),
+          eq(orders.status, "completed")
+        )
+      );
+    return result[0]?.count ?? 0;
+  }
+
+  async claimFreePromoOrder(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }> {
+    return await this.db.transaction(async (tx) => {
+      const countResult = await tx
+        .select({ count: sql<number>`count(*)::int` })
+        .from(orders)
+        .where(
+          and(
+            eq(orders.productType, "base_analysis_free"),
+            eq(orders.status, "completed")
+          )
+        );
+      const currentCount = countResult[0]?.count ?? 0;
+
+      if (currentCount >= 20) {
+        return { success: false, error: "Sorry, all 20 free spots have been claimed!" };
+      }
+
+      const existingResult = await tx
+        .select({ count: sql<number>`count(*)::int` })
+        .from(orders)
+        .where(
+          and(
+            eq(orders.email, email),
+            eq(orders.productType, "base_analysis_free"),
+            eq(orders.status, "completed")
+          )
+        );
+
+      if ((existingResult[0]?.count ?? 0) > 0) {
+        return { success: false, error: "You have already claimed your free analysis." };
+      }
+
+      const orderResult = await tx
+        .insert(orders)
+        .values({
+          userId,
+          email,
+          productType: "base_analysis_free",
+          amount: 0,
+          status: "completed",
+          completedAt: new Date(),
+        })
+        .returning();
+
+      return { success: true, orderId: orderResult[0].id };
+    });
   }
 }
 

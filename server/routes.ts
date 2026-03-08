@@ -181,6 +181,54 @@ export async function registerRoutes(
     }
   }
 
+  app.get("/api/promo/free-spots", async (_req, res) => {
+    try {
+      const count = await storage.countFreePromoOrders();
+      const remaining = Math.max(0, 20 - count);
+      res.json({ total: 20, used: count, remaining });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/checkout/free", async (req, res) => {
+    try {
+      const { email, firstName, lastName } = req.body;
+
+      const schema = z.object({
+        email: z.string().email(),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+      });
+
+      const data = schema.parse({ email, firstName, lastName });
+
+      let user = await storage.getUserByEmail(data.email);
+      if (!user) {
+        user = await storage.createUser({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        });
+      }
+
+      const result = await storage.claimFreePromoOrder(user.id, data.email);
+
+      if (!result.success) {
+        const statusCode = result.error?.includes("already claimed") ? 409 : 410;
+        return res.status(statusCode).json({ error: result.error });
+      }
+
+      res.json({ success: true, orderId: result.orderId });
+    } catch (error: any) {
+      console.error("Free checkout error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid input data" });
+      }
+      res.status(400).json({ error: error.message });
+    }
+  });
+
   // Get user orders
   app.get("/api/orders/:email", async (req, res) => {
     try {
@@ -566,6 +614,7 @@ function getProductName(productType: string): string {
   const names: Record<string, string> = {
     // WhoamI DNA Products
     base_analysis: "Base DNA Analysis Package",
+    base_analysis_free: "Base DNA Analysis Package (First 20 Free)",
     royal_blood: "Royal Blood Check",
     holocaust_survivor: "Holocaust Survivor Search",
     native_tribe: "Native Tribe Trace",
@@ -585,6 +634,7 @@ function getProductName(productType: string): string {
 function getProductDescription(productType: string): string {
   const descriptions: Record<string, string> = {
     base_analysis: "Unified DNA report from multiple providers",
+    base_analysis_free: "Unified DNA report - Free lifetime access (First 20 promo)",
     royal_blood: "Trace your royal ancestry connections",
     holocaust_survivor: "Connect with Holocaust survivor records",
     native_tribe: "Discover your indigenous heritage",
