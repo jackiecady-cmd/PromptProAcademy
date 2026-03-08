@@ -447,6 +447,16 @@ Ready? Let's start! 👇`
         </div>
       </div>
 
+      <div className="bg-amber-50 border-b border-amber-300">
+        <div className="container px-4 py-3 flex items-start gap-2">
+          <span className="text-lg flex-shrink-0">⚠️</span>
+          <p className="text-xs">
+            <strong className="text-[#7D0A24]">WhoamI does not charge you for using external tools.</strong>{" "}
+            Some sites linked here are free; others may charge their own fees. We have no control over third-party pricing.
+          </p>
+        </div>
+      </div>
+
       {/* Progress Bar */}
       <div className="bg-white border-b shadow-sm py-4">
         <div className="container px-4">

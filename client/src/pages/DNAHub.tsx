@@ -181,6 +181,14 @@ export default function DNAHub() {
       </div>
 
       <div className="container px-4 max-w-6xl py-8 space-y-10">
+        <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-5 flex items-start gap-3" data-testid="disclaimer-external-sites">
+          <span className="text-2xl flex-shrink-0">⚠️</span>
+          <p className="text-sm">
+            <strong className="text-[#7D0A24] text-base">WhoamI does not charge you for using any of these external tools.</strong>{" "}
+            Some outside sites listed below are completely free (like GEDmatch and FamilySearch). Others may charge their own fees for DNA testing kits or premium features. WhoamI has no control over third-party pricing. We simply connect you to the best resources available.
+          </p>
+        </div>
+
         <section data-testid="section-your-tools">
           <h2 className="text-2xl font-serif font-bold text-[#7D0A24] mb-2">Your WhoamI Tools</h2>
           <p className="text-muted-foreground mb-5">Everything on our platform — upload DNA, research, and create your book</p>
