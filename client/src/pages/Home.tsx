@@ -45,7 +45,7 @@ The calculators analyze every segment of your chromosomes and can reveal heritag
 2. Scroll to "Download your raw data"
 3. Save the .zip file
 
-Once you have this file, you can upload it directly to our platform on the DNA Journey page (Step 3), or to sites like GEDmatch and DNAGenics for deeper analysis.`,
+Once you have this file, go to the **Upload DNA** page on our platform and upload it directly — it's the easiest way to get started. You can also use it on sites like GEDmatch and DNAGenics for deeper analysis.`,
     icon: Upload,
   },
   {
@@ -105,9 +105,10 @@ export default function Home() {
             We combine data from Ancestry, 23andMe, FamilyTreeDNA, and more to give you the deepest possible analysis of your heritage—all in one place.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
-            <Link href="/pricing">
-              <Button size="lg" className="bg-primary text-white hover:bg-primary/90 text-lg px-8 h-14">
-                Start Analysis - $20
+            <Link href="/upload-dna">
+              <Button size="lg" className="bg-primary text-white hover:bg-primary/90 text-lg px-8 h-14" data-testid="button-hero-upload-dna">
+                <Upload className="mr-2 h-5 w-5" />
+                Upload Your Raw DNA
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
