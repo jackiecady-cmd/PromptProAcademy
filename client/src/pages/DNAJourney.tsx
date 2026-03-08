@@ -447,12 +447,12 @@ Ready? Let's start! 👇`
         </div>
       </div>
 
-      <div className="bg-amber-50 border-b border-amber-300">
+      <div className="bg-red-50 border-b border-red-400">
         <div className="container px-4 py-3 flex items-start gap-2">
           <span className="text-lg flex-shrink-0">⚠️</span>
           <p className="text-xs">
-            <strong className="text-[#7D0A24]">WhoamI does not charge you for using external tools.</strong>{" "}
-            Some sites linked here are free; others may charge their own fees. We have no control over third-party pricing.
+            <strong className="text-red-600">WhoamI does not charge you for using external tools.</strong>{" "}
+            <span className="text-red-700">Some sites linked here are free; others may charge their own fees. We have no control over third-party pricing.</span>
           </p>
         </div>
       </div>

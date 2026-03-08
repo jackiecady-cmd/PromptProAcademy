@@ -681,8 +681,9 @@ export default function MyResearch() {
             <ExternalLink className="h-4 w-4 text-[#7D0A24]" />
             Quick Links — Find More Family
           </h3>
-          <p className="text-xs text-muted-foreground mb-3">
-            <strong className="text-[#7D0A24]">WhoamI does not charge for these.</strong> Some external sites are free; others may have their own fees.
+          <p className="text-xs mb-3">
+            <strong className="text-red-600">WhoamI does not charge for these.</strong>{" "}
+            <span className="text-red-700">Some external sites are free; others may have their own fees.</span>
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
