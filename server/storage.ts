@@ -4,6 +4,7 @@ import {
   users,
   orders,
   dnaReports,
+  dnaUploads,
   familyMembers,
   dnaFindings,
   type User,
@@ -12,6 +13,8 @@ import {
   type InsertOrder,
   type DnaReport,
   type InsertDnaReport,
+  type DnaUpload,
+  type InsertDnaUpload,
   type FamilyMember,
   type InsertFamilyMember,
   type DnaFinding,
@@ -47,6 +50,11 @@ export interface IStorage {
   createFamilyMember(member: InsertFamilyMember): Promise<FamilyMember>;
   updateFamilyMember(id: string, member: Partial<InsertFamilyMember>): Promise<FamilyMember | undefined>;
   deleteFamilyMember(id: string): Promise<void>;
+
+  // DNA Uploads
+  createDnaUpload(upload: InsertDnaUpload): Promise<DnaUpload>;
+  getDnaUploadsByEmail(email: string): Promise<DnaUpload[]>;
+  deleteDnaUpload(id: string): Promise<DnaUpload | undefined>;
 
   // DNA Findings
   getDnaFindingsByEmail(email: string): Promise<DnaFinding[]>;
@@ -181,6 +189,20 @@ class DatabaseStorage implements IStorage {
 
   async createDnaFinding(finding: InsertDnaFinding): Promise<DnaFinding> {
     const result = await this.db.insert(dnaFindings).values(finding).returning();
+    return result[0];
+  }
+
+  async createDnaUpload(upload: InsertDnaUpload): Promise<DnaUpload> {
+    const result = await this.db.insert(dnaUploads).values(upload).returning();
+    return result[0];
+  }
+
+  async getDnaUploadsByEmail(email: string): Promise<DnaUpload[]> {
+    return await this.db.select().from(dnaUploads).where(eq(dnaUploads.email, email)).orderBy(desc(dnaUploads.uploadedAt));
+  }
+
+  async deleteDnaUpload(id: string): Promise<DnaUpload | undefined> {
+    const result = await this.db.delete(dnaUploads).where(eq(dnaUploads.id, id)).returning();
     return result[0];
   }
 

@@ -6,6 +6,35 @@ import Stripe from "stripe";
 import { z } from "zod";
 import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getDNAGuideResponse, getVibeCodeTutorResponse } from "./chatbot";
 import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const uploadsDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const dnaUploadStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, uploadsDir),
+  filename: (_req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    cb(null, `dna-${uniqueSuffix}${path.extname(file.originalname)}`);
+  },
+});
+
+const dnaUpload = multer({
+  storage: dnaUploadStorage,
+  limits: { fileSize: 50 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext === ".zip") {
+      cb(null, true);
+    } else {
+      cb(new Error("Only .zip files are accepted"));
+    }
+  },
+});
 
 export async function registerRoutes(
   httpServer: Server,
@@ -500,6 +529,85 @@ export async function registerRoutes(
     } catch (error: any) {
       console.error("Delete finding error:", error);
       res.status(500).json({ error: "Failed to delete finding" });
+    }
+  });
+
+  // ========== DNA Upload API ==========
+
+  app.post("/api/dna-upload", dnaUpload.single("dnaFile"), async (req, res) => {
+    try {
+      const file = req.file;
+      if (!file) {
+        return res.status(400).json({ error: "No file uploaded. Please select a .zip file." });
+      }
+
+      const email = req.body.email;
+      const source = req.body.source || "unknown";
+
+      if (!email) {
+        fs.unlinkSync(file.path);
+        return res.status(400).json({ error: "Email is required" });
+      }
+
+      const upload = await storage.createDnaUpload({
+        email,
+        originalFilename: file.originalname,
+        storedFilename: file.filename,
+        fileSize: file.size,
+        source,
+        status: "uploaded",
+      });
+
+      res.json({
+        success: true,
+        upload: {
+          id: upload.id,
+          originalFilename: upload.originalFilename,
+          fileSize: upload.fileSize,
+          source: upload.source,
+          status: upload.status,
+          uploadedAt: upload.uploadedAt,
+        },
+      });
+    } catch (error: any) {
+      console.error("DNA upload error:", error);
+      if (error.message === "Only .zip files are accepted") {
+        return res.status(400).json({ error: "Only .zip files are accepted. Please zip your raw DNA file first." });
+      }
+      res.status(500).json({ error: "Failed to upload DNA file" });
+    }
+  });
+
+  app.get("/api/dna-uploads/:email", async (req, res) => {
+    try {
+      const { email } = req.params;
+      const uploads = await storage.getDnaUploadsByEmail(decodeURIComponent(email));
+      res.json(uploads.map((u) => ({
+        id: u.id,
+        originalFilename: u.originalFilename,
+        fileSize: u.fileSize,
+        source: u.source,
+        status: u.status,
+        uploadedAt: u.uploadedAt,
+      })));
+    } catch (error: any) {
+      res.status(500).json({ error: "Failed to get uploads" });
+    }
+  });
+
+  app.delete("/api/dna-uploads/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const upload = await storage.deleteDnaUpload(id);
+      if (upload) {
+        const filePath = path.join(uploadsDir, upload.storedFilename);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: "Failed to delete upload" });
     }
   });
 

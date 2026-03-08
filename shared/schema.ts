@@ -135,6 +135,26 @@ export type InsertConversation = z.infer<typeof insertConversationSchema>;
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 
+// DNA Uploads - Raw DNA zip files
+export const dnaUploads = pgTable("dna_uploads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull(),
+  originalFilename: text("original_filename").notNull(),
+  storedFilename: text("stored_filename").notNull(),
+  fileSize: integer("file_size").notNull(),
+  source: text("source").notNull(),
+  status: text("status").notNull().default("uploaded"),
+  uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
+});
+
+export const insertDnaUploadSchema = createInsertSchema(dnaUploads).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export type InsertDnaUpload = z.infer<typeof insertDnaUploadSchema>;
+export type DnaUpload = typeof dnaUploads.$inferSelect;
+
 // Family Tree - Store family members
 export const familyMembers = pgTable("family_members", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),

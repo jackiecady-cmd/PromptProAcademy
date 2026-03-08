@@ -8,7 +8,9 @@ A multi-business platform with three live offerings:
 
 **Note:** Vibe Code Academy and My Side of the Story have been removed from this codebase - they will be built as a separate website.
 
-## Recent Changes (Dec 25, 2025)
+## Recent Changes
+- Added raw DNA .zip file upload support on the DNA Journey page (Step 3)
+- First 20 users free promo ($0.00 checkout bypassing Stripe, with atomic DB transaction)
 - Removed Vibe Code Academy and My Side of the Story from this codebase (to be built as separate website)
 - Simplified navigation to show only 3 live businesses
 - Clean mobile-friendly top navigation with dropdown menus

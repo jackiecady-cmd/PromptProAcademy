@@ -20,9 +20,15 @@ import {
   Save,
   Sparkles,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
+  Upload,
+  FileArchive,
+  Trash2,
+  CheckCircle
 } from "lucide-react";
 import { Link } from "wouter";
+import { useToast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Message {
   role: "user" | "assistant";
@@ -286,7 +292,75 @@ Ready? Let's start! 👇`
   const [savedFindings, setSavedFindings] = useState<SavedFinding[]>([]);
   const [findingToSave, setFindingToSave] = useState("");
   const [findingTitle, setFindingTitle] = useState("");
+  const [uploadEmail, setUploadEmail] = useState("");
+  const [uploadSource, setUploadSource] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploads, setUploads] = useState<any[]>([]);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+
+  const loadUploads = async (email: string) => {
+    try {
+      const res = await fetch(`/api/dna-uploads/${encodeURIComponent(email)}`);
+      if (res.ok) {
+        setUploads(await res.json());
+      }
+    } catch {}
+  };
+
+  const handleDnaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!uploadEmail) {
+      toast({ title: "Email Required", description: "Please enter your email before uploading.", variant: "destructive" });
+      return;
+    }
+    if (!uploadSource) {
+      toast({ title: "Source Required", description: "Please select where your DNA data came from.", variant: "destructive" });
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadSuccess(false);
+
+    const formData = new FormData();
+    formData.append("dnaFile", file);
+    formData.append("email", uploadEmail);
+    formData.append("source", uploadSource);
+
+    try {
+      const res = await fetch("/api/dna-upload", { method: "POST", body: formData });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Upload failed");
+      }
+
+      setUploadSuccess(true);
+      toast({ title: "Upload Successful!", description: `${file.name} has been uploaded and stored securely.` });
+      loadUploads(uploadEmail);
+    } catch (err: any) {
+      toast({ title: "Upload Failed", description: err.message, variant: "destructive" });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const deleteUpload = async (id: string) => {
+    try {
+      await fetch(`/api/dna-uploads/${id}`, { method: "DELETE" });
+      setUploads((prev) => prev.filter((u) => u.id !== id));
+      toast({ title: "Deleted", description: "Upload removed." });
+    } catch {}
+  };
+
+  useEffect(() => {
+    if (uploadEmail) loadUploads(uploadEmail);
+  }, [uploadEmail]);
 
   const currentStepData = journeySteps[currentStep - 1];
 
@@ -444,6 +518,116 @@ Ready? Let's start! 👇`
                         {link.label}
                       </a>
                     ))}
+                  </div>
+                )}
+
+                {currentStep === 3 && (
+                  <div className="mb-6 p-6 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border-2 border-emerald-200" data-testid="section-dna-upload">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full p-2">
+                        <Upload className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-emerald-800 text-lg">Upload Your Raw DNA Here</h3>
+                        <p className="text-sm text-emerald-600">Upload the .zip file from Ancestry, 23andMe, or other providers</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-sm font-medium text-emerald-800 mb-1 block">Your Email</label>
+                          <Input
+                            type="email"
+                            placeholder="you@example.com"
+                            value={uploadEmail}
+                            onChange={(e) => setUploadEmail(e.target.value)}
+                            data-testid="input-upload-email"
+                            className="border-emerald-300 focus:border-emerald-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-emerald-800 mb-1 block">DNA Source</label>
+                          <Select value={uploadSource} onValueChange={setUploadSource}>
+                            <SelectTrigger className="border-emerald-300" data-testid="select-dna-source">
+                              <SelectValue placeholder="Where is this from?" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ancestry">Ancestry.com</SelectItem>
+                              <SelectItem value="23andme">23andMe</SelectItem>
+                              <SelectItem value="myheritage">MyHeritage</SelectItem>
+                              <SelectItem value="familytreedna">FamilyTreeDNA</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="relative">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".zip"
+                          onChange={handleDnaUpload}
+                          className="hidden"
+                          data-testid="input-dna-file"
+                        />
+                        <Button
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isUploading || !uploadEmail || !uploadSource}
+                          className="w-full h-24 bg-white hover:bg-emerald-50 border-2 border-dashed border-emerald-400 text-emerald-700 hover:border-emerald-500 flex flex-col items-center justify-center gap-2"
+                          variant="outline"
+                          data-testid="button-upload-dna"
+                        >
+                          {isUploading ? (
+                            <>
+                              <Loader2 className="h-8 w-8 animate-spin" />
+                              <span>Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <FileArchive className="h-8 w-8" />
+                              <span>Click to select your .zip DNA file (max 50MB)</span>
+                            </>
+                          )}
+                        </Button>
+                      </div>
+
+                      {uploadSuccess && (
+                        <div className="flex items-center gap-2 text-emerald-700 bg-emerald-100 p-3 rounded-lg" data-testid="text-upload-success">
+                          <CheckCircle className="h-5 w-5" />
+                          <span className="font-medium">Upload complete! Your raw DNA data is stored securely.</span>
+                        </div>
+                      )}
+
+                      {uploads.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium text-emerald-800">Your Uploaded Files:</p>
+                          {uploads.map((u) => (
+                            <div key={u.id} className="flex items-center justify-between bg-white p-3 rounded-lg border border-emerald-200" data-testid={`upload-item-${u.id}`}>
+                              <div className="flex items-center gap-3">
+                                <FileArchive className="h-5 w-5 text-emerald-600" />
+                                <div>
+                                  <p className="text-sm font-medium">{u.originalFilename}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {u.source} • {(u.fileSize / 1024 / 1024).toFixed(1)}MB • {new Date(u.uploadedAt).toLocaleDateString()}
+                                  </p>
+                                </div>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => deleteUpload(u.id)}
+                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                data-testid={`button-delete-upload-${u.id}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
