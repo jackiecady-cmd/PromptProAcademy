@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Dna, Globe, ShieldCheck, Database, Users } from "lucide-react";
+import { ArrowRight, Dna, Globe, ShieldCheck, Database, Users, Gift } from "lucide-react";
 import heroImage from "@assets/generated_images/abstract_dna_helix_merging_with_tree_roots.png";
 import mapImage from "@assets/generated_images/stylized_world_migration_map.png";
 
@@ -37,6 +37,12 @@ export default function Home() {
               <Button size="lg" className="bg-primary text-white hover:bg-primary/90 text-lg px-8 h-14">
                 Start Analysis - $20
                 <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/pricing">
+              <Button size="lg" data-testid="button-first-20-free" className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 text-lg px-8 h-14 shadow-lg shadow-emerald-500/30 animate-pulse hover:animate-none">
+                <Gift className="mr-2 h-5 w-5" />
+                First 20 Users Free
               </Button>
             </Link>
             <Link href="/dashboard">
