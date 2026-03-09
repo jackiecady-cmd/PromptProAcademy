@@ -228,6 +228,11 @@ export const medicalLessonLinks: MedicalLessonLink[] = [
         title: 'Build your own medical terms',
         description: "Just like building prayers, you can build medical terms: gastr- + -itis = gastritis (stomach inflammation). Combine root + suffix to decode or create terms.",
         rootRefs: ["gastr-", "arthr-", "hepat-"]
+      },
+      {
+        title: 'Cor & Cardi- — The Heart Muscle',
+        description: "Left failure: fluid backs into lungs (pulmonary edema). Right: legs swell (edema). Arrhythmia? Heart skips — think 'a-' (no) + 'rhythmus'. Cor (heart) is the root behind every cardiac diagnosis you'll encounter.",
+        rootRefs: ["cardi-", "pulmon-"]
       }
     ]
   },
@@ -238,6 +243,11 @@ export const medicalLessonLinks: MedicalLessonLink[] = [
         title: 'Full medical term pronunciation practice',
         description: "Apply your Latin pronunciation skills to medical terms: 'myocardial infarction' (myo-KAR-dee-al), 'hepatomegaly' (heh-PAH-toh-MEG-ah-lee). Proper Latin sounds = proper medical pronunciation.",
         rootRefs: ["myo-", "cardi-", "hepat-"]
+      },
+      {
+        title: 'Ven- & Arteri- — Blood Highways',
+        description: "Veins: low pressure, easy IV access, carry blood toward the heart. Arteries: high pressure, pulse strong — check radial (wrist), brachial (arm), carotid (neck). Vēna (vein) and artēria (artery) are Latin staples of vascular anatomy.",
+        rootRefs: ["vas-"]
       }
     ]
   }
