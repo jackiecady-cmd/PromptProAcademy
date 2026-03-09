@@ -516,11 +516,17 @@ export default function LatinCourse() {
     }
   };
 
-  const filteredLessons = filterCategory 
-    ? lessons.filter(l => l.category === filterCategory) 
+  const baseLessons = medMode
+    ? lessons.filter(l => l.category !== "prayers")
     : lessons;
 
-  const categories = Object.keys(categoryLabels);
+  const filteredLessons = filterCategory 
+    ? baseLessons.filter(l => l.category === filterCategory) 
+    : baseLessons;
+
+  const categories = Object.keys(categoryLabels).filter(
+    cat => !medMode || cat !== "prayers"
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
@@ -586,16 +592,18 @@ export default function LatinCourse() {
 
       <div className="container px-4 pb-16">
         <Tabs defaultValue="lessons" className="max-w-4xl mx-auto">
-          <TabsList className="grid w-full grid-cols-3 bg-slate-800 mb-8">
+          <TabsList className={`grid w-full bg-slate-800 mb-8 ${medMode ? "grid-cols-2" : "grid-cols-3"}`}>
             <TabsTrigger value="lessons" className="flex items-center gap-2" data-testid="tab-lessons">
               <BookOpen className="h-4 w-4" /> Lessons
             </TabsTrigger>
             <TabsTrigger value="translator" className="flex items-center gap-2" data-testid="tab-translator">
               <Languages className="h-4 w-4" /> Translator
             </TabsTrigger>
-            <TabsTrigger value="prayer" className="flex items-center gap-2" data-testid="tab-prayer">
-              <Heart className="h-4 w-4" /> Prayer Builder
-            </TabsTrigger>
+            {!medMode && (
+              <TabsTrigger value="prayer" className="flex items-center gap-2" data-testid="tab-prayer">
+                <Heart className="h-4 w-4" /> Prayer Builder
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="lessons" className="space-y-6">
@@ -627,7 +635,7 @@ export default function LatinCourse() {
                         <Switch
                           id="med-toggle"
                           checked={medMode}
-                          onCheckedChange={setMedMode}
+                          onCheckedChange={(val) => { setMedMode(val); if (val && filterCategory === "prayers") setFilterCategory(null); }}
                           data-testid="switch-med-mode"
                         />
                       </label>
@@ -648,7 +656,7 @@ export default function LatinCourse() {
                     className={filterCategory === null ? "bg-amber-500 text-black" : "border-slate-600 text-slate-300"}
                     data-testid="filter-all"
                   >
-                    All ({lessons.length})
+                    All ({baseLessons.length})
                   </Button>
                   {categories.map(cat => {
                     const count = lessons.filter(l => l.category === cat).length;
@@ -784,7 +792,7 @@ export default function LatinCourse() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="prayer" className="space-y-6">
+          {!medMode && <TabsContent value="prayer" className="space-y-6">
             <Card className="bg-slate-800 border-slate-700">
               <CardHeader>
                 <CardTitle className="text-amber-400 flex items-center gap-2">
@@ -893,7 +901,7 @@ export default function LatinCourse() {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent>}
         </Tabs>
       </div>
 
