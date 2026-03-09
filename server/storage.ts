@@ -65,6 +65,8 @@ export interface IStorage {
   // Promo
   countFreePromoOrders(): Promise<number>;
   claimFreePromoOrder(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }>;
+  countLatinFreePromoOrders(): Promise<number>;
+  claimLatinFreePromo(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }>;
 }
 
 class DatabaseStorage implements IStorage {
@@ -267,6 +269,67 @@ class DatabaseStorage implements IStorage {
           userId,
           email,
           productType: "base_analysis_free",
+          amount: 0,
+          status: "completed",
+          completedAt: new Date(),
+        })
+        .returning();
+
+      return { success: true, orderId: orderResult[0].id };
+    });
+  }
+
+  async countLatinFreePromoOrders(): Promise<number> {
+    const result = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(orders)
+      .where(
+        and(
+          eq(orders.productType, "latin_course_free"),
+          eq(orders.status, "completed")
+        )
+      );
+    return result[0]?.count ?? 0;
+  }
+
+  async claimLatinFreePromo(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }> {
+    return await this.db.transaction(async (tx) => {
+      const countResult = await tx
+        .select({ count: sql<number>`count(*)::int` })
+        .from(orders)
+        .where(
+          and(
+            eq(orders.productType, "latin_course_free"),
+            eq(orders.status, "completed")
+          )
+        );
+      const currentCount = countResult[0]?.count ?? 0;
+
+      if (currentCount >= 20) {
+        return { success: false, error: "Sorry, all 20 free lifetime spots have been claimed!" };
+      }
+
+      const existingResult = await tx
+        .select({ count: sql<number>`count(*)::int` })
+        .from(orders)
+        .where(
+          and(
+            eq(orders.email, email),
+            eq(orders.productType, "latin_course_free"),
+            eq(orders.status, "completed")
+          )
+        );
+
+      if ((existingResult[0]?.count ?? 0) > 0) {
+        return { success: false, error: "You have already claimed your free lifetime access." };
+      }
+
+      const orderResult = await tx
+        .insert(orders)
+        .values({
+          userId,
+          email,
+          productType: "latin_course_free",
           amount: 0,
           status: "completed",
           completedAt: new Date(),

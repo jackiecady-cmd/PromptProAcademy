@@ -9,6 +9,7 @@ A multi-business platform with three live offerings:
 **Note:** Vibe Code Academy and My Side of the Story have been removed from this codebase - they will be built as a separate website.
 
 ## Recent Changes
+- Sacred Latin Course: First 20 free lifetime promo ($0.00, no Stripe charge). Green "First 20 Get It FREE" button on Latin page hero + bottom CTA. Claim dialog collects name/email, creates order with product_type="latin_course_free" at $0 amount. Tracked via countLatinFreePromoOrders/claimLatinFreePromo in storage. API: GET /api/promo/latin-free-spots, POST /api/checkout/latin-free.
 - Bulk import on My Research page — "Paste a List" imports multiple family members at once (name, relationship, birth year, birth place per line); "Paste DNA Results" imports multiple findings at once. Both support comma/tab/pipe-separated formats. Backend endpoints: POST /api/family/bulk and POST /api/findings/bulk.
 - Redesigned My Research page — person-centered with expandable cards showing each person's DNA findings underneath them. Findings linked to specific family members via familyMemberId. Quick links to FamilySearch, GEDmatch, DNAGenics, Ancestry. Deleting a member moves their findings to General Findings (no data loss).
 - DNA Tools Hub page (/dna-hub) — central dashboard connecting all internal tools and external DNA sites

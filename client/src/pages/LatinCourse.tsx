@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Play, 
   Volume2, 
@@ -15,7 +18,8 @@ import {
   Sparkles,
   Loader2,
   Languages,
-  Heart
+  Heart,
+  Gift
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -144,6 +148,45 @@ export default function LatinCourse() {
   const [generatedPrayer, setGeneratedPrayer] = useState<LatinPhrase[]>([]);
   const [generatingPrayer, setGeneratingPrayer] = useState(false);
 
+  const [freeSpots, setFreeSpots] = useState<number | null>(null);
+  const [freeDialogOpen, setFreeDialogOpen] = useState(false);
+  const [freeEmail, setFreeEmail] = useState("");
+  const [freeFirstName, setFreeFirstName] = useState("");
+  const [freeLastName, setFreeLastName] = useState("");
+  const [claiming, setClaiming] = useState(false);
+  const [claimed, setClaimed] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetch("/api/promo/latin-free-spots")
+      .then(r => r.json())
+      .then(data => setFreeSpots(data.remaining))
+      .catch(() => {});
+  }, []);
+
+  const handleClaimFree = async () => {
+    if (!freeEmail || !freeFirstName || !freeLastName) return;
+    setClaiming(true);
+    try {
+      const res = await fetch("/api/checkout/latin-free", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: freeEmail, firstName: freeFirstName, lastName: freeLastName }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setClaimed(true);
+        setFreeSpots(prev => prev !== null ? Math.max(0, prev - 1) : null);
+        toast({ title: "You're in! Lifetime access granted!", description: "Sacred Latin Course is yours — $0.00 forever. No credit card needed." });
+      } else {
+        toast({ title: "Could not claim", description: data.error || "Please try again.", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
+    }
+    setClaiming(false);
+  };
+
   const handleSubscribe = async () => {
     try {
       const response = await fetch("/api/subscribe/latin", {
@@ -218,15 +261,41 @@ export default function LatinCourse() {
             Visual emphasis guides + AI pronunciation + custom prayer builder
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
+            {freeSpots !== null && freeSpots > 0 && !claimed && (
+              <Button 
+                size="lg" 
+                className="bg-green-500 hover:bg-green-600 text-white font-bold animate-pulse"
+                onClick={() => setFreeDialogOpen(true)}
+                data-testid="button-latin-free"
+              >
+                <Gift className="h-5 w-5 mr-2" /> First 20 Get It FREE — Lifetime Access
+              </Button>
+            )}
+            {claimed && (
+              <Badge className="bg-green-500/20 text-green-300 border-green-500/30 text-lg px-6 py-2" data-testid="badge-claimed">
+                <Check className="h-5 w-5 mr-2" /> You have lifetime access!
+              </Badge>
+            )}
             <Button 
               size="lg" 
               className="bg-amber-500 hover:bg-amber-600 text-black font-bold"
               onClick={handleSubscribe}
+              data-testid="button-subscribe"
             >
               Subscribe - $19/month
             </Button>
           </div>
+          {freeSpots !== null && freeSpots > 0 && !claimed && (
+            <p className="text-green-400 font-bold mb-4 text-lg" data-testid="text-free-spots">
+              Only {freeSpots} free lifetime spot{freeSpots !== 1 ? 's' : ''} remaining!
+            </p>
+          )}
+          {freeSpots !== null && freeSpots === 0 && !claimed && (
+            <p className="text-red-400 font-medium mb-4">
+              All 20 free spots have been claimed
+            </p>
+          )}
 
           <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Cancel anytime</span>
@@ -497,15 +566,104 @@ export default function LatinCourse() {
           <p className="text-slate-400 mb-6 max-w-xl mx-auto">
             Join practitioners deepening their ritual work. Cancel anytime.
           </p>
-          <Button 
-            size="lg" 
-            className="bg-amber-500 hover:bg-amber-600 text-black font-bold"
-            onClick={handleSubscribe}
-          >
-            Subscribe Now - $19/month <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {freeSpots !== null && freeSpots > 0 && !claimed && (
+              <Button 
+                size="lg" 
+                className="bg-green-500 hover:bg-green-600 text-white font-bold"
+                onClick={() => setFreeDialogOpen(true)}
+                data-testid="button-latin-free-bottom"
+              >
+                <Gift className="h-5 w-5 mr-2" /> Claim FREE Lifetime Access
+              </Button>
+            )}
+            <Button 
+              size="lg" 
+              className="bg-amber-500 hover:bg-amber-600 text-black font-bold"
+              onClick={handleSubscribe}
+            >
+              Subscribe Now - $19/month <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </div>
+
+      <Dialog open={freeDialogOpen} onOpenChange={setFreeDialogOpen}>
+        <DialogContent className="bg-slate-900 border-green-500/30 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-green-400 text-xl flex items-center gap-2">
+              <Gift className="h-6 w-6" /> Claim Your FREE Lifetime Access
+            </DialogTitle>
+            <DialogDescription className="text-slate-300">
+              The first 20 people get the Sacred Latin Course completely free — $0.00, forever. No credit card required.
+            </DialogDescription>
+          </DialogHeader>
+          {claimed ? (
+            <div className="text-center py-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 mb-4">
+                <Check className="h-8 w-8 text-green-400" />
+              </div>
+              <h3 className="text-xl font-bold text-green-400 mb-2">You're In!</h3>
+              <p className="text-slate-300">Sacred Latin Course is yours for life. No charges, ever.</p>
+            </div>
+          ) : (
+            <div className="space-y-4 py-2">
+              <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-center">
+                <p className="text-green-400 font-bold text-lg">$0.00 — Free for Life</p>
+                <p className="text-slate-400 text-sm">{freeSpots} spot{freeSpots !== 1 ? 's' : ''} remaining out of 20</p>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-slate-300">First Name</Label>
+                  <Input
+                    value={freeFirstName}
+                    onChange={(e) => setFreeFirstName(e.target.value)}
+                    className="bg-slate-800 border-slate-600 text-white"
+                    placeholder="First name"
+                    data-testid="input-free-firstname"
+                  />
+                </div>
+                <div>
+                  <Label className="text-slate-300">Last Name</Label>
+                  <Input
+                    value={freeLastName}
+                    onChange={(e) => setFreeLastName(e.target.value)}
+                    className="bg-slate-800 border-slate-600 text-white"
+                    placeholder="Last name"
+                    data-testid="input-free-lastname"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label className="text-slate-300">Email</Label>
+                <Input
+                  type="email"
+                  value={freeEmail}
+                  onChange={(e) => setFreeEmail(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white"
+                  placeholder="your@email.com"
+                  data-testid="input-free-email"
+                />
+              </div>
+              <Button
+                onClick={handleClaimFree}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold text-lg py-6"
+                disabled={claiming || !freeEmail.includes("@") || !freeFirstName || !freeLastName}
+                data-testid="button-claim-free"
+              >
+                {claiming ? (
+                  <><Loader2 className="h-5 w-5 animate-spin mr-2" /> Claiming...</>
+                ) : (
+                  <><Gift className="h-5 w-5 mr-2" /> Claim Free Lifetime Access — $0.00</>
+                )}
+              </Button>
+              <p className="text-xs text-center text-slate-500">
+                No credit card required. No Stripe charge. This is 100% free.
+              </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

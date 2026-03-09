@@ -258,6 +258,56 @@ export async function registerRoutes(
     }
   });
 
+  // Latin free promo - check spots
+  app.get("/api/promo/latin-free-spots", async (_req, res) => {
+    try {
+      const count = await storage.countLatinFreePromoOrders();
+      const remaining = Math.max(0, 20 - count);
+      res.json({ total: 20, used: count, remaining });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Latin free promo - claim
+  app.post("/api/checkout/latin-free", async (req, res) => {
+    try {
+      const { email, firstName, lastName } = req.body;
+
+      const schema = z.object({
+        email: z.string().email(),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+      });
+
+      const data = schema.parse({ email, firstName, lastName });
+
+      let user = await storage.getUserByEmail(data.email);
+      if (!user) {
+        user = await storage.createUser({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        });
+      }
+
+      const result = await storage.claimLatinFreePromo(user.id, data.email);
+
+      if (!result.success) {
+        const statusCode = result.error?.includes("already claimed") ? 409 : 410;
+        return res.status(statusCode).json({ error: result.error });
+      }
+
+      res.json({ success: true, orderId: result.orderId });
+    } catch (error: any) {
+      console.error("Latin free checkout error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid input data" });
+      }
+      res.status(400).json({ error: error.message });
+    }
+  });
+
   // Get user orders
   app.get("/api/orders/:email", async (req, res) => {
     try {
@@ -788,6 +838,8 @@ function getProductName(productType: string): string {
     heritage_book_standard: "Heritage Book - Standard Edition",
     heritage_book_deluxe: "Heritage Book - Deluxe Edition",
     heritage_book_legacy: "Heritage Book - Legacy Edition",
+    // Sacred Latin Products
+    latin_course_free: "Sacred Latin Course (First 20 Free - Lifetime)",
     // PromptPro Academy Products
     academy_starter: "PromptPro Academy - Starter Course",
     academy_foundation: "PromptPro Academy - Foundation Course",
@@ -808,6 +860,7 @@ function getProductDescription(productType: string): string {
     heritage_book_standard: "50+ page softcover family history book",
     heritage_book_deluxe: "100+ page hardcover premium family history book",
     heritage_book_legacy: "150+ page leather-bound archival family history book",
+    latin_course_free: "Sacred Latin course - Free lifetime access (First 20 promo)",
     academy_starter: "Learn AI basics through ancestry research",
     academy_foundation: "Master prompt engineering fundamentals",
     academy_professional: "Career-ready AI skills with certification",
