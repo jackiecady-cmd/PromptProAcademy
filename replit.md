@@ -36,7 +36,7 @@ https://ancestry-canvas--jackiecady.replit.app/
 ### PromptPro Academy (Blue theme)
 - Starter: FREE - 10 courses on AI basics through ancestry research
 - Foundation: FREE - 10 courses on prompt engineering + certificate
-- Professional: $249 - Career-ready certification
+- Professional: $249 - Career-ready certification (first 5 free, no Stripe needed)
 - Routes: /academy, /learn, /academy/tutor, /prompts, /academy/forum
 - Course content defined in AcademyDashboard.tsx lessons array
 

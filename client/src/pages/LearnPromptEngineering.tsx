@@ -13,9 +13,11 @@ import {
   Star,
   Users,
   TrendingUp,
-  Home
+  Home,
+  Gift
 } from "lucide-react";
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
 
 const courseTiers = [
   {
@@ -109,6 +111,15 @@ const testimonials = [
 ];
 
 export default function LearnPromptEngineering() {
+  const [proFreeSpots, setProFreeSpots] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/promo/academy-pro-free")
+      .then(r => r.json())
+      .then(data => setProFreeSpots(data.remaining))
+      .catch(() => setProFreeSpots(0));
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -212,6 +223,17 @@ export default function LearnPromptEngineering() {
                   <div className="mt-4">
                     {tier.price === 0 ? (
                       <span className="text-3xl font-bold text-green-600">Free</span>
+                    ) : tier.id === 'professional' && proFreeSpots !== null && proFreeSpots > 0 ? (
+                      <div>
+                        <span className="text-3xl font-bold text-green-600">Free</span>
+                        <span className="text-sm line-through text-muted-foreground ml-2">${tier.price}</span>
+                        <div className="mt-1">
+                          <Badge className="bg-green-600 text-white text-xs">
+                            <Gift className="h-3 w-3 mr-1" />
+                            {proFreeSpots} free spot{proFreeSpots !== 1 ? "s" : ""} left
+                          </Badge>
+                        </div>
+                      </div>
                     ) : (
                       <span className="text-3xl font-bold">${tier.price}</span>
                     )}
@@ -237,8 +259,8 @@ export default function LearnPromptEngineering() {
                 </CardContent>
                 <CardFooter>
                   <Link href={tier.price === 0 ? "/academy" : "/academy/checkout"}>
-                    <Button className={`w-full ${tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`} variant={tier.popular ? 'default' : 'outline'} data-testid={`btn-enroll-${tier.id}`}>
-                      {tier.price === 0 ? "Start Free" : "Enroll Now"}
+                    <Button className={`w-full ${tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''} ${tier.id === 'professional' && proFreeSpots !== null && proFreeSpots > 0 ? 'bg-green-600 hover:bg-green-700' : ''}`} variant={tier.popular ? 'default' : 'outline'} data-testid={`btn-enroll-${tier.id}`}>
+                      {tier.price === 0 ? "Start Free" : tier.id === 'professional' && proFreeSpots !== null && proFreeSpots > 0 ? "Claim Free Spot" : "Enroll Now"}
                     </Button>
                   </Link>
                 </CardFooter>

@@ -68,6 +68,8 @@ export interface IStorage {
   countLatinFreePromoOrders(): Promise<number>;
   claimLatinFreePromo(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }>;
   countLatinLifetimeOrders(): Promise<number>;
+  countAcademyProFreeOrders(): Promise<number>;
+  claimAcademyProFree(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }>;
 }
 
 class DatabaseStorage implements IStorage {
@@ -295,6 +297,8 @@ class DatabaseStorage implements IStorage {
 
   async claimLatinFreePromo(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }> {
     return await this.db.transaction(async (tx) => {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(100)`);
+
       const countResult = await tx
         .select({ count: sql<number>`count(*)::int` })
         .from(orders)
@@ -352,6 +356,69 @@ class DatabaseStorage implements IStorage {
         )
       );
     return result[0]?.count ?? 0;
+  }
+
+  async countAcademyProFreeOrders(): Promise<number> {
+    const result = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(orders)
+      .where(
+        and(
+          eq(orders.productType, "academy_professional_free"),
+          eq(orders.status, "completed")
+        )
+      );
+    return result[0]?.count ?? 0;
+  }
+
+  async claimAcademyProFree(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }> {
+    return await this.db.transaction(async (tx) => {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(200)`);
+
+      const countResult = await tx
+        .select({ count: sql<number>`count(*)::int` })
+        .from(orders)
+        .where(
+          and(
+            eq(orders.productType, "academy_professional_free"),
+            eq(orders.status, "completed")
+          )
+        );
+      const currentCount = countResult[0]?.count ?? 0;
+
+      if (currentCount >= 5) {
+        return { success: false, error: "Sorry, all 5 free Professional spots have been claimed!" };
+      }
+
+      const existingResult = await tx
+        .select({ count: sql<number>`count(*)::int` })
+        .from(orders)
+        .where(
+          and(
+            eq(orders.email, email),
+            eq(orders.productType, "academy_professional_free"),
+            eq(orders.status, "completed")
+          )
+        );
+
+      if ((existingResult[0]?.count ?? 0) > 0) {
+        return { success: false, error: "You have already claimed your free Professional access." };
+      }
+
+      const orderResult = await tx
+        .insert(orders)
+        .values({
+          userId,
+          email,
+          productType: "academy_professional_free",
+          amount: 0,
+          status: "completed",
+          completedAt: new Date(),
+        })
+        .returning();
+
+      return { success: true, orderId: orderResult[0].id };
+    });
   }
 }
 

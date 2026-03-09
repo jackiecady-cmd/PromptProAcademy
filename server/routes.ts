@@ -308,6 +308,56 @@ export async function registerRoutes(
     }
   });
 
+  // Academy Professional free promo - check spots
+  app.get("/api/promo/academy-pro-free", async (_req, res) => {
+    try {
+      const count = await storage.countAcademyProFreeOrders();
+      const remaining = Math.max(0, 5 - count);
+      res.json({ total: 5, used: count, remaining });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Academy Professional free promo - claim
+  app.post("/api/checkout/academy-pro-free", async (req, res) => {
+    try {
+      const { email, firstName, lastName } = req.body;
+
+      const schema = z.object({
+        email: z.string().email(),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+      });
+
+      const data = schema.parse({ email, firstName, lastName });
+
+      let user = await storage.getUserByEmail(data.email);
+      if (!user) {
+        user = await storage.createUser({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        });
+      }
+
+      const result = await storage.claimAcademyProFree(user.id, data.email);
+
+      if (!result.success) {
+        const statusCode = result.error?.includes("already claimed") ? 409 : 410;
+        return res.status(statusCode).json({ error: result.error });
+      }
+
+      res.json({ success: true, orderId: result.orderId });
+    } catch (error: any) {
+      console.error("Academy Pro free checkout error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid input data" });
+      }
+      res.status(400).json({ error: error.message });
+    }
+  });
+
   // Get user orders
   app.get("/api/orders/:email", async (req, res) => {
     try {
@@ -892,6 +942,7 @@ function getProductName(productType: string): string {
     academy_starter: "PromptPro Academy - Starter Course",
     academy_foundation: "PromptPro Academy - Foundation Course",
     academy_professional: "PromptPro Academy - Professional Certification",
+    academy_professional_free: "PromptPro Academy - Professional (First 5 Free)",
   };
   return names[productType] || "WhoamI Service";
 }
@@ -913,6 +964,7 @@ function getProductDescription(productType: string): string {
     academy_starter: "Learn AI basics through ancestry research",
     academy_foundation: "Master prompt engineering fundamentals",
     academy_professional: "Career-ready AI skills with certification",
+    academy_professional_free: "Professional AI certification - Free access (First 5 promo)",
   };
   return descriptions[productType] || "Premium service from WhoamI";
 }
