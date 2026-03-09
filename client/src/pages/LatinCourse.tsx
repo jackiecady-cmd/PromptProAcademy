@@ -541,6 +541,14 @@ export default function LatinCourse() {
               />
             ) : (
               <>
+                <Card className="bg-gradient-to-r from-amber-500/10 to-purple-500/10 border-amber-500/30 mb-2">
+                  <CardContent className="py-6 text-center">
+                    <p className="text-2xl font-serif text-amber-300 italic" data-testid="text-welcome">
+                      Salve, student! Ready to speak like Caesar?
+                    </p>
+                  </CardContent>
+                </Card>
+
                 <div className="flex flex-wrap gap-2 mb-6">
                   <Button
                     variant={filterCategory === null ? "default" : "outline"}
