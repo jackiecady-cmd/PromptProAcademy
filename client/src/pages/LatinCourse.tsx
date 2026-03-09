@@ -545,9 +545,10 @@ export default function LatinCourse() {
     }
   };
 
+  const medOnlyLessonIds = [21];
   const baseLessons = medMode
     ? lessons.filter(l => l.category !== "prayers").map(l => applyHealthcareOverride(l, true))
-    : lessons;
+    : lessons.filter(l => !medOnlyLessonIds.includes(l.id));
 
   const filteredLessons = filterCategory 
     ? baseLessons.filter(l => l.category === filterCategory) 
@@ -562,7 +563,7 @@ export default function LatinCourse() {
       <div className="container px-4 py-12">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
-            {medMode ? "19" : "21"} Lessons + Quizzes
+            {medMode ? "19" : "20"} Lessons + Quizzes
           </Badge>
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
             {medMode ? "Medical Latin Pronunciation" : "Sacred Latin Pronunciation"}
@@ -615,7 +616,7 @@ export default function LatinCourse() {
           )}
 
           <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> {medMode ? "19" : "21"} structured lessons</span>
+            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> {medMode ? "19" : "20"} structured lessons</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Quizzes after each lesson</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> AI pronunciation</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> {medMode ? "Medical roots & terminology" : "Custom prayers"}</span>
