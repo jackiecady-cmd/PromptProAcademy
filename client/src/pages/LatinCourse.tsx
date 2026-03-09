@@ -452,6 +452,12 @@ export default function LatinCourse() {
   const [freeLastName, setFreeLastName] = useState("");
   const [claiming, setClaiming] = useState(false);
   const [claimed, setClaimed] = useState(false);
+  const [earlyBird, setEarlyBird] = useState<{ isEarlyBird: boolean; earlyBirdRemaining: number; price: number } | null>(null);
+  const [buyDialogOpen, setBuyDialogOpen] = useState(false);
+  const [buyEmail, setBuyEmail] = useState("");
+  const [buyFirstName, setBuyFirstName] = useState("");
+  const [buyLastName, setBuyLastName] = useState("");
+  const [buying, setBuying] = useState(false);
 
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
@@ -463,6 +469,10 @@ export default function LatinCourse() {
     fetch("/api/promo/latin-free-spots")
       .then(r => r.json())
       .then(data => setFreeSpots(data.remaining))
+      .catch(() => {});
+    fetch("/api/promo/latin-earlybird")
+      .then(r => r.json())
+      .then(data => setEarlyBird(data))
       .catch(() => {});
   }, []);
 
@@ -489,20 +499,25 @@ export default function LatinCourse() {
     setClaiming(false);
   };
 
-  const handleSubscribe = async () => {
+  const handleBuyLifetime = async () => {
+    if (!buyEmail || !buyFirstName || !buyLastName) return;
+    setBuying(true);
     try {
-      const response = await fetch("/api/subscribe/latin", {
+      const response = await fetch("/api/checkout/latin-lifetime", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseType: "latin" }),
+        body: JSON.stringify({ email: buyEmail, firstName: buyFirstName, lastName: buyLastName }),
       });
       const data = await response.json();
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        toast({ title: "Error", description: data.error || "Could not start checkout.", variant: "destructive" });
       }
     } catch (error) {
-      console.error("Subscription error:", error);
+      toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
     }
+    setBuying(false);
   };
 
   const handleTranslate = async () => {
@@ -598,12 +613,20 @@ export default function LatinCourse() {
             <Button 
               size="lg" 
               className="bg-amber-500 hover:bg-amber-600 text-black font-bold"
-              onClick={handleSubscribe}
-              data-testid="button-subscribe"
+              onClick={() => setBuyDialogOpen(true)}
+              data-testid="button-buy-lifetime"
             >
-              Subscribe - $19/month
+              {earlyBird?.isEarlyBird 
+                ? <>Buy Now — $12 Lifetime Access</>
+                : <>Buy Now — $15 Lifetime Access</>
+              }
             </Button>
           </div>
+          {earlyBird?.isEarlyBird && (
+            <p className="text-amber-400 font-bold mb-2 text-lg animate-pulse" data-testid="text-earlybird">
+              Early bird pricing! Only {earlyBird.earlyBirdRemaining} spot{earlyBird.earlyBirdRemaining !== 1 ? 's' : ''} left at $12 — then $15.
+            </p>
+          )}
           {freeSpots !== null && freeSpots > 0 && !claimed && (
             <p className="text-green-400 font-bold mb-4 text-lg" data-testid="text-free-spots">
               Only {freeSpots} free lifetime spot{freeSpots !== 1 ? 's' : ''} remaining!
@@ -944,8 +967,8 @@ export default function LatinCourse() {
           <h2 className="text-2xl font-bold mb-4">{medMode ? "Ready to Master Medical Latin?" : "Ready to Master Sacred Latin?"}</h2>
           <p className="text-slate-400 mb-6 max-w-xl mx-auto">
             {medMode
-              ? "Join healthcare professionals mastering clinical terminology. Cancel anytime."
-              : "Join practitioners deepening their ritual work. Cancel anytime."}
+              ? "Join healthcare professionals mastering clinical terminology. One payment. Yours forever."
+              : "Join practitioners deepening their ritual work. One payment. Yours forever."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {freeSpots !== null && freeSpots > 0 && !claimed && (
@@ -961,9 +984,10 @@ export default function LatinCourse() {
             <Button 
               size="lg" 
               className="bg-amber-500 hover:bg-amber-600 text-black font-bold"
-              onClick={handleSubscribe}
+              onClick={() => setBuyDialogOpen(true)}
+              data-testid="button-buy-lifetime-bottom"
             >
-              Subscribe Now - $19/month <ArrowRight className="ml-2 h-5 w-5" />
+              {earlyBird?.isEarlyBird ? "Buy Now — $12" : "Buy Now — $15"} Lifetime Access <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </div>
@@ -1043,6 +1067,83 @@ export default function LatinCourse() {
               </p>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={buyDialogOpen} onOpenChange={setBuyDialogOpen}>
+        <DialogContent className="bg-slate-900 border-amber-500/30 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-amber-400 text-xl flex items-center gap-2">
+              <Star className="h-6 w-6" /> Get Lifetime Access
+            </DialogTitle>
+            <DialogDescription className="text-slate-300">
+              One payment. All {medMode ? "21" : "20"} lessons, Healthcare Mode, quizzes, AI translator — yours forever. No subscription.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 text-center">
+              {earlyBird?.isEarlyBird ? (
+                <>
+                  <p className="text-amber-400 font-bold text-lg">
+                    <span className="line-through text-slate-500 mr-2">$15</span> $12 — Early Bird Price
+                  </p>
+                  <p className="text-slate-400 text-sm">
+                    {earlyBird.earlyBirdRemaining} early bird spot{earlyBird.earlyBirdRemaining !== 1 ? 's' : ''} left — then $15
+                  </p>
+                </>
+              ) : (
+                <p className="text-amber-400 font-bold text-lg">$15 — Lifetime Access</p>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="text-slate-300">First Name</Label>
+                <Input
+                  value={buyFirstName}
+                  onChange={(e) => setBuyFirstName(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white"
+                  placeholder="First name"
+                  data-testid="input-buy-firstname"
+                />
+              </div>
+              <div>
+                <Label className="text-slate-300">Last Name</Label>
+                <Input
+                  value={buyLastName}
+                  onChange={(e) => setBuyLastName(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white"
+                  placeholder="Last name"
+                  data-testid="input-buy-lastname"
+                />
+              </div>
+            </div>
+            <div>
+              <Label className="text-slate-300">Email</Label>
+              <Input
+                type="email"
+                value={buyEmail}
+                onChange={(e) => setBuyEmail(e.target.value)}
+                className="bg-slate-800 border-slate-600 text-white"
+                placeholder="your@email.com"
+                data-testid="input-buy-email"
+              />
+            </div>
+            <Button
+              onClick={handleBuyLifetime}
+              className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold text-lg py-6"
+              disabled={buying || !buyEmail.includes("@") || !buyFirstName || !buyLastName}
+              data-testid="button-confirm-buy"
+            >
+              {buying ? (
+                <><Loader2 className="h-5 w-5 animate-spin mr-2" /> Processing...</>
+              ) : (
+                <>Buy Now — {earlyBird?.isEarlyBird ? "$12" : "$15"} Lifetime Access</>
+              )}
+            </Button>
+            <p className="text-xs text-center text-slate-500">
+              One-time payment via Stripe. No recurring charges. Instant access.
+            </p>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

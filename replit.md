@@ -4,7 +4,7 @@
 A multi-business platform with three live offerings:
 1. **WhoamI DNA & Genealogy** - AI-guided DIY ancestry research with Heritage Books
 2. **PromptPro Academy** - Teaches prompt engineering to adults 40+ seeking remote work
-3. **Sacred Latin Course** - Latin pronunciation for ritual/spiritual practitioners ($19/month)
+3. **Sacred Latin Course** - Latin pronunciation for ritual/spiritual practitioners ($15 lifetime, $12 early-bird for first 10)
 
 **Note:** Vibe Code Academy and My Side of the Story have been removed from this codebase - they will be built as a separate website.
 
@@ -38,9 +38,12 @@ https://ancestry-canvas--jackiecady.replit.app/
 - Routes: /academy, /learn, /academy/tutor, /prompts, /academy/forum
 
 ### Sacred Latin Course (Purple theme)
-- $19/month subscription
+- $15 one-time lifetime purchase ($12 early-bird for first 10 buyers)
+- First 20 users get it free (separate promo)
 - Latin pronunciation for rituals and prayers
+- Healthcare Mode toggle converts to medical Latin course
 - Routes: /latin
+- API: GET /api/promo/latin-earlybird, POST /api/checkout/latin-lifetime
 
 ## Project Architecture
 - **Frontend:** React with Wouter routing, Tailwind CSS v4

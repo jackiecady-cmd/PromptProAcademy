@@ -67,6 +67,7 @@ export interface IStorage {
   claimFreePromoOrder(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }>;
   countLatinFreePromoOrders(): Promise<number>;
   claimLatinFreePromo(userId: string, email: string): Promise<{ success: boolean; orderId?: string; error?: string }>;
+  countLatinLifetimeOrders(): Promise<number>;
 }
 
 class DatabaseStorage implements IStorage {
@@ -338,6 +339,19 @@ class DatabaseStorage implements IStorage {
 
       return { success: true, orderId: orderResult[0].id };
     });
+  }
+
+  async countLatinLifetimeOrders(): Promise<number> {
+    const result = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(orders)
+      .where(
+        and(
+          eq(orders.productType, "latin_lifetime"),
+          eq(orders.status, "completed")
+        )
+      );
+    return result[0]?.count ?? 0;
   }
 }
 

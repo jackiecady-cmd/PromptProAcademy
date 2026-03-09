@@ -440,18 +440,59 @@ export async function registerRoutes(
     }
   });
 
-  // Latin Course Subscription
-  app.post("/api/subscribe/latin", async (req, res) => {
+  // Latin Course - Early bird spots check
+  app.get("/api/promo/latin-earlybird", async (_req, res) => {
+    try {
+      const count = await storage.countLatinLifetimeOrders();
+      const earlyBirdLimit = 10;
+      const isEarlyBird = count < earlyBirdLimit;
+      const earlyBirdRemaining = Math.max(0, earlyBirdLimit - count);
+      res.json({ isEarlyBird, earlyBirdRemaining, price: isEarlyBird ? 1200 : 1500, totalSold: count });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Latin Course - Lifetime Purchase ($12 early bird / $15 regular)
+  app.post("/api/checkout/latin-lifetime", async (req, res) => {
     try {
       if (!stripe) {
         return res.status(503).json({ error: "Payment service not configured" });
       }
 
+      const schema = z.object({
+        email: z.string().email(),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+      });
+      const data = schema.parse(req.body);
+
+      const count = await storage.countLatinLifetimeOrders();
+      const isEarlyBird = count < 10;
+      const price = isEarlyBird ? 1200 : 1500;
+      const priceLabel = isEarlyBird ? "$12" : "$15";
+
+      let user = await storage.getUserByEmail(data.email);
+      if (!user) {
+        user = await storage.createUser({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        });
+      }
+
+      const order = await storage.createOrder({
+        userId: user.id,
+        email: data.email,
+        productType: "latin_lifetime",
+        amount: price,
+        status: "pending",
+      });
+
       const baseUrl = process.env.REPL_SLUG && process.env.REPL_OWNER 
         ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
         : `http://localhost:${process.env.PORT || 5000}`;
 
-      // Create Stripe checkout session for subscription
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: [
@@ -459,28 +500,34 @@ export async function registerRoutes(
             price_data: {
               currency: "usd",
               product_data: {
-                name: "Sacred Latin Pronunciation Course",
-                description: "Monthly subscription - Master Latin pronunciation for rituals, prayers, and invocations",
+                name: "Sacred Latin Course — Lifetime Access",
+                description: `One-time ${priceLabel} payment. All lessons, Healthcare Mode, quizzes, translator — forever. No subscription.`,
               },
-              unit_amount: 1900, // $19.00
-              recurring: {
-                interval: "month",
-              },
+              unit_amount: price,
             },
             quantity: 1,
           },
         ],
-        mode: "subscription",
-        success_url: `${baseUrl}/latin?success=true`,
+        mode: "payment",
+        success_url: `${baseUrl}/latin?success=true&order_id=${order.id}`,
         cancel_url: `${baseUrl}/latin?canceled=true`,
+        customer_email: data.email,
         metadata: {
-          courseType: "latin",
+          orderId: order.id,
+          userId: user.id,
+          courseType: "latin_lifetime",
+          earlyBird: isEarlyBird ? "true" : "false",
         },
       });
 
+      await storage.updateOrderStripeInfo(order.id, undefined, session.id);
+
       res.json({ sessionId: session.id, url: session.url });
     } catch (error: any) {
-      console.error("Subscription error:", error);
+      console.error("Latin lifetime checkout error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid input data" });
+      }
       res.status(400).json({ error: error.message });
     }
   });
@@ -840,6 +887,7 @@ function getProductName(productType: string): string {
     heritage_book_legacy: "Heritage Book - Legacy Edition",
     // Sacred Latin Products
     latin_course_free: "Sacred Latin Course (First 20 Free - Lifetime)",
+    latin_lifetime: "Sacred Latin Course — Lifetime Access",
     // PromptPro Academy Products
     academy_starter: "PromptPro Academy - Starter Course",
     academy_foundation: "PromptPro Academy - Foundation Course",
@@ -861,6 +909,7 @@ function getProductDescription(productType: string): string {
     heritage_book_deluxe: "100+ page hardcover premium family history book",
     heritage_book_legacy: "150+ page leather-bound archival family history book",
     latin_course_free: "Sacred Latin course - Free lifetime access (First 20 promo)",
+    latin_lifetime: "Full Latin course - One-time lifetime purchase",
     academy_starter: "Learn AI basics through ancestry research",
     academy_foundation: "Master prompt engineering fundamentals",
     academy_professional: "Career-ready AI skills with certification",
