@@ -205,8 +205,8 @@ export const medicalLessonLinks: MedicalLessonLink[] = [
     lessonId: 17,
     links: [
       {
-        title: 'Medical oaths echo sacred Latin',
-        description: "The phrase 'Primum non nocēre' (First, do no harm) blends sacred and medical Latin. Medical oaths historically used the same reverent language as prayers.",
+        title: 'Medical oaths in Latin',
+        description: "The phrase 'Primum non nocēre' (First, do no harm) is the foundational principle of medical ethics. Medical oaths historically used formal Latin for precision and authority.",
         rootRefs: []
       }
     ]
@@ -216,7 +216,7 @@ export const medicalLessonLinks: MedicalLessonLink[] = [
     links: [
       {
         title: '"Sānāre" and healing vocabulary',
-        description: "Sānāre (to heal) gives us 'sanitary,' 'sanitation,' and 'insane' (not sound/healthy). Salūs (health/salvation) gives 'salubrious' — medical and sacred overlap.",
+        description: "Sānāre (to heal) gives us 'sanitary,' 'sanitation,' and 'insane' (not sound/healthy). Salūs (health/salvation) gives 'salubrious' — Latin roots underpin modern medical vocabulary.",
         rootRefs: []
       }
     ]
@@ -226,7 +226,7 @@ export const medicalLessonLinks: MedicalLessonLink[] = [
     links: [
       {
         title: 'Build your own medical terms',
-        description: "Just like building prayers, you can build medical terms: gastr- + -itis = gastritis (stomach inflammation). Combine root + suffix to decode or create terms.",
+        description: "Just like building Latin sentences, you can build medical terms: gastr- + -itis = gastritis (stomach inflammation). Combine root + suffix to decode or create terms.",
         rootRefs: ["gastr-", "arthr-", "hepat-"]
       },
       {
@@ -249,6 +249,588 @@ export const medicalLessonLinks: MedicalLessonLink[] = [
         description: "Veins: low pressure, easy IV access, carry blood toward the heart. Arteries: high pressure, pulse strong — check radial (wrist), brachial (arm), carotid (neck). Vēna (vein) and artēria (artery) are Latin staples of vascular anatomy.",
         rootRefs: ["vas-"]
       }
+    ]
+  }
+];
+
+export interface HealthcareOverride {
+  lessonId: number;
+  title?: string;
+  subtitle?: string;
+  content?: string;
+  phrases?: Array<{
+    latin: string;
+    meaning: string;
+    syllables: Array<{ text: string; stress: "high" | "medium" | "low" }>;
+    phonetic: string;
+  }>;
+  vocabReplacements?: Array<{ index: number; latin: string; english: string; type: "noun" | "verb" | "adjective" | "adverb" | "pronoun" | "preposition" | "conjunction"; gender?: "masculine" | "feminine" | "neuter"; declension?: string; conjugation?: string; phonetic: string }>;
+  quizReplacements?: Array<{ index: number; question: string; options: string[]; correctIndex: number; explanation: string }>;
+}
+
+export const healthcareOverrides: HealthcareOverride[] = [
+  {
+    lessonId: 1,
+    phrases: [
+      {
+        latin: "Medīcīna ars est",
+        meaning: "Medicine is an art",
+        syllables: [
+          { text: "me", stress: "low" },
+          { text: "DĪ", stress: "high" },
+          { text: "kī", stress: "medium" },
+          { text: "na", stress: "low" },
+          { text: " ARS", stress: "high" },
+          { text: " est", stress: "medium" }
+        ],
+        phonetic: "meh-DEE-kee-nah ARS est"
+      },
+      {
+        latin: "Salve",
+        meaning: "Hello / Greetings",
+        syllables: [
+          { text: "SAL", stress: "high" },
+          { text: "ve", stress: "medium" }
+        ],
+        phonetic: "SAHL-veh"
+      }
+    ]
+  },
+  {
+    lessonId: 2,
+    content: "Latin vowels can be long or short, which changes meaning and affects the rhythm of speech. Long vowels are held about twice as long as short vowels. A macron (ā, ē, ī, ō, ū) marks long vowels. In medical terminology, getting vowel length right ensures proper pronunciation of anatomical and clinical terms.",
+    phrases: [
+      {
+        latin: "Medīcus cūrat aegrōs",
+        meaning: "The physician cures the sick",
+        syllables: [
+          { text: "me", stress: "low" },
+          { text: "DĪ", stress: "high" },
+          { text: "kus", stress: "medium" },
+          { text: " KŪ", stress: "high" },
+          { text: "rat", stress: "medium" },
+          { text: " AI", stress: "high" },
+          { text: "grohs", stress: "medium" }
+        ],
+        phonetic: "meh-DEE-koos KOO-raht AI-grohs"
+      },
+      {
+        latin: "Vīta brevis, ars longa",
+        meaning: "Life is short, the art is long",
+        syllables: [
+          { text: "WĪ", stress: "high" },
+          { text: "ta", stress: "medium" },
+          { text: " BRE", stress: "high" },
+          { text: "wis", stress: "medium" },
+          { text: " ARS", stress: "high" },
+          { text: " LON", stress: "high" },
+          { text: "ga", stress: "medium" }
+        ],
+        phonetic: "WEE-tah BREH-wis ARS LON-gah"
+      }
+    ]
+  },
+  {
+    lessonId: 3,
+    content: "Latin consonants are mostly straightforward, but some differ from English. C is always hard (like K), G is always hard (like in 'go'). Diphthongs are two vowels pronounced as one sound: AE (like 'eye'), OE (like 'oy'), AU (like 'ow' in 'how'). In medical Latin, AE and OE are often simplified to 'eh' (e.g., anaemia → anemia).",
+    phrases: [
+      {
+        latin: "Haemorrhagia ex arteriā",
+        meaning: "Hemorrhage from the artery",
+        syllables: [
+          { text: "hai", stress: "medium" },
+          { text: "mor", stress: "medium" },
+          { text: "RHA", stress: "high" },
+          { text: "gi", stress: "medium" },
+          { text: "a", stress: "low" },
+          { text: " eks", stress: "medium" },
+          { text: " ar", stress: "low" },
+          { text: "TE", stress: "high" },
+          { text: "ri", stress: "medium" },
+          { text: "ā", stress: "low" }
+        ],
+        phonetic: "hai-mor-RAH-gee-ah eks ar-TEH-ree-ah"
+      }
+    ]
+  },
+  {
+    lessonId: 5,
+    phrases: [
+      {
+        latin: "Humerus est os bracchiī",
+        meaning: "The humerus is the bone of the arm",
+        syllables: [
+          { text: "HU", stress: "high" },
+          { text: "me", stress: "medium" },
+          { text: "rus", stress: "low" },
+          { text: " est", stress: "medium" },
+          { text: " os", stress: "high" },
+          { text: " BRAK", stress: "high" },
+          { text: "ki", stress: "medium" },
+          { text: "ī", stress: "low" }
+        ],
+        phonetic: "HOO-meh-roos est os BRAHK-kee-ee"
+      }
+    ],
+    vocabReplacements: [
+      { index: 0, latin: "humerus", english: "upper arm bone", type: "noun", gender: "masculine", declension: "2nd", phonetic: "HOO-meh-roos" },
+      { index: 1, latin: "morbus", english: "disease", type: "noun", gender: "masculine", declension: "2nd", phonetic: "MOR-boos" }
+    ]
+  },
+  {
+    lessonId: 6,
+    phrases: [
+      {
+        latin: "Cor corporis vīvit",
+        meaning: "The heart of the body lives",
+        syllables: [
+          { text: "KOR", stress: "high" },
+          { text: " KOR", stress: "high" },
+          { text: "po", stress: "medium" },
+          { text: "ris", stress: "low" },
+          { text: " WĪ", stress: "high" },
+          { text: "wit", stress: "medium" }
+        ],
+        phonetic: "KOR KOR-poh-ris WEE-wit"
+      }
+    ]
+  },
+  {
+    lessonId: 7,
+    phrases: [
+      {
+        latin: "Medīcus cūrat patientem",
+        meaning: "The physician cures the patient",
+        syllables: [
+          { text: "me", stress: "low" },
+          { text: "DĪ", stress: "high" },
+          { text: "kus", stress: "medium" },
+          { text: " KŪ", stress: "high" },
+          { text: "rat", stress: "medium" },
+          { text: " pa", stress: "low" },
+          { text: "ti", stress: "medium" },
+          { text: "EN", stress: "high" },
+          { text: "tem", stress: "medium" }
+        ],
+        phonetic: "meh-DEE-koos KOO-raht pah-tee-EN-tem"
+      },
+      {
+        latin: "Vidēmus lūcem",
+        meaning: "We see the light",
+        syllables: [
+          { text: "wi", stress: "low" },
+          { text: "DĒ", stress: "high" },
+          { text: "mus", stress: "medium" },
+          { text: " LŪ", stress: "high" },
+          { text: "kem", stress: "medium" }
+        ],
+        phonetic: "wee-DEH-moos LOO-kem"
+      }
+    ],
+    vocabReplacements: [
+      { index: 1, latin: "cūrāre", english: "to cure / to care for", type: "verb", conjugation: "1st", phonetic: "koo-RAH-reh" }
+    ],
+    quizReplacements: [
+      { index: 1, question: "What does 'cūrāre' mean?", options: ["To cut", "To cure / care for", "To run", "To call"], correctIndex: 1, explanation: "Cūrāre means to cure or care for. Think of 'cure' and 'curative' in English." }
+    ]
+  },
+  {
+    lessonId: 8,
+    phrases: [
+      {
+        latin: "Audī pulsūs patientis",
+        meaning: "Listen to the patient's pulse",
+        syllables: [
+          { text: "OW", stress: "high" },
+          { text: "dee", stress: "medium" },
+          { text: " pool", stress: "medium" },
+          { text: "SOOS", stress: "high" },
+          { text: " pa", stress: "low" },
+          { text: "ti", stress: "medium" },
+          { text: "EN", stress: "high" },
+          { text: "tis", stress: "medium" }
+        ],
+        phonetic: "OW-dee pool-SOOS pah-tee-EN-tis"
+      }
+    ]
+  },
+  {
+    lessonId: 9,
+    content: "Esse (to be) is the most common Latin verb and is irregular. Present tense: sum (I am), es (you are), est (he/she/it is), sumus (we are), estis (you all are), sunt (they are). This verb is essential for clinical descriptions — 'The patient is feverish' = Patiens febrīlis est.",
+    phrases: [
+      {
+        latin: "Patiens febrīlis est",
+        meaning: "The patient is feverish",
+        syllables: [
+          { text: "PA", stress: "high" },
+          { text: "ti", stress: "medium" },
+          { text: "ens", stress: "low" },
+          { text: " fe", stress: "medium" },
+          { text: "BRĪ", stress: "high" },
+          { text: "lis", stress: "medium" },
+          { text: " est", stress: "medium" }
+        ],
+        phonetic: "PAH-tee-ens feh-BREE-lis est"
+      },
+      {
+        latin: "Ossa fortia sunt",
+        meaning: "The bones are strong",
+        syllables: [
+          { text: "OS", stress: "high" },
+          { text: "sa", stress: "medium" },
+          { text: " FOR", stress: "high" },
+          { text: "ti", stress: "medium" },
+          { text: "a", stress: "low" },
+          { text: " soont", stress: "high" }
+        ],
+        phonetic: "OS-sah FOR-tee-ah soont"
+      }
+    ],
+    quizReplacements: [
+      { index: 3, question: "Translate: 'Patiens febrīlis est'", options: ["The patient had a fever", "The patient is feverish", "The patient is healing", "The patient is here"], correctIndex: 1, explanation: "Patiens = patient, febrīlis = feverish, est = is." }
+    ]
+  },
+  {
+    lessonId: 10,
+    phrases: [
+      {
+        latin: "Nervus vagus longus est",
+        meaning: "The vagus nerve is long",
+        syllables: [
+          { text: "NER", stress: "high" },
+          { text: "wus", stress: "medium" },
+          { text: " VA", stress: "high" },
+          { text: "gus", stress: "medium" },
+          { text: " LON", stress: "high" },
+          { text: "gus", stress: "medium" },
+          { text: " est", stress: "medium" }
+        ],
+        phonetic: "NER-woos WAH-goos LON-goos est"
+      }
+    ],
+    vocabReplacements: [
+      { index: 2, latin: "sānus", english: "healthy / sound", type: "adjective", phonetic: "SAH-noos" },
+      { index: 4, latin: "validus", english: "strong / vigorous", type: "adjective", phonetic: "WAH-lee-doos" }
+    ],
+    quizReplacements: [
+      { index: 1, question: "What is the feminine form of 'bonus' (good)?", options: ["Bona", "Bone", "Bonum", "Bonus"], correctIndex: 0, explanation: "Bonus (m), bona (f), bonum (n). Adjectives match the gender of their noun." },
+      { index: 3, question: "What does 'sānus' mean?", options: ["Sandy", "Healthy / Sound", "Saintly", "Sad"], correctIndex: 1, explanation: "Sānus means healthy or sound. Think of 'sane', 'sanitary', 'insane' (not healthy)." }
+    ]
+  },
+  {
+    lessonId: 11,
+    content: "Latin pronouns decline like nouns. Ego (I/me), tū (you), nōs (we/us), vōs (you all). The vocative case is used for direct address — calling upon a person or colleague. Most nouns use the nominative for vocative, except 2nd declension -us which becomes -e (Medice from Medicus).",
+    phrases: [
+      {
+        latin: "Tē rogō, Medice",
+        meaning: "I ask you, Doctor",
+        syllables: [
+          { text: "TĒ", stress: "high" },
+          { text: " RO", stress: "high" },
+          { text: "gō", stress: "medium" },
+          { text: " ME", stress: "high" },
+          { text: "di", stress: "medium" },
+          { text: "ke", stress: "low" }
+        ],
+        phonetic: "TEH ROH-goh MEH-dee-keh"
+      },
+      {
+        latin: "Cūrā nōs, Medice",
+        meaning: "Heal us, Doctor",
+        syllables: [
+          { text: "KŪ", stress: "high" },
+          { text: "rā", stress: "medium" },
+          { text: " nōs", stress: "high" },
+          { text: " ME", stress: "high" },
+          { text: "di", stress: "medium" },
+          { text: "ke", stress: "low" }
+        ],
+        phonetic: "KOO-rah nohs MEH-dee-keh"
+      }
+    ],
+    quizReplacements: [
+      { index: 0, question: "What is the vocative of 'Medicus'?", options: ["Medicus", "Medice", "Medicō", "Medicī"], correctIndex: 1, explanation: "Second declension -us nouns change to -e in vocative: Medice (O Doctor)." },
+      { index: 2, question: "What does 'cūrā' (imperative) mean?", options: ["Be curious", "Heal / Care for", "Be careful", "Run"], correctIndex: 1, explanation: "Cūrā is the imperative of cūrāre — heal or care for." }
+    ]
+  },
+  {
+    lessonId: 12,
+    title: "Prepositions & Medical Phrases",
+    subtitle: "Connecting words in clinical language",
+    content: "Prepositions govern specific cases. With accusative: in (into), ad (toward), per (through), prō (for/on behalf of). With ablative: in (in/on), cum (with), ab/ā (from), ex/ē (out of), sine (without). Many medical phrases use prepositions: per ōs (by mouth), in vitrō (in glass), ex vīvō (from the living).",
+    phrases: [
+      {
+        latin: "Per ōs bis in diē",
+        meaning: "By mouth twice a day",
+        syllables: [
+          { text: "pehr", stress: "medium" },
+          { text: " ōs", stress: "high" },
+          { text: " bis", stress: "high" },
+          { text: " in", stress: "low" },
+          { text: " DI", stress: "high" },
+          { text: "ē", stress: "medium" }
+        ],
+        phonetic: "pehr ohs bis in DEE-eh"
+      }
+    ]
+  },
+  {
+    lessonId: 13,
+    subtitle: "Commands in clinical and professional Latin",
+    content: "The imperative mood gives commands — essential for clinical directions and instructions. Singular imperative is usually the verb stem: amā! (love!), audī! (hear!). Plural adds -te: amāte! audīte! Negative commands use nōlī/nōlīte + infinitive. Many medical directives are imperatives: 'Mix!' (Misce!), 'Label!' (Signa!), 'Give!' (Dā!).",
+    phrases: [
+      {
+        latin: "Misce et signa",
+        meaning: "Mix and label (pharmacy directive)",
+        syllables: [
+          { text: "MIS", stress: "high" },
+          { text: "ke", stress: "medium" },
+          { text: " et", stress: "low" },
+          { text: " SIG", stress: "high" },
+          { text: "na", stress: "medium" }
+        ],
+        phonetic: "MIS-keh et SIG-nah"
+      },
+      {
+        latin: "Prōtege nōs",
+        meaning: "Protect us",
+        syllables: [
+          { text: "PRŌ", stress: "high" },
+          { text: "te", stress: "medium" },
+          { text: "ge", stress: "low" },
+          { text: " nōs", stress: "high" }
+        ],
+        phonetic: "PROH-teh-geh nohs"
+      }
+    ]
+  },
+  {
+    lessonId: 14,
+    phrases: [
+      {
+        latin: "Medīcus dīxit",
+        meaning: "The physician said / spoke",
+        syllables: [
+          { text: "me", stress: "low" },
+          { text: "DĪ", stress: "high" },
+          { text: "kus", stress: "medium" },
+          { text: " DĪK", stress: "high" },
+          { text: "sit", stress: "medium" }
+        ],
+        phonetic: "meh-DEE-koos DEEK-sit"
+      },
+      {
+        latin: "Vīdī, vīcī",
+        meaning: "I saw, I conquered",
+        syllables: [
+          { text: "WĪ", stress: "high" },
+          { text: "dī", stress: "medium" },
+          { text: " WĪ", stress: "high" },
+          { text: "kī", stress: "medium" }
+        ],
+        phonetic: "WEE-dee WEE-kee"
+      }
+    ]
+  },
+  {
+    lessonId: 15,
+    subtitle: "Wishes, directives, and possibilities",
+    content: "The subjunctive mood expresses wishes, possibilities, and exhortations — extremely important in prescriptions and clinical directives. 'Let it be made' (Fīat), 'Let it be given' (Dētur), 'May the patient recover' (Patiens convalēscat). The subjunctive changes the vowel: 1st conj ā→ē, 2nd ē→eā, 3rd/4th use -ā-.",
+    phrases: [
+      {
+        latin: "Fīat mistura",
+        meaning: "Let the mixture be made",
+        syllables: [
+          { text: "FĪ", stress: "high" },
+          { text: "at", stress: "medium" },
+          { text: " mis", stress: "medium" },
+          { text: "TŪ", stress: "high" },
+          { text: "ra", stress: "low" }
+        ],
+        phonetic: "FEE-aht mis-TOO-rah"
+      },
+      {
+        latin: "Dētur medicāmentum",
+        meaning: "Let the medication be given",
+        syllables: [
+          { text: "DĒ", stress: "high" },
+          { text: "tur", stress: "medium" },
+          { text: " me", stress: "low" },
+          { text: "di", stress: "medium" },
+          { text: "kā", stress: "medium" },
+          { text: "MEN", stress: "high" },
+          { text: "tum", stress: "medium" }
+        ],
+        phonetic: "DEH-toor meh-dee-kah-MEN-toom"
+      },
+      {
+        latin: "Requiescat in pāce",
+        meaning: "May he/she rest in peace",
+        syllables: [
+          { text: "re", stress: "low" },
+          { text: "kwi", stress: "medium" },
+          { text: "ES", stress: "high" },
+          { text: "kat", stress: "medium" },
+          { text: " in", stress: "low" },
+          { text: " PĀ", stress: "high" },
+          { text: "ke", stress: "medium" }
+        ],
+        phonetic: "reh-kwee-ES-kaht in PAH-keh"
+      }
+    ],
+    vocabReplacements: [
+      { index: 1, latin: "dētur", english: "let it be given", type: "verb", phonetic: "DEH-toor" },
+      { index: 2, latin: "convalēscat", english: "may he/she recover", type: "verb", phonetic: "kon-wah-LEHS-kaht" }
+    ],
+    quizReplacements: [
+      { index: 1, question: "What mood is 'Fīat mistura'?", options: ["Indicative", "Imperative", "Subjunctive", "Infinitive"], correctIndex: 2, explanation: "Fīat is subjunctive — 'let it be made' is a directive, not a statement of fact." },
+      { index: 2, question: "What does 'Requiescat in pāce' mean?", options: ["He rested in peace", "May he/she rest in peace", "Rest in peace (command)", "They rested peacefully"], correctIndex: 1, explanation: "Requiescat is subjunctive expressing a wish: May he/she rest in peace." }
+    ]
+  },
+  {
+    lessonId: 16,
+    title: "Numbers & Clinical Counting",
+    subtitle: "Latin numbers in medicine",
+    content: "Numbers appear frequently in medical contexts. Cardinal numbers: ūnus (1), duo (2), trēs (3), quattuor (4), quīnque (5), sex (6), septem (7), octō (8), novem (9), decem (10). Numbers 1-3 decline like adjectives. Prescriptions use Latin numbers: bis (twice), ter (three times), quater (four times).",
+    phrases: [
+      {
+        latin: "Ūna tabletta ter in diē",
+        meaning: "One tablet three times a day",
+        syllables: [
+          { text: "Ū", stress: "high" },
+          { text: "na", stress: "medium" },
+          { text: " ta", stress: "low" },
+          { text: "BLET", stress: "high" },
+          { text: "ta", stress: "medium" },
+          { text: " ter", stress: "high" },
+          { text: " in", stress: "low" },
+          { text: " DI", stress: "high" },
+          { text: "ē", stress: "medium" }
+        ],
+        phonetic: "OO-nah tah-BLET-tah ter in DEE-eh"
+      }
+    ]
+  },
+  {
+    lessonId: 4,
+    vocabReplacements: [
+      { index: 3, latin: "scapula", english: "shoulder blade", type: "noun", gender: "feminine", declension: "1st", phonetic: "SKAH-poo-lah" }
+    ],
+    quizReplacements: [
+      { index: 2, question: "What does 'scapula' mean?", options: ["Skull", "Spine", "Shoulder blade", "Shin"], correctIndex: 2, explanation: "Scapula means shoulder blade. It's a 1st declension feminine noun." }
+    ]
+  },
+  {
+    lessonId: 19,
+    title: "Crafting Clinical Latin Phrases",
+    subtitle: "Building original medical terminology",
+    content: "Now you have the tools to build your own Latin medical phrases. Key patterns: Start with the subject (medīcus, patiens, morbus), add a verb in the appropriate tense or mood (cūrat, dētur, fīat), include the object (medicāmentum, remedium), and add modifiers (per ōs, bis in diē). This mirrors how prescriptions and clinical notes are structured.",
+    phrases: [
+      {
+        latin: "Medīcus prōtegit familiam ab morbō",
+        meaning: "The physician protects the family from disease",
+        syllables: [
+          { text: "me", stress: "low" },
+          { text: "DĪ", stress: "high" },
+          { text: "kus", stress: "medium" },
+          { text: " PRŌ", stress: "high" },
+          { text: "te", stress: "medium" },
+          { text: "git", stress: "low" },
+          { text: " fa", stress: "low" },
+          { text: "MI", stress: "high" },
+          { text: "li", stress: "medium" },
+          { text: "am", stress: "low" },
+          { text: " ab", stress: "low" },
+          { text: " MOR", stress: "high" },
+          { text: "bō", stress: "medium" }
+        ],
+        phonetic: "meh-DEE-koos PROH-teh-git fah-MEE-lee-ahm ab MOR-boh"
+      },
+      {
+        latin: "Dā mihi fortitūdinem et sapientiam",
+        meaning: "Give me strength and wisdom",
+        syllables: [
+          { text: "DĀ", stress: "high" },
+          { text: " MI", stress: "high" },
+          { text: "hi", stress: "low" },
+          { text: " for", stress: "low" },
+          { text: "ti", stress: "medium" },
+          { text: "TŪ", stress: "high" },
+          { text: "di", stress: "medium" },
+          { text: "nem", stress: "low" },
+          { text: " et", stress: "low" },
+          { text: " sa", stress: "low" },
+          { text: "pi", stress: "medium" },
+          { text: "EN", stress: "high" },
+          { text: "ti", stress: "medium" },
+          { text: "am", stress: "low" }
+        ],
+        phonetic: "DAH MEE-hee for-tee-TOO-dee-nem et sah-pee-EN-tee-ahm"
+      }
+    ],
+    quizReplacements: [
+      { index: 0, question: "How do you address a physician directly in Latin?", options: ["Medīcus (nominative)", "Medīcum (accusative)", "Medice (vocative)", "Medīcī (genitive)"], correctIndex: 2, explanation: "Use the vocative case for direct address. 2nd declension -us becomes -e: Medice." }
+    ]
+  },
+  {
+    lessonId: 20,
+    title: "Full Clinical Pronunciation Practice",
+    subtitle: "Putting it all together",
+    content: "This final lesson brings everything together with extended clinical and anatomical texts for practice. Focus on smooth pronunciation, proper vowel lengths, correct stress patterns, and clear delivery. Read each text slowly first, then build speed while maintaining clarity. Record yourself and compare with the phonetic guides.",
+    phrases: [
+      {
+        latin: "Primum non nocēre",
+        meaning: "First, do no harm",
+        syllables: [
+          { text: "PRĪ", stress: "high" },
+          { text: "mum", stress: "medium" },
+          { text: " non", stress: "medium" },
+          { text: " no", stress: "medium" },
+          { text: "KĒ", stress: "high" },
+          { text: "re", stress: "low" }
+        ],
+        phonetic: "PREE-moom non noh-KEH-reh"
+      },
+      {
+        latin: "Corpus sānum in mente sānā",
+        meaning: "A healthy body in a healthy mind",
+        syllables: [
+          { text: "KOR", stress: "high" },
+          { text: "pus", stress: "medium" },
+          { text: " SĀ", stress: "high" },
+          { text: "num", stress: "medium" },
+          { text: " in", stress: "low" },
+          { text: " MEN", stress: "high" },
+          { text: "te", stress: "medium" },
+          { text: " SĀ", stress: "high" },
+          { text: "nā", stress: "medium" }
+        ],
+        phonetic: "KOR-poos SAH-noom in MEN-teh SAH-nah"
+      },
+      {
+        latin: "Sīcut erat in prīncipiō, et nunc, et semper",
+        meaning: "As it was in the beginning, and now, and always",
+        syllables: [
+          { text: "SĪ", stress: "high" },
+          { text: "kut", stress: "medium" },
+          { text: " EH", stress: "high" },
+          { text: "rat", stress: "medium" },
+          { text: " in", stress: "low" },
+          { text: " prīn", stress: "medium" },
+          { text: "KI", stress: "high" },
+          { text: "pi", stress: "medium" },
+          { text: "ō", stress: "low" },
+          { text: " et", stress: "low" },
+          { text: " NUNK", stress: "high" },
+          { text: " et", stress: "low" },
+          { text: " SEM", stress: "high" },
+          { text: "per", stress: "medium" }
+        ],
+        phonetic: "SEE-koot EH-raht in preen-KI-pee-oh et NOONK et SEM-pehr"
+      }
+    ],
+    quizReplacements: [
+      { index: 3, question: "What does 'saecula saeculōrum' literally mean?", options: ["Ancient secrets", "Ages of ages (forever)", "Century of centuries", "Secular world"], correctIndex: 1, explanation: "Saecula saeculōrum = ages of ages, meaning forever and ever. Used in formal Latin closings." }
     ]
   }
 ];

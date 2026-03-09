@@ -34,7 +34,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Link } from "wouter";
 import { lessons, categoryLabels, categoryColors, type Lesson, type Syllable } from "@/data/latinLessons";
-import { medicalRoots, medicalLessonLinks, medicalQuizQuestions } from "@/data/medicalRoots";
+import { medicalRoots, medicalLessonLinks, medicalQuizQuestions, healthcareOverrides } from "@/data/medicalRoots";
 
 function SyllableDisplay({ syllables }: { syllables: Syllable[] }) {
   const getSizeClass = (stress: string) => {
@@ -111,7 +111,36 @@ function MedLinkBox({ lessonId }: { lessonId: number }) {
   );
 }
 
-function LessonView({ lesson, onBack, medMode }: { lesson: Lesson; onBack: () => void; medMode: boolean }) {
+function applyHealthcareOverride(lesson: Lesson, medMode: boolean): Lesson {
+  if (!medMode) return lesson;
+  const override = healthcareOverrides.find(o => o.lessonId === lesson.id);
+  if (!override) return lesson;
+  const result = { ...lesson };
+  if (override.title) result.title = override.title;
+  if (override.subtitle) result.subtitle = override.subtitle;
+  if (override.content) result.content = override.content;
+  if (override.phrases) result.phrases = override.phrases;
+  if (override.vocabReplacements) {
+    result.vocabulary = [...lesson.vocabulary];
+    for (const rep of override.vocabReplacements) {
+      if (rep.index < result.vocabulary.length) {
+        result.vocabulary[rep.index] = { latin: rep.latin, english: rep.english, type: rep.type, phonetic: rep.phonetic, ...(rep.gender ? { gender: rep.gender } : {}), ...(rep.declension ? { declension: rep.declension } : {}), ...(rep.conjugation ? { conjugation: rep.conjugation } : {}) };
+      }
+    }
+  }
+  if (override.quizReplacements) {
+    result.quiz = [...lesson.quiz];
+    for (const rep of override.quizReplacements) {
+      if (rep.index < result.quiz.length) {
+        result.quiz[rep.index] = { question: rep.question, options: rep.options, correctIndex: rep.correctIndex, explanation: rep.explanation };
+      }
+    }
+  }
+  return result;
+}
+
+function LessonView({ lesson: rawLesson, onBack, medMode }: { lesson: Lesson; onBack: () => void; medMode: boolean }) {
+  const lesson = applyHealthcareOverride(rawLesson, medMode);
   const [expandedPhrase, setExpandedPhrase] = useState<number | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -450,7 +479,7 @@ export default function LatinCourse() {
       if (res.ok && data.success) {
         setClaimed(true);
         setFreeSpots(prev => prev !== null ? Math.max(0, prev - 1) : null);
-        toast({ title: "You're in! Lifetime access granted!", description: "Sacred Latin Course is yours — $0.00 forever. No credit card needed." });
+        toast({ title: "You're in! Lifetime access granted!", description: `${medMode ? "Medical" : "Sacred"} Latin Course is yours — $0.00 forever. No credit card needed.` });
       } else {
         toast({ title: "Could not claim", description: data.error || "Please try again.", variant: "destructive" });
       }
@@ -517,7 +546,7 @@ export default function LatinCourse() {
   };
 
   const baseLessons = medMode
-    ? lessons.filter(l => l.category !== "prayers")
+    ? lessons.filter(l => l.category !== "prayers").map(l => applyHealthcareOverride(l, true))
     : lessons;
 
   const filteredLessons = filterCategory 
@@ -533,16 +562,20 @@ export default function LatinCourse() {
       <div className="container px-4 py-12">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
-            20 Lessons + Quizzes
+            {medMode ? "18" : "20"} Lessons + Quizzes
           </Badge>
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
-            Sacred Latin Pronunciation
+            {medMode ? "Medical Latin Pronunciation" : "Sacred Latin Pronunciation"}
           </h1>
           <p className="text-xl text-slate-300 mb-2">
-            Master the ancient tongue for invocations, prayers, and ritual work
+            {medMode
+              ? "Master the ancient tongue for clinical terminology and anatomy"
+              : "Master the ancient tongue for invocations, prayers, and ritual work"}
           </p>
           <p className="text-slate-400 mb-8">
-            Nouns, verbs, declensions, conjugations + AI translator + custom prayer builder
+            {medMode
+              ? "Nouns, verbs, declensions, conjugations + AI translator + medical roots"
+              : "Nouns, verbs, declensions, conjugations + AI translator + custom prayer builder"}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
@@ -582,10 +615,10 @@ export default function LatinCourse() {
           )}
 
           <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> 20 structured lessons</span>
+            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> {medMode ? "18" : "20"} structured lessons</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Quizzes after each lesson</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> AI pronunciation</span>
-            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Custom prayers</span>
+            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> {medMode ? "Medical roots & terminology" : "Custom prayers"}</span>
           </div>
         </div>
       </div>
@@ -907,9 +940,11 @@ export default function LatinCourse() {
 
       <div className="bg-slate-800/50 py-12">
         <div className="container px-4 text-center">
-          <h2 className="text-2xl font-bold mb-4">Ready to Master Sacred Latin?</h2>
+          <h2 className="text-2xl font-bold mb-4">{medMode ? "Ready to Master Medical Latin?" : "Ready to Master Sacred Latin?"}</h2>
           <p className="text-slate-400 mb-6 max-w-xl mx-auto">
-            Join practitioners deepening their ritual work. Cancel anytime.
+            {medMode
+              ? "Join healthcare professionals mastering clinical terminology. Cancel anytime."
+              : "Join practitioners deepening their ritual work. Cancel anytime."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {freeSpots !== null && freeSpots > 0 && !claimed && (
@@ -940,7 +975,7 @@ export default function LatinCourse() {
               <Gift className="h-6 w-6" /> Claim Your FREE Lifetime Access
             </DialogTitle>
             <DialogDescription className="text-slate-300">
-              The first 20 people get the Sacred Latin Course completely free — $0.00, forever. No credit card required.
+              The first 20 people get the {medMode ? "Medical" : "Sacred"} Latin Course completely free — $0.00, forever. No credit card required.
             </DialogDescription>
           </DialogHeader>
           {claimed ? (
@@ -949,7 +984,7 @@ export default function LatinCourse() {
                 <Check className="h-8 w-8 text-green-400" />
               </div>
               <h3 className="text-xl font-bold text-green-400 mb-2">You're In!</h3>
-              <p className="text-slate-300">Sacred Latin Course is yours for life. No charges, ever.</p>
+              <p className="text-slate-300">{medMode ? "Medical" : "Sacred"} Latin Course is yours for life. No charges, ever.</p>
             </div>
           ) : (
             <div className="space-y-4 py-2">
