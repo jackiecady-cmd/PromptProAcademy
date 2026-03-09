@@ -561,8 +561,9 @@ export default function LatinCourse() {
   };
 
   const medOnlyLessonIds = [21];
+  const medHiddenLessonIds = [17, 18, 19, 20];
   const baseLessons = medMode
-    ? lessons.filter(l => l.category !== "prayers").map(l => applyHealthcareOverride(l, true))
+    ? lessons.filter(l => l.category !== "prayers" && !medHiddenLessonIds.includes(l.id)).map(l => applyHealthcareOverride(l, true))
     : lessons.filter(l => !medOnlyLessonIds.includes(l.id));
 
   const filteredLessons = filterCategory 
@@ -578,15 +579,13 @@ export default function LatinCourse() {
       <div className="container px-4 py-12">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
-            {medMode ? "19" : "20"} Lessons + Quizzes
+            {medMode ? "17" : "20"} Lessons + Quizzes
           </Badge>
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
-            {medMode ? "Medical Latin Pronunciation" : "Sacred Latin Pronunciation"}
+            Latin for Witches & Med Pros
           </h1>
           <p className="text-xl text-slate-300 mb-2">
-            {medMode
-              ? "Master the ancient tongue for clinical terminology and anatomy"
-              : "Master the ancient tongue for invocations, prayers, and ritual work"}
+            Toggle Modes — No Crossover.
           </p>
           <p className="text-slate-400 mb-8">
             {medMode
@@ -639,7 +638,7 @@ export default function LatinCourse() {
           )}
 
           <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> {medMode ? "19" : "20"} structured lessons</span>
+            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> {medMode ? "17" : "20"} structured lessons</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Quizzes after each lesson</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> AI pronunciation</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> {medMode ? "Medical roots & terminology" : "Custom prayers"}</span>
@@ -964,7 +963,7 @@ export default function LatinCourse() {
 
       <div className="bg-slate-800/50 py-12">
         <div className="container px-4 text-center">
-          <h2 className="text-2xl font-bold mb-4">{medMode ? "Ready to Master Medical Latin?" : "Ready to Master Sacred Latin?"}</h2>
+          <h2 className="text-2xl font-bold mb-4">{medMode ? "Ready to Master Medical Latin?" : "Ready to Master Ritual Latin?"}</h2>
           <p className="text-slate-400 mb-6 max-w-xl mx-auto">
             {medMode
               ? "Join healthcare professionals mastering clinical terminology. One payment. Yours forever."
@@ -1077,7 +1076,7 @@ export default function LatinCourse() {
               <Star className="h-6 w-6" /> Get Lifetime Access
             </DialogTitle>
             <DialogDescription className="text-slate-300">
-              One payment. All {medMode ? "21" : "20"} lessons, Healthcare Mode, quizzes, AI translator — yours forever. No subscription.
+              One payment. All {medMode ? "17" : "20"} lessons, Healthcare Mode, quizzes, AI translator — yours forever. No subscription.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">

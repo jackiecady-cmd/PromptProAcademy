@@ -847,6 +847,11 @@ export const healthcareOverrides: HealthcareOverride[] = [
     quizReplacements: [
       { index: 3, question: "What does 'saecula saeculōrum' literally mean?", options: ["Ancient secrets", "Ages of ages (forever)", "Century of centuries", "Secular world"], correctIndex: 1, explanation: "Saecula saeculōrum = ages of ages, meaning forever and ever. Used in formal Latin closings." }
     ]
+  },
+  {
+    lessonId: 21,
+    title: "Arteri- Roots: Arteries in Shock",
+    subtitle: "Latin roots behind arterial emergencies"
   }
 ];
 
@@ -901,5 +906,6 @@ export const medicalQuizQuestions: MedicalQuizQuestion[] = [
   { lessonId: 20, question: "Pronounce 'myocardial': which syllable gets stress?", options: ["MY-oh-cardial", "my-oh-CAR-dee-al", "my-OH-cardial", "myocar-DI-al"], correctIndex: 1, explanation: "my-oh-CAR-dee-al. The stress falls on CAR (from cardi-/cor, heart). Myo- = muscle." },
   { lessonId: 20, question: "What does 'arthr-' mean?", options: ["Artery", "Joint", "Arm", "Arch"], correctIndex: 1, explanation: "Arthr- = joint. Arthritis = joint inflammation, arthroscopy = joint viewing procedure." },
   { lessonId: 21, question: "What does 'vasoconstriction' mean, using Latin roots?", options: ["Vessel widening", "Vessel narrowing/tightening", "Vessel breaking", "Vessel blocking"], correctIndex: 1, explanation: "Vās (vessel) + constrictiō (tightening) = vasoconstriction. Arteries narrow to maintain blood pressure during shock." },
-  { lessonId: 21, question: "What does 'exsanguinate' literally mean?", options: ["To lose consciousness", "To drain of blood", "To stop breathing", "To lose pulse"], correctIndex: 1, explanation: "Ex- (out of) + sanguis (blood) = exsanguinate, to bleed out completely. A life-threatening emergency." }
+  { lessonId: 21, question: "What does 'exsanguinate' literally mean?", options: ["To lose consciousness", "To drain of blood", "To stop breathing", "To lose pulse"], correctIndex: 1, explanation: "Ex- (out of) + sanguis (blood) = exsanguinate, to bleed out completely. A life-threatening emergency." },
+  { lessonId: 21, question: "Why do arteries constrict in hypovolemic shock?", options: ["To increase blood volume", "To maintain perfusion pressure to vital organs", "To stop bleeding at the wound site", "To slow the heart rate down"], correctIndex: 1, explanation: "When blood volume tanks, arteries constrict — hard. It's the body's emergency redirect: shunt whatever blood is left to the brain and heart. Skin goes cold, clammy, pale. Radial pulse disappears below 80 systolic. Kidneys shut down first — no perfusion, no urine output. Then the gut ischemia kicks in. Vasoconstriction buys you minutes, not hours. Without volume replacement, the constriction fails, pressure craters, and multi-organ failure follows. That cold clammy patient with a thready pulse? Clock is ticking." }
 ];
