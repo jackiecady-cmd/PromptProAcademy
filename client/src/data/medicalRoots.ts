@@ -250,6 +250,21 @@ export const medicalLessonLinks: MedicalLessonLink[] = [
         rootRefs: ["vas-"]
       }
     ]
+  },
+  {
+    lessonId: 21,
+    links: [
+      {
+        title: 'Arteria & Shock — When Vessels Clamp Down',
+        description: "Arteria — because in hypovolemic shock, arteries clamp down, pulse goes thready (pulsus fīliformis). Vasoconstriction is the body's last-ditch effort to keep blood pressure up. Check radial pulse — if absent, systolic BP is likely below 80.",
+        rootRefs: ["cardi-", "vas-"]
+      },
+      {
+        title: 'Hemorrhage Roots: Sanguis & Haem-',
+        description: "Sanguis (Latin) and haem- (Greek) both mean blood. Hemorrhage = haem- (blood) + -rrhagia (bursting). Exsanguination = ex- (out) + sanguis (blood). When arteries bleed, blood is bright red and spurts with each heartbeat — a critical distinction from venous (dark, steady) bleeding.",
+        rootRefs: ["cardi-"]
+      }
+    ]
   }
 ];
 
@@ -883,5 +898,7 @@ export const medicalQuizQuestions: MedicalQuizQuestion[] = [
   { lessonId: 19, question: "Break down 'gastritis' using Latin/Greek roots.", options: ["Gastr- (stomach) + -itis (inflammation)", "Gastr- (gas) + -ritis (pain)", "Gast- (gut) + -ritis (rupture)", "Gastr- (gall) + -itis (infection)"], correctIndex: 0, explanation: "Gastr- (stomach) + -itis (inflammation) = gastritis: inflammation of the stomach." },
   { lessonId: 19, question: "What does 'nephr-' mean?", options: ["Nerve", "Nose", "Kidney", "Neck"], correctIndex: 2, explanation: "Nephr- = kidney. Nephrology = kidney specialty, nephrectomy = kidney removal." },
   { lessonId: 20, question: "Pronounce 'myocardial': which syllable gets stress?", options: ["MY-oh-cardial", "my-oh-CAR-dee-al", "my-OH-cardial", "myocar-DI-al"], correctIndex: 1, explanation: "my-oh-CAR-dee-al. The stress falls on CAR (from cardi-/cor, heart). Myo- = muscle." },
-  { lessonId: 20, question: "What does 'arthr-' mean?", options: ["Artery", "Joint", "Arm", "Arch"], correctIndex: 1, explanation: "Arthr- = joint. Arthritis = joint inflammation, arthroscopy = joint viewing procedure." }
+  { lessonId: 20, question: "What does 'arthr-' mean?", options: ["Artery", "Joint", "Arm", "Arch"], correctIndex: 1, explanation: "Arthr- = joint. Arthritis = joint inflammation, arthroscopy = joint viewing procedure." },
+  { lessonId: 21, question: "What does 'vasoconstriction' mean, using Latin roots?", options: ["Vessel widening", "Vessel narrowing/tightening", "Vessel breaking", "Vessel blocking"], correctIndex: 1, explanation: "Vās (vessel) + constrictiō (tightening) = vasoconstriction. Arteries narrow to maintain blood pressure during shock." },
+  { lessonId: 21, question: "What does 'exsanguinate' literally mean?", options: ["To lose consciousness", "To drain of blood", "To stop breathing", "To lose pulse"], correctIndex: 1, explanation: "Ex- (out of) + sanguis (blood) = exsanguinate, to bleed out completely. A life-threatening emergency." }
 ];

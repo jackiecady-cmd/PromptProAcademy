@@ -1012,6 +1012,81 @@ export const lessons: Lesson[] = [
       { question: "What does 'nunc' mean?", options: ["None", "Nun", "Now", "Night"], correctIndex: 2, explanation: "Nunc means now." },
       { question: "What does 'saecula saeculōrum' literally mean?", options: ["Sacred secrets", "Ages of ages (forever)", "Century of centuries", "Secular world"], correctIndex: 1, explanation: "Saecula saeculōrum = ages of ages, meaning forever and ever. A common doxology ending." }
     ]
+  },
+  {
+    id: 21,
+    title: "Arteria — The Artery in Crisis",
+    subtitle: "What's the Latin for 'artery'? Why does it matter in shock?",
+    category: "advanced",
+    content: "Arteria (artery) comes from the Greek artēría, originally meaning 'windpipe' because early anatomists thought arteries carried air. In Latin medical usage, arteria refers to the muscular vessels carrying oxygenated blood from the heart. In hypovolemic shock — when blood volume drops dangerously — arteries clamp down (vasoconstriction) to maintain pressure. The pulse becomes thready: weak, rapid, barely palpable. Recognizing 'thready pulse' (pulsus fīliformis) is a critical clinical sign.",
+    phrases: [
+      {
+        latin: "Arteria sanguinem portat",
+        meaning: "The artery carries blood",
+        syllables: [
+          { text: "ar", stress: "low" },
+          { text: "TE", stress: "high" },
+          { text: "ri", stress: "medium" },
+          { text: "a", stress: "low" },
+          { text: " SAN", stress: "high" },
+          { text: "gui", stress: "medium" },
+          { text: "nem", stress: "low" },
+          { text: " POR", stress: "high" },
+          { text: "tat", stress: "medium" }
+        ],
+        phonetic: "ar-TEH-ree-ah SAHN-gwee-nem POR-taht"
+      },
+      {
+        latin: "Pulsus fīliformis in vulnere gravī",
+        meaning: "Thready pulse in a serious wound",
+        syllables: [
+          { text: "POOL", stress: "high" },
+          { text: "sus", stress: "medium" },
+          { text: " fī", stress: "medium" },
+          { text: "li", stress: "medium" },
+          { text: "FOR", stress: "high" },
+          { text: "mis", stress: "medium" },
+          { text: " in", stress: "low" },
+          { text: " VUL", stress: "high" },
+          { text: "ne", stress: "medium" },
+          { text: "re", stress: "low" },
+          { text: " GRA", stress: "high" },
+          { text: "wī", stress: "medium" }
+        ],
+        phonetic: "POOL-soos fee-lee-FOR-mis in WUUL-neh-reh GRAH-wee"
+      },
+      {
+        latin: "Vāsa contrahuntur in pavōre",
+        meaning: "The vessels contract in shock",
+        syllables: [
+          { text: "VĀ", stress: "high" },
+          { text: "sa", stress: "medium" },
+          { text: " kon", stress: "low" },
+          { text: "tra", stress: "medium" },
+          { text: "HUN", stress: "high" },
+          { text: "tur", stress: "medium" },
+          { text: " in", stress: "low" },
+          { text: " pa", stress: "low" },
+          { text: "VŌ", stress: "high" },
+          { text: "re", stress: "medium" }
+        ],
+        phonetic: "WAH-sah kon-trah-HOON-tur in pah-WOH-reh"
+      }
+    ],
+    vocabulary: [
+      { latin: "arteria", english: "artery", type: "noun", gender: "feminine", declension: "1st", phonetic: "ar-TEH-ree-ah" },
+      { latin: "sanguis", english: "blood", type: "noun", gender: "masculine", declension: "3rd", phonetic: "SAHN-gwis" },
+      { latin: "pulsus", english: "pulse / beat", type: "noun", gender: "masculine", declension: "4th", phonetic: "POOL-soos" },
+      { latin: "vulnus", english: "wound", type: "noun", gender: "neuter", declension: "3rd", phonetic: "WUUL-noos" },
+      { latin: "vāsa", english: "vessels (plural)", type: "noun", gender: "neuter", phonetic: "WAH-sah" },
+      { latin: "fīliformis", english: "thread-like / thready", type: "adjective", phonetic: "fee-lee-FOR-mis" }
+    ],
+    quiz: [
+      { question: "What does 'arteria' originally mean in Greek?", options: ["Blood tube", "Windpipe / Air carrier", "Heart string", "Nerve channel"], correctIndex: 1, explanation: "Artēría originally meant windpipe — early anatomists thought arteries carried air, not blood." },
+      { question: "In hypovolemic shock, what happens to the arteries?", options: ["They dilate widely", "They clamp down (vasoconstriction)", "They stop pulsing", "They fill with air"], correctIndex: 1, explanation: "Arteries vasoconstrict to maintain blood pressure when volume drops, making the pulse weak and thready." },
+      { question: "What does 'pulsus fīliformis' mean?", options: ["Strong pulse", "Irregular pulse", "Thready / thread-like pulse", "Absent pulse"], correctIndex: 2, explanation: "Fīliformis = thread-like (fīlum = thread + forma = shape). A thready pulse is weak and rapid — a danger sign." },
+      { question: "What does 'sanguis' mean?", options: ["Sand", "Blood", "Health", "Sweat"], correctIndex: 1, explanation: "Sanguis = blood. Gives us 'sanguine' (blood-related, optimistic) and 'exsanguinate' (to bleed out)." }
+    ]
   }
 ];
 
