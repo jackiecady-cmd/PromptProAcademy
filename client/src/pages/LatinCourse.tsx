@@ -139,13 +139,14 @@ function applyHealthcareOverride(lesson: Lesson, medMode: boolean): Lesson {
   return result;
 }
 
-function LessonView({ lesson: rawLesson, onBack, medMode }: { lesson: Lesson; onBack: () => void; medMode: boolean }) {
+function LessonView({ lesson: rawLesson, onBack, medMode, onPass }: { lesson: Lesson; onBack: () => void; medMode: boolean; onPass: (lessonId: number) => void }) {
   const lesson = applyHealthcareOverride(rawLesson, medMode);
   const [expandedPhrase, setExpandedPhrase] = useState<number | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [wasCorrect, setWasCorrect] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [quizComplete, setQuizComplete] = useState(false);
 
@@ -160,9 +161,17 @@ function LessonView({ lesson: rawLesson, onBack, medMode }: { lesson: Lesson; on
     if (selectedAnswer !== null) return;
     setSelectedAnswer(optionIdx);
     setShowExplanation(true);
-    if (optionIdx === allQuizQuestions[currentQuestion].correctIndex) {
+    const correct = optionIdx === allQuizQuestions[currentQuestion].correctIndex;
+    setWasCorrect(correct);
+    if (correct) {
       setCorrectCount(prev => prev + 1);
     }
+  };
+
+  const handleRetryQuestion = () => {
+    setSelectedAnswer(null);
+    setShowExplanation(false);
+    setWasCorrect(false);
   };
 
   const handleNextQuestion = () => {
@@ -170,8 +179,10 @@ function LessonView({ lesson: rawLesson, onBack, medMode }: { lesson: Lesson; on
       setCurrentQuestion(prev => prev + 1);
       setSelectedAnswer(null);
       setShowExplanation(false);
+      setWasCorrect(false);
     } else {
       setQuizComplete(true);
+      onPass(lesson.id);
     }
   };
 
@@ -179,6 +190,7 @@ function LessonView({ lesson: rawLesson, onBack, medMode }: { lesson: Lesson; on
     setCurrentQuestion(0);
     setSelectedAnswer(null);
     setShowExplanation(false);
+    setWasCorrect(false);
     setCorrectCount(0);
     setQuizComplete(false);
     setQuizStarted(false);
@@ -324,27 +336,23 @@ function LessonView({ lesson: rawLesson, onBack, medMode }: { lesson: Lesson; on
             </CardContent>
           </Card>
         ) : quizComplete ? (
-          <Card className="bg-gradient-to-r from-amber-500/10 to-green-500/10 border-amber-500/30">
+          <Card className="bg-gradient-to-r from-amber-500/10 to-green-500/10 border-green-500/30 border">
             <CardContent className="py-8 text-center">
-              <Trophy className="h-16 w-16 text-amber-400 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-white mb-2">Quiz Complete!</h3>
-              <p className="text-4xl font-bold text-amber-400 mb-2" data-testid={`text-quiz-score-${lesson.id}`}>
-                {correctCount} / {allQuizQuestions.length}
+              <Trophy className="h-16 w-16 text-green-400 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-white mb-2">
+                Quiz Passed — Next Lesson Unlocked!
+              </h3>
+              <p className="text-4xl font-bold mb-2" data-testid={`text-quiz-score-${lesson.id}`}>
+                <span className="text-green-400">
+                  {correctCount} / {allQuizQuestions.length}
+                </span>
               </p>
               <p className="text-slate-400 mb-6">
-                {correctCount === allQuizQuestions.length ? "Perfect score! Excellent work!" :
-                 correctCount >= allQuizQuestions.length * 0.75 ? "Great job! You're learning well." :
-                 correctCount >= allQuizQuestions.length * 0.5 ? "Good effort. Review the lesson and try again." :
-                 "Keep studying! Review the vocabulary and phrases above."}
+                Every question correct. You earned it.
               </p>
-              <div className="flex gap-3 justify-center">
-                <Button variant="outline" onClick={resetQuiz} className="border-slate-600 text-slate-300">
-                  Retake Quiz
-                </Button>
-                <Button onClick={onBack} className="bg-amber-500 hover:bg-amber-600 text-black">
-                  Next Lesson <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </div>
+              <Button onClick={onBack} className="bg-green-600 hover:bg-green-700 text-white font-bold" data-testid="button-next-lesson">
+                <CheckCircle2 className="h-4 w-4 mr-2" /> Continue to Next Lesson
+              </Button>
             </CardContent>
           </Card>
         ) : (
@@ -411,19 +419,38 @@ function LessonView({ lesson: rawLesson, onBack, medMode }: { lesson: Lesson; on
                 })}
               </div>
               {showExplanation && (
-                <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mt-4">
+                <div className={`rounded-lg p-4 mt-4 border ${wasCorrect ? "bg-green-900/30 border-green-500/40" : "bg-red-900/30 border-red-500/40"}`}>
+                  {!wasCorrect && (
+                    <p className="text-red-400 font-bold text-sm mb-2 flex items-center gap-2">
+                      <XCircle className="h-4 w-4" /> Wrong.
+                    </p>
+                  )}
+                  {wasCorrect && (
+                    <p className="text-green-400 font-bold text-sm mb-2 flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4" /> Correct.
+                    </p>
+                  )}
                   <p className="text-sm text-slate-300">
                     {allQuizQuestions[currentQuestion].explanation}
                   </p>
                 </div>
               )}
-              {selectedAnswer !== null && (
+              {selectedAnswer !== null && wasCorrect && (
                 <Button
                   onClick={handleNextQuestion}
                   className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold mt-4"
                   data-testid="button-next-question"
                 >
                   {currentQuestion < allQuizQuestions.length - 1 ? "Next Question" : "See Results"} <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              )}
+              {selectedAnswer !== null && !wasCorrect && (
+                <Button
+                  onClick={handleRetryQuestion}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold mt-4"
+                  data-testid="button-retry-question"
+                >
+                  Retry This Question
                 </Button>
               )}
             </CardContent>
@@ -462,6 +489,27 @@ export default function LatinCourse() {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [medMode, setMedMode] = useState(false);
+  const [passedLessons, setPassedLessons] = useState<Set<number>>(() => {
+    try {
+      const saved = localStorage.getItem("latin_passed_lessons");
+      return saved ? new Set(JSON.parse(saved)) : new Set<number>();
+    } catch { return new Set<number>(); }
+  });
+
+  const handleLessonPass = (lessonId: number) => {
+    setPassedLessons(prev => {
+      const next = new Set(prev);
+      next.add(lessonId);
+      localStorage.setItem("latin_passed_lessons", JSON.stringify([...next]));
+      return next;
+    });
+  };
+
+  const isLessonUnlocked = (lesson: Lesson, index: number) => {
+    if (index === 0) return true;
+    const prevLesson = baseLessons[index - 1];
+    return prevLesson ? passedLessons.has(prevLesson.id) : true;
+  };
 
   const { toast } = useToast();
 
@@ -668,6 +716,7 @@ export default function LatinCourse() {
                 lesson={selectedLesson} 
                 onBack={() => setSelectedLesson(null)}
                 medMode={medMode}
+                onPass={handleLessonPass}
               />
             ) : (
               <>
@@ -734,29 +783,37 @@ export default function LatinCourse() {
                 <div className="space-y-3">
                   {filteredLessons.map((lesson) => {
                     const catColor = categoryColors[lesson.category] || "bg-slate-500/20 text-slate-300";
+                    const baseIndex = baseLessons.findIndex(l => l.id === lesson.id);
+                    const unlocked = isLessonUnlocked(lesson, baseIndex);
+                    const passed = passedLessons.has(lesson.id);
                     return (
                       <Card 
                         key={lesson.id}
-                        className="bg-slate-800 border-slate-700 hover:border-amber-500/50 cursor-pointer transition-all"
-                        onClick={() => setSelectedLesson(lesson)}
+                        className={`border transition-all ${unlocked ? "bg-slate-800 border-slate-700 hover:border-amber-500/50 cursor-pointer" : "bg-slate-900/50 border-slate-800 opacity-60 cursor-not-allowed"}`}
+                        onClick={() => unlocked && setSelectedLesson(lesson)}
                         data-testid={`card-lesson-${lesson.id}`}
                       >
                         <CardContent className="py-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 font-bold text-sm shrink-0">
-                                {lesson.id}
+                              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0 ${passed ? "bg-green-500/20 text-green-400" : unlocked ? "bg-amber-500/10 text-amber-400" : "bg-slate-800 text-slate-600"}`}>
+                                {passed ? <CheckCircle2 className="h-5 w-5" /> : unlocked ? lesson.id : <Lock className="h-4 w-4" />}
                               </div>
                               <div>
-                                <h3 className="font-medium text-white">{lesson.title}</h3>
-                                <p className="text-sm text-slate-400">{lesson.subtitle}</p>
+                                <h3 className={`font-medium ${unlocked ? "text-white" : "text-slate-500"}`}>{lesson.title}</h3>
+                                <p className={`text-sm ${unlocked ? "text-slate-400" : "text-slate-600"}`}>{lesson.subtitle}</p>
                                 <div className="flex items-center gap-2 mt-1">
                                   <Badge className={`text-xs ${catColor}`}>
                                     {categoryLabels[lesson.category]}
                                   </Badge>
-                                  <span className="text-xs text-slate-500">
-                                    {lesson.phrases.length} phrase{lesson.phrases.length !== 1 ? "s" : ""} · {lesson.vocabulary.length} vocab · {lesson.quiz.length + (medMode ? medicalQuizQuestions.filter(q => q.lessonId === lesson.id).length : 0)} quiz questions
-                                  </span>
+                                  {unlocked && (
+                                    <span className="text-xs text-slate-500">
+                                      {lesson.phrases.length} phrase{lesson.phrases.length !== 1 ? "s" : ""} · {lesson.vocabulary.length} vocab · {lesson.quiz.length + (medMode ? medicalQuizQuestions.filter(q => q.lessonId === lesson.id).length : 0)} quiz questions
+                                    </span>
+                                  )}
+                                  {!unlocked && (
+                                    <span className="text-xs text-slate-600">Pass previous quiz to unlock</span>
+                                  )}
                                   {medMode && medicalLessonLinks.find(m => m.lessonId === lesson.id) && (
                                     <Badge className="bg-teal-500/20 text-teal-300 border-teal-500/30 text-xs">
                                       <Stethoscope className="h-3 w-3 mr-1" /> Med
@@ -765,7 +822,11 @@ export default function LatinCourse() {
                                 </div>
                               </div>
                             </div>
-                            <ArrowRight className="h-5 w-5 text-slate-500" />
+                            {unlocked ? (
+                              passed ? <CheckCircle2 className="h-5 w-5 text-green-500" /> : <ArrowRight className="h-5 w-5 text-slate-500" />
+                            ) : (
+                              <Lock className="h-5 w-5 text-slate-600" />
+                            )}
                           </div>
                         </CardContent>
                       </Card>
