@@ -12,25 +12,6 @@ import { Link } from "wouter";
 
 const courses = [
   {
-    id: "academy_starter",
-    name: "Starter",
-    subtitle: "DIY Ancestry Research",
-    price: 29,
-    priceInCents: 2900,
-    description: "Learn AI basics through your own family history research",
-    icon: Star,
-  },
-  {
-    id: "academy_foundation",
-    name: "Foundation",
-    subtitle: "Prompt Engineering Basics",
-    price: 99,
-    priceInCents: 9900,
-    description: "Master the fundamentals - build skills employers want",
-    icon: GraduationCap,
-    popular: true,
-  },
-  {
     id: "academy_professional",
     name: "Professional",
     subtitle: "Career-Ready Certification",
@@ -46,7 +27,7 @@ export default function AcademyCheckout() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("academy_foundation");
+  const [selectedCourse, setSelectedCourse] = useState("academy_professional");
   const { toast } = useToast();
 
   const course = courses.find(c => c.id === selectedCourse)!;

@@ -276,6 +276,338 @@ Pick one of these templates and fill it in with your own family details. You're 
     ]
   },
   {
+    id: "tone-voice",
+    track: "starter",
+    title: "Setting the Tone: Making AI Sound Like You",
+    description: "Control how AI writes - formal, casual, funny, or professional",
+    duration: "12 min",
+    hasQuiz: true,
+    content: `
+## AI Can Match Your Voice
+
+One of the most powerful tricks: telling AI HOW to write, not just WHAT to write.
+
+### Tone Instructions
+
+Add these to any prompt:
+- **"Write this in a friendly, conversational tone"**
+- **"Keep it professional and formal"**
+- **"Make it simple enough for a 10-year-old"**
+- **"Write like a storyteller — warm and engaging"**
+
+### Example: Same Request, Different Tones
+
+**Formal:** "Compose a professional summary of the Battle of Gettysburg suitable for an academic paper."
+
+**Casual:** "Tell me about the Battle of Gettysburg like you're explaining it to a friend over coffee."
+
+**For kids:** "Explain the Battle of Gettysburg so a 4th grader would understand and find it interesting."
+
+### The Voice Formula
+
+Start your prompt with: "You are a [ROLE] writing for [AUDIENCE] in a [TONE] style."
+
+Example: "You are a friendly history teacher writing for adults who are new to genealogy in a warm, encouraging style."
+
+### Try It
+
+Take any topic you're interested in and ask AI to explain it in three different tones. Notice how different each response feels!
+    `,
+    quiz: [
+      {
+        question: "How do you control the tone of AI's response?",
+        options: ["You can't control it", "Include tone instructions in your prompt", "Use special codes", "Pay for premium access"],
+        correct: 1
+      },
+      {
+        question: "The Voice Formula starts with:",
+        options: ["Dear AI", "You are a [ROLE] writing for [AUDIENCE]", "Please be nice", "Tone: formal"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "follow-up",
+    track: "starter",
+    title: "The Follow-Up: Building on AI Conversations",
+    description: "How to dig deeper instead of starting over every time",
+    duration: "10 min",
+    hasQuiz: true,
+    content: `
+## Don't Start Over — Go Deeper
+
+Most beginners ask one question, get an answer, then start a brand new conversation. That's like hanging up the phone every time someone answers.
+
+### The Power of Follow-Ups
+
+AI remembers your conversation. Use that!
+
+**First prompt:** "What was life like in rural Ireland in the 1880s?"
+**Follow-up:** "Now focus specifically on farming families. What crops did they grow?"
+**Go deeper:** "What happened to those farms during the Great Famine?"
+**Even deeper:** "If my ancestor left Ireland in 1885, what route would they likely have taken to America?"
+
+### Follow-Up Starters
+
+- "Tell me more about..."
+- "Now focus on..."
+- "What about the opposite — ..."
+- "Can you give me a specific example of..."
+- "How does that compare to..."
+- "Break that down step by step"
+
+### The Drill-Down Method
+
+1. Start broad
+2. Pick the most interesting part of the answer
+3. Ask about that specifically
+4. Repeat until you have what you need
+
+### Why This Matters
+
+One good conversation with follow-ups beats ten separate questions. You get deeper, more connected information.
+    `,
+    quiz: [
+      {
+        question: "Why are follow-up questions better than starting new conversations?",
+        options: ["They're faster to type", "AI remembers context and gives deeper answers", "They cost less", "They don't require an account"],
+        correct: 1
+      },
+      {
+        question: "The Drill-Down Method starts with:",
+        options: ["A very specific question", "A broad question, then narrow down", "A complaint about the last answer", "A copy-paste of the previous response"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "templates",
+    track: "starter",
+    title: "Copy-Paste Power: Prompt Templates That Work",
+    description: "Ready-made prompt templates you can customize for any situation",
+    duration: "15 min",
+    hasQuiz: true,
+    content: `
+## Templates Save Time
+
+Why write from scratch every time? Use templates and fill in the blanks.
+
+### The Universal Template
+
+"I need help with [TASK]. My audience is [WHO]. The goal is [OUTCOME]. Please write in a [TONE] style and keep it [LENGTH]."
+
+### Research Template
+
+"I'm researching [TOPIC]. Please provide:
+1. A brief overview (2-3 sentences)
+2. Three key facts most people don't know
+3. Where I can learn more
+4. Any common misconceptions to avoid"
+
+### Writing Template
+
+"Write a [TYPE OF WRITING] about [TOPIC] that is [LENGTH]. The tone should be [TONE]. Include [SPECIFIC ELEMENTS]. Avoid [THINGS TO SKIP]."
+
+### Comparison Template
+
+"Compare [THING A] and [THING B]. Create a simple table showing:
+- Key differences
+- Pros and cons of each
+- Which is better for [SPECIFIC USE CASE]"
+
+### Problem-Solving Template
+
+"I'm dealing with [PROBLEM]. Here's what I've tried: [ATTEMPTS]. My constraints are [LIMITS]. What are three different approaches I haven't considered?"
+
+### Pro Tip
+
+Save your best prompts in a notes app. Build your own personal prompt library!
+    `,
+    quiz: [
+      {
+        question: "Why use prompt templates?",
+        options: ["AI requires them", "They save time and give consistent results", "They're mandatory for paid accounts", "Templates are the only way AI works"],
+        correct: 1
+      },
+      {
+        question: "A good template includes:",
+        options: ["Just the topic", "Task, audience, goal, and tone", "Only keywords", "Your personal information"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "ai-safety",
+    track: "starter",
+    title: "Staying Safe: What NOT to Tell AI",
+    description: "Protect yourself — know what to share and what to keep private",
+    duration: "10 min",
+    hasQuiz: true,
+    content: `
+## AI Is Helpful, But Be Smart
+
+AI tools are powerful, but you need to know what's safe to share and what isn't.
+
+### Never Share With AI
+
+- **Social Security numbers**
+- **Bank account or credit card numbers**
+- **Passwords or PINs**
+- **Medical records with your real name attached**
+- **Legal documents with case numbers**
+
+### Be Careful With
+
+- Full names + addresses combined
+- Exact dates of birth for living people
+- Private family conflicts or legal issues
+- Workplace confidential information
+
+### Safe to Share
+
+- General questions about history, topics, or skills
+- Anonymized scenarios ("Someone in this situation...")
+- Creative writing requests
+- Learning and research questions
+- Public information
+
+### The Newspaper Test
+
+Before typing something into AI, ask: "Would I be comfortable if this appeared in a newspaper?" If not, don't type it.
+
+### Remember
+
+AI conversations may be stored, reviewed, or used for training. Treat every conversation as potentially public.
+    `,
+    quiz: [
+      {
+        question: "Which should you NEVER share with AI?",
+        options: ["Your favorite color", "Your Social Security number", "A recipe question", "A historical question"],
+        correct: 1
+      },
+      {
+        question: "The Newspaper Test means:",
+        options: ["Read the news to AI", "Only share what you'd be comfortable seeing published", "Print your AI chats", "AI reads newspapers for you"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "output-formats",
+    track: "starter",
+    title: "Tell AI What Shape You Want",
+    description: "Get tables, lists, emails, scripts — just by asking",
+    duration: "12 min",
+    hasQuiz: true,
+    content: `
+## Format Matters
+
+AI can give you the same information in completely different formats. You just have to ask.
+
+### Format Commands
+
+- **"Give me this as a bullet-point list"**
+- **"Create a table with columns for..."**
+- **"Write this as a step-by-step guide"**
+- **"Format this as an email"**
+- **"Present this as a pros/cons comparison"**
+- **"Give me a numbered checklist"**
+
+### Example: Same Info, Different Formats
+
+Ask about healthy breakfasts:
+
+**As a list:** Quick bullet points
+**As a table:** Columns for meal, prep time, calories, ingredients
+**As a weekly plan:** Monday through Sunday schedule
+**As a shopping list:** Organized by grocery store aisle
+
+### Pro Formats for Work
+
+- **"Write a professional email"** — ready to copy-paste
+- **"Create an agenda for a meeting about..."** — instant meeting prep
+- **"Make a FAQ list about..."** — customer-ready content
+- **"Draft a social media post about..."** — marketing in seconds
+
+### The Magic Phrase
+
+End any prompt with: "Format this as a [FORMAT TYPE] that I can easily [USE CASE]."
+
+Example: "Format this as a checklist that I can easily print and hang on my fridge."
+    `,
+    quiz: [
+      {
+        question: "How do you get AI to create a table?",
+        options: ["You can't", "Ask it to create a table with specific columns", "Upload a spreadsheet", "Use a special plugin"],
+        correct: 1
+      },
+      {
+        question: "The magic phrase to control format is:",
+        options: ["Please try harder", "Format this as a [type] that I can easily [use]", "Make it look nice", "Use fancy formatting"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "review-practice",
+    track: "starter",
+    title: "Starter Review: Put It All Together",
+    description: "Practice everything you've learned with real scenarios",
+    duration: "20 min",
+    hasQuiz: true,
+    content: `
+## You've Come a Long Way!
+
+Let's review everything from the Starter track and practice with real scenarios.
+
+### What You've Learned
+
+1. **What a prompt is** — just what you type to AI
+2. **Which AI to use** — different tools for different jobs
+3. **Be specific** — the WHAT-WHO-WHEN-WHERE method
+4. **Ancestry prompts** — templates for family research
+5. **Tone control** — making AI match your voice
+6. **Follow-ups** — drilling deeper instead of starting over
+7. **Templates** — copy-paste frameworks that save time
+8. **Safety** — what to share and what to keep private
+9. **Formats** — getting output in the shape you need
+
+### Practice Scenario 1: The Email
+
+You need to write an email to a distant cousin you found through DNA matching. You want to introduce yourself and ask if they know anything about your shared great-grandmother.
+
+Build your prompt using what you've learned!
+
+### Practice Scenario 2: The Research
+
+You found a census record from 1910 listing your ancestor's occupation as "puddler." You have no idea what that is.
+
+How would you ask AI to help? Remember: be specific, ask for context, and request a useful format.
+
+### Practice Scenario 3: The Comparison
+
+You want to compare two DNA testing services to decide which to buy.
+
+What template would you use? What format would you request?
+
+### You're Ready
+
+If you can handle these scenarios, you're ready for the Foundation track!
+    `,
+    quiz: [
+      {
+        question: "The WHAT-WHO-WHEN-WHERE method helps you:",
+        options: ["Memorize facts", "Give AI enough context to help you", "Type faster", "Avoid paying for AI"],
+        correct: 1
+      },
+      {
+        question: "Before sharing information with AI, you should:",
+        options: ["Share everything for best results", "Apply the Newspaper Test", "Only use AI on weekdays", "Never share anything at all"],
+        correct: 1
+      }
+    ]
+  },
+  {
     id: "troubleshooting",
     track: "foundation",
     title: "When AI Gets It Wrong",
@@ -322,6 +654,11 @@ Being a good prompt engineer means knowing when to push back politely!
         question: "When AI makes a mistake, you should:",
         options: ["Give up", "Ask it to clarify or verify", "Assume all AI is useless", "Accept the wrong answer"],
         correct: 1
+      },
+      {
+        question: "AI 'hallucinations' are when:",
+        options: ["AI sees images", "AI makes up facts that sound real", "AI crashes", "AI goes offline"],
+        correct: 1
       }
     ]
   },
@@ -331,7 +668,7 @@ Being a good prompt engineer means knowing when to push back politely!
     title: "Using AI for Everything Else",
     description: "Apply your new skills to work, hobbies, and daily life",
     duration: "20 min",
-    hasQuiz: false,
+    hasQuiz: true,
     content: `
 ## Your Skills Work Everywhere!
 
@@ -357,7 +694,461 @@ The prompt engineering skills you've learned work for much more than ancestry re
 These are exactly the skills that companies need. Many businesses want to hire people who can effectively communicate with AI tools.
 
 The fact that you're learning this puts you ahead of many people - including those much younger than you!
-    `
+    `,
+    quiz: [
+      {
+        question: "Prompt engineering skills are useful for:",
+        options: ["Only ancestry research", "Only work emails", "Almost everything — work, hobbies, daily life", "Only creative writing"],
+        correct: 2
+      },
+      {
+        question: "Companies want to hire people who can:",
+        options: ["Build AI from scratch", "Effectively communicate with AI tools", "Replace AI", "Avoid using AI"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "role-playing",
+    track: "foundation",
+    title: "Role Assignment: Make AI an Expert",
+    description: "Assign AI a role and watch the quality skyrocket",
+    duration: "15 min",
+    hasQuiz: true,
+    content: `
+## The Role Trick
+
+This one technique will transform your results: tell AI WHO to be before asking your question.
+
+### How It Works
+
+Start your prompt with: **"You are a [specific expert]..."**
+
+### Examples
+
+**Without role:** "How do I fix a leaky faucet?"
+**With role:** "You are an experienced plumber with 20 years of experience. Walk me through fixing a leaky faucet, including the tools I'll need and common mistakes beginners make."
+
+**Without role:** "Tell me about investing."
+**With role:** "You are a financial advisor who specializes in helping people over 50 plan for retirement. Explain the basics of investing in simple terms, avoiding jargon."
+
+### Powerful Roles to Try
+
+- "You are a patient teacher who explains things step by step"
+- "You are a professional editor reviewing my writing"
+- "You are a career coach helping someone re-enter the workforce"
+- "You are a genealogist with expertise in [country/region] records"
+- "You are a doctor explaining a diagnosis in plain English"
+
+### Stack Roles for Better Results
+
+"You are a genealogist AND a historian specializing in 19th-century immigration. Help me understand why my ancestor might have left Germany in 1848."
+
+### Why This Works
+
+Roles give AI a perspective and expertise level. Without a role, you get generic answers. With a role, you get expert-level guidance.
+    `,
+    quiz: [
+      {
+        question: "Assigning AI a role helps because:",
+        options: ["It's required by the terms of service", "It gives AI a perspective and expertise level", "AI can't answer without one", "It makes AI faster"],
+        correct: 1
+      },
+      {
+        question: "A good role assignment includes:",
+        options: ["Just the job title", "A specific expert with relevant experience", "A fictional character name", "Your own name"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "chain-prompting",
+    track: "foundation",
+    title: "Chain Prompting: Complex Tasks Made Simple",
+    description: "Break big projects into a series of connected prompts",
+    duration: "18 min",
+    hasQuiz: true,
+    content: `
+## Big Tasks Need Multiple Steps
+
+Trying to do everything in one prompt leads to messy results. Chain prompting breaks complex work into clean steps.
+
+### The Chain Method
+
+**Step 1 — Research:** "Give me an overview of [topic]"
+**Step 2 — Analyze:** "Based on that overview, what are the three most important points?"
+**Step 3 — Create:** "Now write a [document type] focusing on those three points"
+**Step 4 — Refine:** "Review what you wrote and improve the [specific aspect]"
+
+### Real Example: Writing a Family History
+
+**Prompt 1:** "List the major historical events in Poland between 1880-1920 that would have affected farming families."
+
+**Prompt 2:** "My ancestor was a farmer in Krakow during this period. Based on those events, what was their daily life probably like?"
+
+**Prompt 3:** "Now write a 500-word narrative about a typical day for this farmer, incorporating the historical details."
+
+**Prompt 4:** "Review that narrative. Make the language more vivid and add sensory details — what did they see, hear, smell?"
+
+### When to Chain
+
+- Writing anything longer than a paragraph
+- Research that requires multiple angles
+- Projects with a planning phase and an execution phase
+- Anything that needs revision
+
+### The Rule
+
+If your prompt is longer than 5 sentences, you probably need to chain it into multiple prompts instead.
+    `,
+    quiz: [
+      {
+        question: "Chain prompting means:",
+        options: ["Typing everything in one long message", "Breaking complex tasks into connected steps", "Using chain email templates", "Linking multiple AI accounts"],
+        correct: 1
+      },
+      {
+        question: "When should you use chain prompting?",
+        options: ["Only for short questions", "When a task is too complex for a single prompt", "Never — one prompt is always better", "Only with paid AI accounts"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "fact-checking",
+    track: "foundation",
+    title: "Fact-Checking AI: Trust but Verify",
+    description: "How to spot AI mistakes and verify important information",
+    duration: "15 min",
+    hasQuiz: true,
+    content: `
+## AI Is Confident Even When Wrong
+
+The most dangerous thing about AI is that it states incorrect information with complete confidence. Here's how to protect yourself.
+
+### Red Flags to Watch For
+
+- **Suspiciously specific numbers** — "Exactly 47,382 people immigrated that year"
+- **Famous people connections** — "Your ancestor was friends with Abraham Lincoln"
+- **Too-perfect stories** — Everything aligns too neatly
+- **Confident but vague sources** — "According to historical records..."
+
+### Verification Techniques
+
+**The Cross-Check:** Ask the same question to a different AI. If they disagree, dig deeper.
+
+**The Source Request:** "What specific sources can you point me to for this information? Give me book titles, website URLs, or archive names."
+
+**The Challenge:** "I want to push back on this claim. What evidence contradicts it?"
+
+**The Date Check:** "When was this information last updated? Is there more recent data?"
+
+### For Genealogy Specifically
+
+- AI cannot access actual genealogy databases (Ancestry, FamilySearch)
+- AI makes up ancestors, dates, and connections
+- Always verify names, dates, and relationships against actual records
+- Use AI for context and strategy, not as a source of facts
+
+### The Golden Rule
+
+Use AI to learn HOW to research, not as the research itself.
+    `,
+    quiz: [
+      {
+        question: "A red flag that AI might be making something up is:",
+        options: ["It says 'I'm not sure'", "It gives suspiciously specific numbers with complete confidence", "It asks you for more details", "It suggests checking a source"],
+        correct: 1
+      },
+      {
+        question: "For genealogy, AI should be used for:",
+        options: ["Finding your exact ancestors", "Creating your family tree directly", "Learning research strategies and historical context", "Replacing genealogy databases"],
+        correct: 2
+      }
+    ]
+  },
+  {
+    id: "writing-with-ai",
+    track: "foundation",
+    title: "Writing with AI: From Draft to Polish",
+    description: "Use AI as a writing partner — not a replacement",
+    duration: "20 min",
+    hasQuiz: true,
+    content: `
+## AI Is Your Writing Partner
+
+The best way to use AI for writing isn't to say "write this for me." It's to collaborate.
+
+### The Three-Phase Method
+
+**Phase 1 — Brainstorm**
+"I want to write about [topic]. Give me 5 different angles I could take."
+
+**Phase 2 — Draft**
+"I chose angle #3. Write a first draft of [length]. Here are my main points: [your ideas]."
+
+**Phase 3 — Polish**
+"Here's my draft: [paste your version]. Please improve the [clarity/flow/grammar/tone] while keeping my voice."
+
+### Editing Prompts That Work
+
+- "Make this more concise — cut 30% of the words without losing meaning"
+- "Find any grammar or spelling errors in this text"
+- "Rewrite the opening paragraph to hook the reader immediately"
+- "Add transitions between these paragraphs so they flow better"
+- "Simplify the vocabulary — aim for an 8th grade reading level"
+
+### The Voice Trap
+
+If you let AI write everything from scratch, it sounds like AI. Instead:
+1. Write your own rough draft first
+2. Let AI improve what YOU wrote
+3. Your voice stays, but the quality goes up
+
+### For Personal Projects
+
+Writing a family history? A memoir? A letter to a relative?
+
+"Here's what I want to say: [your rough thoughts]. Help me express this more clearly while keeping it personal and heartfelt."
+    `,
+    quiz: [
+      {
+        question: "The best way to use AI for writing is to:",
+        options: ["Let AI write everything from scratch", "Write your own draft, then let AI improve it", "Copy AI's output word for word", "Avoid AI for writing entirely"],
+        correct: 1
+      },
+      {
+        question: "The Three-Phase Method is:",
+        options: ["Write, delete, rewrite", "Brainstorm, draft, polish", "Copy, paste, submit", "Research, outline, type"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "ai-for-work",
+    track: "foundation",
+    title: "AI at Work: Skills Employers Want",
+    description: "Turn your prompt skills into job-ready abilities",
+    duration: "18 min",
+    hasQuiz: true,
+    content: `
+## These Skills Pay
+
+Prompt engineering isn't just a hobby — it's a marketable skill. Here's how to use it professionally.
+
+### Skills That Get You Hired
+
+1. **Writing professional emails** — "Draft an email to [person] about [situation] in a professional but warm tone"
+2. **Meeting prep** — "Create an agenda and talking points for a meeting about [topic]"
+3. **Report writing** — "Summarize these data points into an executive summary"
+4. **Problem solving** — "Here's the problem: [describe]. Give me three solutions with pros/cons"
+5. **Training materials** — "Create a training guide for [process] written for new employees"
+
+### Remote Work Gold
+
+Many remote jobs specifically want people who can:
+- Use AI to increase productivity
+- Create content efficiently
+- Analyze information quickly
+- Communicate clearly in writing
+
+### How to Talk About It
+
+On a resume: "Proficient in AI-assisted workflow optimization and prompt engineering"
+
+In an interview: "I use AI tools strategically to improve efficiency. For example, I can draft, research, and analyze information 3x faster by knowing how to communicate effectively with AI."
+
+### Freelance Opportunities
+
+- Content writing (with AI as your assistant)
+- Virtual assistant work (using AI for research and drafting)
+- Data analysis (using AI to interpret information)
+- Customer service (using AI to draft professional responses)
+
+### The Advantage
+
+Most people over 40 think they're "too old" for tech. By learning this, you've proven that wrong. You have life experience AND AI skills — that's a powerful combination.
+    `,
+    quiz: [
+      {
+        question: "On a resume, prompt engineering skills should be described as:",
+        options: ["'I talk to robots'", "'AI-assisted workflow optimization'", "'I use ChatGPT sometimes'", "'Computer skills'"],
+        correct: 1
+      },
+      {
+        question: "The advantage of learning AI skills later in life is:",
+        options: ["There is no advantage", "You combine life experience with AI skills", "Younger people can't learn AI", "AI works better for older users"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "ai-ethics",
+    track: "foundation",
+    title: "AI Ethics: Using AI Responsibly",
+    description: "Understand bias, copyright, and the ethical use of AI tools",
+    duration: "15 min",
+    hasQuiz: true,
+    content: `
+## With Great Power...
+
+AI is a powerful tool. Like any tool, it can be used well or poorly. Here's how to use it responsibly.
+
+### AI Bias Is Real
+
+AI learns from human-written text, which means it inherits human biases:
+- **Gender bias:** May assume doctors are male, nurses are female
+- **Cultural bias:** May default to Western perspectives
+- **Historical bias:** May repeat outdated stereotypes
+
+### What You Can Do
+
+**Challenge assumptions:** If AI gives you a biased answer, say "That seems to assume [X]. Can you reconsider without that assumption?"
+
+**Ask for multiple perspectives:** "Give me three different viewpoints on this topic, including perspectives that are often overlooked."
+
+**Check for balance:** "Is this answer considering people from different backgrounds, ages, and cultures?"
+
+### Copyright and AI
+
+- AI-generated text is not copyrighted (currently)
+- Don't paste someone else's copyrighted work and ask AI to rewrite it
+- Give credit when AI helps you create something
+- Your ideas + AI's writing = your work, but be transparent about using AI
+
+### The Human-in-the-Loop Rule
+
+AI should assist your thinking, not replace it. Always:
+1. Review AI output before using it
+2. Apply your own judgment and experience
+3. Take responsibility for what you publish or share
+4. Never blame AI for your decisions
+
+### The Bottom Line
+
+Use AI to amplify your capabilities, not to bypass your responsibility.
+    `,
+    quiz: [
+      {
+        question: "AI bias comes from:",
+        options: ["AI being malicious", "AI learning from biased human-written text", "AI having opinions", "Programming errors only"],
+        correct: 1
+      },
+      {
+        question: "The Human-in-the-Loop Rule means:",
+        options: ["Let AI make all decisions", "Always review and take responsibility for AI output", "Only use AI once per day", "AI should replace human judgment"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "advanced-techniques",
+    track: "foundation",
+    title: "Advanced Prompting Techniques",
+    description: "Few-shot learning, chain-of-thought, and zero-shot — the pro methods",
+    duration: "20 min",
+    hasQuiz: true,
+    content: `
+## Level Up Your Prompting
+
+These are the techniques professional prompt engineers use. They sound technical, but they're simple once you see them.
+
+### Few-Shot Learning (Learning by Example)
+
+Give AI examples of what you want before asking your question.
+
+"Here are examples of good family history summaries:
+- 'Maria Rossi (1892-1967) — Born in Naples, immigrated to New York in 1910, worked as a seamstress on the Lower East Side.'
+- 'Thomas O'Brien (1845-1920) — Left County Cork during the famine, settled in Boston, became a longshoreman.'
+
+Now write a similar summary for my ancestor based on this information: [your details]"
+
+### Chain-of-Thought (Show Your Work)
+
+Ask AI to think step by step.
+
+"I need to figure out if two people in my family tree are the same person. Think through this step by step:
+- Person A: John Smith, born ~1870, listed in Ohio census 1880
+- Person B: J. Smith, born ~1868, listed in Pennsylvania census 1890"
+
+### Zero-Shot (First Try, No Examples)
+
+Give very clear, detailed instructions without examples.
+
+"Without any examples, write a 200-word biography of a fictional 1900s immigrant. Include: country of origin, reason for leaving, journey details, first job in America, and one personal detail that makes them feel real."
+
+### When to Use Each
+
+- **Few-shot:** When you need a specific style or format
+- **Chain-of-thought:** When you need analysis or problem-solving
+- **Zero-shot:** When you need creative or unique output
+    `,
+    quiz: [
+      {
+        question: "Few-shot learning means:",
+        options: ["AI only has a few seconds to answer", "You give AI examples before asking your question", "You only ask a few questions", "AI learns from a few websites"],
+        correct: 1
+      },
+      {
+        question: "Chain-of-thought prompting asks AI to:",
+        options: ["Link multiple AI accounts", "Think through the problem step by step", "Create a chain of emails", "Skip the thinking and give a quick answer"],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: "foundation-review",
+    track: "foundation",
+    title: "Foundation Review: Your Complete Toolkit",
+    description: "Review all Foundation skills and practice with advanced scenarios",
+    duration: "25 min",
+    hasQuiz: true,
+    content: `
+## You've Built a Serious Skill Set
+
+Let's review everything from the Foundation track.
+
+### Your Toolkit Summary
+
+1. **Troubleshooting** — Fix AI mistakes with the Fix-It Toolkit
+2. **Broad application** — AI works for work, hobbies, and daily life
+3. **Role assignment** — Make AI an expert before asking
+4. **Chain prompting** — Break complex tasks into steps
+5. **Fact-checking** — Trust but verify, always
+6. **Writing partnership** — Brainstorm, draft, polish
+7. **Work skills** — Translate prompt skills into job-ready abilities
+8. **Advanced techniques** — Few-shot, chain-of-thought, zero-shot
+
+### Practice Scenario 1: The Job Application
+
+You're applying for a remote customer service position. Use role assignment and writing techniques to draft a cover letter that highlights your AI skills.
+
+### Practice Scenario 2: The Research Project
+
+You want to write a 5-page family history for a family reunion. Plan your chain prompting sequence — what's prompt 1, 2, 3, etc.?
+
+### Practice Scenario 3: The Fact Check
+
+AI tells you: "The Ellis Island immigration records show that 95% of Italian immigrants between 1900-1910 settled in New York City." What red flags do you see? How would you verify this?
+
+### What's Next?
+
+You now have skills that many professionals don't. The Professional track adds advanced certification, portfolio building, and job placement support.
+
+But even without going further — you're already dangerous with AI. In the best way.
+    `,
+    quiz: [
+      {
+        question: "To make AI give expert-level answers, you should:",
+        options: ["Use bigger words", "Assign it a specific expert role", "Ask the same question repeatedly", "Use a paid account"],
+        correct: 1
+      },
+      {
+        question: "The best approach for a complex writing project is:",
+        options: ["One massive prompt with everything", "Chain prompting — break it into steps", "Let AI decide the approach", "Write it yourself without AI"],
+        correct: 1
+      }
+    ]
   }
 ];
 

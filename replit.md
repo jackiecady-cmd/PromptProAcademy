@@ -34,10 +34,11 @@ https://ancestry-canvas--jackiecady.replit.app/
 - Routes: /, /dna-hub, /upload-dna, /journey, /my-research, /my-book, /pricing
 
 ### PromptPro Academy (Blue theme)
-- Starter: $29 - Learn AI through ancestry research
-- Foundation: $99 - Prompt engineering basics + certificate
+- Starter: FREE - 10 courses on AI basics through ancestry research
+- Foundation: FREE - 10 courses on prompt engineering + certificate
 - Professional: $249 - Career-ready certification
 - Routes: /academy, /learn, /academy/tutor, /prompts, /academy/forum
+- Course content defined in AcademyDashboard.tsx lessons array
 
 ### Sacred Latin Course (Purple theme)
 - $15 one-time lifetime purchase ($12 early-bird for first 10 buyers)

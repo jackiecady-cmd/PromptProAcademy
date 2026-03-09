@@ -22,19 +22,21 @@ const courseTiers = [
     id: "starter",
     name: "Starter",
     subtitle: "DIY Ancestry Research",
-    price: 29,
-    description: "Learn to use AI for your own family history research. Perfect introduction to working with AI.",
+    price: 0,
+    description: "Learn to use AI for your own family history research. 10 free courses — no credit card needed.",
     duration: "Self-paced",
     includes: [
-      "5 guided AI conversations",
-      "Basic prompt templates",
+      "10 guided AI lessons with quizzes",
+      "Prompt templates library",
       "Ancestry research prompts",
+      "AI safety & privacy guide",
       "Email support",
     ],
     outcomes: [
       "Confidently use ChatGPT, Claude, or Grok",
       "Research your family history with AI",
       "Understand what makes a good prompt",
+      "Control tone, format, and follow-ups",
     ],
     color: "bg-blue-500",
   },
@@ -42,21 +44,22 @@ const courseTiers = [
     id: "foundation",
     name: "Foundation",
     subtitle: "Prompt Engineering Basics",
-    price: 99,
-    description: "Master the fundamentals of prompt engineering. Build skills employers are looking for.",
-    duration: "2 weeks",
+    price: 0,
+    description: "Master prompt engineering with 10 free courses. Build skills employers are actively hiring for.",
+    duration: "Self-paced",
     includes: [
-      "Everything in Starter",
-      "10+ skill-building exercises",
-      "Video tutorials",
-      "Practice assessments",
+      "10 advanced AI lessons with quizzes",
+      "Role assignment & chain prompting",
+      "Fact-checking & verification skills",
+      "AI writing partnership techniques",
+      "Job-ready portfolio skills",
       "Certificate of Completion",
     ],
     outcomes: [
       "Write effective prompts for any AI",
       "Understand AI capabilities and limits",
       "Troubleshoot when AI gives poor results",
-      "Add to your resume/LinkedIn",
+      "Apply for AI-related remote jobs",
     ],
     popular: true,
     color: "bg-primary",
@@ -207,7 +210,11 @@ export default function LearnPromptEngineering() {
                   <CardTitle>{tier.name}</CardTitle>
                   <CardDescription>{tier.subtitle}</CardDescription>
                   <div className="mt-4">
-                    <span className="text-3xl font-bold">${tier.price}</span>
+                    {tier.price === 0 ? (
+                      <span className="text-3xl font-bold text-green-600">Free</span>
+                    ) : (
+                      <span className="text-3xl font-bold">${tier.price}</span>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -229,9 +236,9 @@ export default function LearnPromptEngineering() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Link href="/academy/checkout">
-                    <Button className={`w-full ${tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`} variant={tier.popular ? 'default' : 'outline'}>
-                      Enroll Now
+                  <Link href={tier.price === 0 ? "/academy" : "/academy/checkout"}>
+                    <Button className={`w-full ${tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`} variant={tier.popular ? 'default' : 'outline'} data-testid={`btn-enroll-${tier.id}`}>
+                      {tier.price === 0 ? "Start Free" : "Enroll Now"}
                     </Button>
                   </Link>
                 </CardFooter>
