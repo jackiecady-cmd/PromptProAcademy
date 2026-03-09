@@ -27,10 +27,14 @@ import {
   CheckCircle2,
   XCircle,
   Trophy,
-  GraduationCap
+  GraduationCap,
+  Stethoscope,
+  HeartPulse
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { Link } from "wouter";
 import { lessons, categoryLabels, categoryColors, type Lesson, type Syllable } from "@/data/latinLessons";
+import { medicalRoots, medicalLessonLinks, medicalQuizQuestions } from "@/data/medicalRoots";
 
 function SyllableDisplay({ syllables }: { syllables: Syllable[] }) {
   const getSizeClass = (stress: string) => {
@@ -69,7 +73,45 @@ function speakLatin(text: string) {
   }
 }
 
-function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) {
+function MedLinkBox({ lessonId }: { lessonId: number }) {
+  const lessonLinks = medicalLessonLinks.find(m => m.lessonId === lessonId);
+  if (!lessonLinks || lessonLinks.links.length === 0) return null;
+
+  return (
+    <div className="space-y-3 mt-6">
+      {lessonLinks.links.map((link, idx) => (
+        <Card key={idx} className="bg-teal-500/10 border-teal-500/30" data-testid={`med-link-${lessonId}-${idx}`}>
+          <CardContent className="py-4">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-teal-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                <Stethoscope className="h-4 w-4 text-teal-400" />
+              </div>
+              <div>
+                <p className="font-medium text-teal-300 text-sm">Med Link</p>
+                <p className="text-white font-medium mt-1">{link.title}</p>
+                <p className="text-slate-400 text-sm mt-1">{link.description}</p>
+                {link.rootRefs.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {link.rootRefs.map(ref => {
+                      const root = medicalRoots.find(r => r.root === ref);
+                      return root ? (
+                        <Badge key={ref} className="bg-teal-500/20 text-teal-300 border-teal-500/30 text-xs">
+                          {root.root} ({root.meaning})
+                        </Badge>
+                      ) : null;
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function LessonView({ lesson, onBack, medMode }: { lesson: Lesson; onBack: () => void; medMode: boolean }) {
   const [expandedPhrase, setExpandedPhrase] = useState<number | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -78,17 +120,24 @@ function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) 
   const [correctCount, setCorrectCount] = useState(0);
   const [quizComplete, setQuizComplete] = useState(false);
 
+  const medQuestions = medMode
+    ? medicalQuizQuestions
+        .filter(q => q.lessonId === lesson.id)
+        .map(q => ({ question: q.question, options: q.options, correctIndex: q.correctIndex, explanation: q.explanation }))
+    : [];
+  const allQuizQuestions = [...lesson.quiz, ...medQuestions];
+
   const handleAnswer = (optionIdx: number) => {
     if (selectedAnswer !== null) return;
     setSelectedAnswer(optionIdx);
     setShowExplanation(true);
-    if (optionIdx === lesson.quiz[currentQuestion].correctIndex) {
+    if (optionIdx === allQuizQuestions[currentQuestion].correctIndex) {
       setCorrectCount(prev => prev + 1);
     }
   };
 
   const handleNextQuestion = () => {
-    if (currentQuestion < lesson.quiz.length - 1) {
+    if (currentQuestion < allQuizQuestions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
       setSelectedAnswer(null);
       setShowExplanation(false);
@@ -218,13 +267,23 @@ function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) 
         ))}
       </div>
 
+      {medMode && <MedLinkBox lessonId={lesson.id} />}
+
       <div className="mt-10 pt-6 border-t border-slate-700">
         {!quizStarted ? (
           <Card className="bg-gradient-to-r from-amber-500/10 to-purple-500/10 border-amber-500/30">
             <CardContent className="py-8 text-center">
               <GraduationCap className="h-12 w-12 text-amber-400 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-white mb-2">Lesson {lesson.id} Quiz</h3>
-              <p className="text-slate-400 mb-6">{lesson.quiz.length} questions to test your knowledge</p>
+              <p className="text-slate-400 mb-6">
+                {allQuizQuestions.length} questions to test your knowledge
+                {medMode && medQuestions.length > 0 && (
+                  <span className="block text-teal-400 text-xs mt-1">
+                    <Stethoscope className="h-3 w-3 inline mr-1" />
+                    Includes {medQuestions.length} medical question{medQuestions.length !== 1 ? "s" : ""}
+                  </span>
+                )}
+              </p>
               <Button
                 size="lg"
                 className="bg-amber-500 hover:bg-amber-600 text-black font-bold"
@@ -241,12 +300,12 @@ function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) 
               <Trophy className="h-16 w-16 text-amber-400 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-white mb-2">Quiz Complete!</h3>
               <p className="text-4xl font-bold text-amber-400 mb-2" data-testid={`text-quiz-score-${lesson.id}`}>
-                {correctCount} / {lesson.quiz.length}
+                {correctCount} / {allQuizQuestions.length}
               </p>
               <p className="text-slate-400 mb-6">
-                {correctCount === lesson.quiz.length ? "Perfect score! Excellent work!" :
-                 correctCount >= lesson.quiz.length * 0.75 ? "Great job! You're learning well." :
-                 correctCount >= lesson.quiz.length * 0.5 ? "Good effort. Review the lesson and try again." :
+                {correctCount === allQuizQuestions.length ? "Perfect score! Excellent work!" :
+                 correctCount >= allQuizQuestions.length * 0.75 ? "Great job! You're learning well." :
+                 correctCount >= allQuizQuestions.length * 0.5 ? "Good effort. Review the lesson and try again." :
                  "Keep studying! Review the vocabulary and phrases above."}
               </p>
               <div className="flex gap-3 justify-center">
@@ -263,8 +322,13 @@ function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) 
           <Card className="bg-slate-800 border-amber-500/30">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-amber-400">
-                  Question {currentQuestion + 1} of {lesson.quiz.length}
+                <CardTitle className="text-amber-400 flex items-center gap-2">
+                  Question {currentQuestion + 1} of {allQuizQuestions.length}
+                  {medMode && currentQuestion >= lesson.quiz.length && (
+                    <Badge className="bg-teal-500/20 text-teal-300 border-teal-500/30 text-xs">
+                      <Stethoscope className="h-3 w-3 mr-1" /> Med
+                    </Badge>
+                  )}
                 </CardTitle>
                 <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30">
                   {correctCount} correct
@@ -273,18 +337,18 @@ function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) 
               <div className="w-full bg-slate-700 rounded-full h-2 mt-2">
                 <div 
                   className="bg-amber-500 h-2 rounded-full transition-all"
-                  style={{ width: `${((currentQuestion + 1) / lesson.quiz.length) * 100}%` }}
+                  style={{ width: `${((currentQuestion + 1) / allQuizQuestions.length) * 100}%` }}
                 />
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-lg text-white font-medium" data-testid={`text-quiz-question-${lesson.id}`}>
-                {lesson.quiz[currentQuestion].question}
+                {allQuizQuestions[currentQuestion].question}
               </p>
               <div className="space-y-2">
-                {lesson.quiz[currentQuestion].options.map((option, optIdx) => {
+                {allQuizQuestions[currentQuestion].options.map((option, optIdx) => {
                   const isSelected = selectedAnswer === optIdx;
-                  const isCorrect = optIdx === lesson.quiz[currentQuestion].correctIndex;
+                  const isCorrect = optIdx === allQuizQuestions[currentQuestion].correctIndex;
                   let btnClass = "w-full text-left justify-start py-3 px-4 border ";
                   if (selectedAnswer !== null) {
                     if (isCorrect) btnClass += "border-green-500 bg-green-500/10 text-green-300";
@@ -320,7 +384,7 @@ function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) 
               {showExplanation && (
                 <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mt-4">
                   <p className="text-sm text-slate-300">
-                    {lesson.quiz[currentQuestion].explanation}
+                    {allQuizQuestions[currentQuestion].explanation}
                   </p>
                 </div>
               )}
@@ -330,7 +394,7 @@ function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) 
                   className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold mt-4"
                   data-testid="button-next-question"
                 >
-                  {currentQuestion < lesson.quiz.length - 1 ? "Next Question" : "See Results"} <ArrowRight className="h-4 w-4 ml-2" />
+                  {currentQuestion < allQuizQuestions.length - 1 ? "Next Question" : "See Results"} <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               )}
             </CardContent>
@@ -362,6 +426,7 @@ export default function LatinCourse() {
 
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
+  const [medMode, setMedMode] = useState(false);
 
   const { toast } = useToast();
 
@@ -537,15 +602,41 @@ export default function LatinCourse() {
             {selectedLesson ? (
               <LessonView 
                 lesson={selectedLesson} 
-                onBack={() => setSelectedLesson(null)} 
+                onBack={() => setSelectedLesson(null)}
+                medMode={medMode}
               />
             ) : (
               <>
                 <Card className="bg-gradient-to-r from-amber-500/10 to-purple-500/10 border-amber-500/30 mb-2">
-                  <CardContent className="py-6 text-center">
-                    <p className="text-2xl font-serif text-amber-300 italic" data-testid="text-welcome">
+                  <CardContent className="py-6">
+                    <p className="text-2xl font-serif text-amber-300 italic text-center mb-4" data-testid="text-welcome">
                       Salve, student! Ready to speak like Caesar?
                     </p>
+                    <div className="flex items-center justify-center gap-3">
+                      <label
+                        htmlFor="med-toggle"
+                        className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-full border transition-all ${
+                          medMode
+                            ? "bg-teal-500/20 border-teal-500/50 text-teal-300"
+                            : "bg-slate-800/50 border-slate-600 text-slate-400"
+                        }`}
+                        data-testid="label-med-toggle"
+                      >
+                        <Stethoscope className={`h-5 w-5 ${medMode ? "text-teal-400" : "text-slate-500"}`} />
+                        <span className="text-sm font-medium">Medical / Healthcare Mode</span>
+                        <Switch
+                          id="med-toggle"
+                          checked={medMode}
+                          onCheckedChange={setMedMode}
+                          data-testid="switch-med-mode"
+                        />
+                      </label>
+                    </div>
+                    {medMode && (
+                      <p className="text-center text-xs text-teal-400 mt-2" data-testid="text-med-active">
+                        Medical context ON — Med Link boxes and extra quiz questions added to each lesson
+                      </p>
+                    )}
                   </CardContent>
                 </Card>
 
@@ -600,8 +691,13 @@ export default function LatinCourse() {
                                     {categoryLabels[lesson.category]}
                                   </Badge>
                                   <span className="text-xs text-slate-500">
-                                    {lesson.phrases.length} phrase{lesson.phrases.length !== 1 ? "s" : ""} · {lesson.vocabulary.length} vocab · {lesson.quiz.length} quiz questions
+                                    {lesson.phrases.length} phrase{lesson.phrases.length !== 1 ? "s" : ""} · {lesson.vocabulary.length} vocab · {lesson.quiz.length + (medMode ? medicalQuizQuestions.filter(q => q.lessonId === lesson.id).length : 0)} quiz questions
                                   </span>
+                                  {medMode && medicalLessonLinks.find(m => m.lessonId === lesson.id) && (
+                                    <Badge className="bg-teal-500/20 text-teal-300 border-teal-500/30 text-xs">
+                                      <Stethoscope className="h-3 w-3 mr-1" /> Med
+                                    </Badge>
+                                  )}
                                 </div>
                               </div>
                             </div>
