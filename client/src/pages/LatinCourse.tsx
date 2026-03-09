@@ -15,89 +15,22 @@ import {
   Star,
   Check,
   ArrowRight,
+  ArrowLeft,
   Sparkles,
   Loader2,
   Languages,
   Heart,
-  Gift
+  Gift,
+  ChevronDown,
+  ChevronUp,
+  Lock,
+  CheckCircle2,
+  XCircle,
+  Trophy,
+  GraduationCap
 } from "lucide-react";
 import { Link } from "wouter";
-
-interface Syllable {
-  text: string;
-  stress: "high" | "medium" | "low";
-}
-
-interface LatinPhrase {
-  latin: string;
-  meaning: string;
-  syllables: Syllable[];
-  phonetic: string;
-  notes?: string;
-}
-
-const samplePhrases: LatinPhrase[] = [
-  {
-    latin: "Ave Maria",
-    meaning: "Hail Mary",
-    syllables: [
-      { text: "A", stress: "high" },
-      { text: "ve", stress: "medium" },
-      { text: " ", stress: "low" },
-      { text: "Ma", stress: "high" },
-      { text: "rí", stress: "medium" },
-      { text: "a", stress: "low" }
-    ],
-    phonetic: "AH-veh mah-REE-ah"
-  },
-  {
-    latin: "In nomine Patris",
-    meaning: "In the name of the Father",
-    syllables: [
-      { text: "In", stress: "medium" },
-      { text: " ", stress: "low" },
-      { text: "NÓ", stress: "high" },
-      { text: "mi", stress: "medium" },
-      { text: "ne", stress: "low" },
-      { text: " ", stress: "low" },
-      { text: "PA", stress: "high" },
-      { text: "tris", stress: "medium" }
-    ],
-    phonetic: "een NOH-mee-neh PAH-trees"
-  },
-  {
-    latin: "Domine Deus Meus",
-    meaning: "Lord my God",
-    syllables: [
-      { text: "DO", stress: "high" },
-      { text: "mi", stress: "medium" },
-      { text: "ne", stress: "low" },
-      { text: " ", stress: "low" },
-      { text: "DE", stress: "high" },
-      { text: "us", stress: "medium" },
-      { text: " ", stress: "low" },
-      { text: "ME", stress: "high" },
-      { text: "us", stress: "low" }
-    ],
-    phonetic: "DOH-mee-neh DEH-oos MEH-oos"
-  },
-  {
-    latin: "Veni, veni, venias",
-    meaning: "Come, come, may you come",
-    syllables: [
-      { text: "VE", stress: "high" },
-      { text: "ni", stress: "medium" },
-      { text: ", ", stress: "low" },
-      { text: "VE", stress: "high" },
-      { text: "ni", stress: "medium" },
-      { text: ", ", stress: "low" },
-      { text: "VE", stress: "high" },
-      { text: "ni", stress: "medium" },
-      { text: "as", stress: "low" }
-    ],
-    phonetic: "VEH-nee, VEH-nee, VEH-nee-ahs"
-  },
-];
+import { lessons, categoryLabels, categoryColors, type Lesson, type Syllable } from "@/data/latinLessons";
 
 function SyllableDisplay({ syllables }: { syllables: Syllable[] }) {
   const getSizeClass = (stress: string) => {
@@ -136,16 +69,287 @@ function speakLatin(text: string) {
   }
 }
 
+function LessonView({ lesson, onBack }: { lesson: Lesson; onBack: () => void }) {
+  const [expandedPhrase, setExpandedPhrase] = useState<number | null>(null);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [quizComplete, setQuizComplete] = useState(false);
+
+  const handleAnswer = (optionIdx: number) => {
+    if (selectedAnswer !== null) return;
+    setSelectedAnswer(optionIdx);
+    setShowExplanation(true);
+    if (optionIdx === lesson.quiz[currentQuestion].correctIndex) {
+      setCorrectCount(prev => prev + 1);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestion < lesson.quiz.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+    } else {
+      setQuizComplete(true);
+    }
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setShowExplanation(false);
+    setCorrectCount(0);
+    setQuizComplete(false);
+    setQuizStarted(false);
+  };
+
+  const catColor = categoryColors[lesson.category] || "bg-slate-500/20 text-slate-300 border-slate-500/30";
+
+  return (
+    <div className="space-y-6">
+      <Button
+        variant="ghost"
+        onClick={onBack}
+        className="text-slate-400 hover:text-white"
+        data-testid="button-back-to-lessons"
+      >
+        <ArrowLeft className="h-4 w-4 mr-2" /> Back to All Lessons
+      </Button>
+
+      <div className="flex items-center gap-3 mb-2">
+        <Badge className={catColor}>
+          {categoryLabels[lesson.category]}
+        </Badge>
+        <span className="text-slate-500 text-sm">Lesson {lesson.id} of {lessons.length}</span>
+      </div>
+
+      <h2 className="text-3xl font-serif font-bold text-white" data-testid={`text-lesson-title-${lesson.id}`}>{lesson.title}</h2>
+      <p className="text-lg text-amber-300">{lesson.subtitle}</p>
+
+      <Card className="bg-slate-800/50 border-slate-700">
+        <CardContent className="py-5">
+          <p className="text-slate-300 leading-relaxed">{lesson.content}</p>
+        </CardContent>
+      </Card>
+
+      <h3 className="text-xl font-bold text-amber-400 flex items-center gap-2 mt-8">
+        <Volume2 className="h-5 w-5" /> Phrases & Pronunciation
+      </h3>
+      {lesson.phrases.map((phrase, idx) => (
+        <Card 
+          key={idx} 
+          className={`bg-slate-800 border-slate-700 cursor-pointer transition-all hover:border-amber-500/50 ${expandedPhrase === idx ? 'border-amber-500 ring-1 ring-amber-500/30' : ''}`}
+          onClick={() => setExpandedPhrase(expandedPhrase === idx ? null : idx)}
+        >
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-lg font-medium text-white font-serif">{phrase.latin}</p>
+                <p className="text-sm text-slate-400">{phrase.meaning}</p>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-amber-400 hover:bg-amber-500/20"
+                onClick={(e) => { e.stopPropagation(); speakLatin(phrase.latin); }}
+              >
+                <Volume2 className="h-5 w-5" />
+              </Button>
+            </div>
+            {expandedPhrase === idx && (
+              <div className="mt-4 pt-4 border-t border-slate-700 space-y-4">
+                <div>
+                  <p className="text-xs text-slate-500 mb-2 uppercase tracking-wider">Pronunciation Guide</p>
+                  <div className="bg-black/50 rounded-lg p-6 text-center">
+                    <SyllableDisplay syllables={phrase.syllables} />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-400">Phonetic: <span className="text-amber-300">{phrase.phonetic}</span></span>
+                  <Button 
+                    size="sm" 
+                    className="bg-amber-500 hover:bg-amber-600 text-black"
+                    onClick={(e) => { e.stopPropagation(); speakLatin(phrase.latin); }}
+                  >
+                    <Play className="h-4 w-4 mr-1" /> Listen & Repeat
+                  </Button>
+                </div>
+                {phrase.notes && (
+                  <p className="text-xs text-slate-500 italic">{phrase.notes}</p>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ))}
+
+      <h3 className="text-xl font-bold text-amber-400 flex items-center gap-2 mt-8">
+        <BookOpen className="h-5 w-5" /> Vocabulary
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {lesson.vocabulary.map((word, idx) => (
+          <Card key={idx} className="bg-slate-800 border-slate-700">
+            <CardContent className="py-3 flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-serif text-lg text-white">{word.latin}</span>
+                  <Badge variant="outline" className="text-xs border-slate-600 text-slate-400">
+                    {word.type}{word.gender ? ` (${word.gender.charAt(0)})` : ""}
+                  </Badge>
+                </div>
+                <p className="text-sm text-slate-400">{word.english}</p>
+                <p className="text-xs text-amber-300/70">{word.phonetic}</p>
+                {word.declension && <p className="text-xs text-slate-500">{word.declension} declension</p>}
+                {word.conjugation && <p className="text-xs text-slate-500">{word.conjugation} conjugation</p>}
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-amber-400 hover:bg-amber-500/20"
+                onClick={() => speakLatin(word.latin)}
+              >
+                <Volume2 className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="mt-10 pt-6 border-t border-slate-700">
+        {!quizStarted ? (
+          <Card className="bg-gradient-to-r from-amber-500/10 to-purple-500/10 border-amber-500/30">
+            <CardContent className="py-8 text-center">
+              <GraduationCap className="h-12 w-12 text-amber-400 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-white mb-2">Lesson {lesson.id} Quiz</h3>
+              <p className="text-slate-400 mb-6">{lesson.quiz.length} questions to test your knowledge</p>
+              <Button
+                size="lg"
+                className="bg-amber-500 hover:bg-amber-600 text-black font-bold"
+                onClick={() => setQuizStarted(true)}
+                data-testid={`button-start-quiz-${lesson.id}`}
+              >
+                <Star className="h-5 w-5 mr-2" /> Start Quiz
+              </Button>
+            </CardContent>
+          </Card>
+        ) : quizComplete ? (
+          <Card className="bg-gradient-to-r from-amber-500/10 to-green-500/10 border-amber-500/30">
+            <CardContent className="py-8 text-center">
+              <Trophy className="h-16 w-16 text-amber-400 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-white mb-2">Quiz Complete!</h3>
+              <p className="text-4xl font-bold text-amber-400 mb-2" data-testid={`text-quiz-score-${lesson.id}`}>
+                {correctCount} / {lesson.quiz.length}
+              </p>
+              <p className="text-slate-400 mb-6">
+                {correctCount === lesson.quiz.length ? "Perfect score! Excellent work!" :
+                 correctCount >= lesson.quiz.length * 0.75 ? "Great job! You're learning well." :
+                 correctCount >= lesson.quiz.length * 0.5 ? "Good effort. Review the lesson and try again." :
+                 "Keep studying! Review the vocabulary and phrases above."}
+              </p>
+              <div className="flex gap-3 justify-center">
+                <Button variant="outline" onClick={resetQuiz} className="border-slate-600 text-slate-300">
+                  Retake Quiz
+                </Button>
+                <Button onClick={onBack} className="bg-amber-500 hover:bg-amber-600 text-black">
+                  Next Lesson <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="bg-slate-800 border-amber-500/30">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-amber-400">
+                  Question {currentQuestion + 1} of {lesson.quiz.length}
+                </CardTitle>
+                <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30">
+                  {correctCount} correct
+                </Badge>
+              </div>
+              <div className="w-full bg-slate-700 rounded-full h-2 mt-2">
+                <div 
+                  className="bg-amber-500 h-2 rounded-full transition-all"
+                  style={{ width: `${((currentQuestion + 1) / lesson.quiz.length) * 100}%` }}
+                />
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-lg text-white font-medium" data-testid={`text-quiz-question-${lesson.id}`}>
+                {lesson.quiz[currentQuestion].question}
+              </p>
+              <div className="space-y-2">
+                {lesson.quiz[currentQuestion].options.map((option, optIdx) => {
+                  const isSelected = selectedAnswer === optIdx;
+                  const isCorrect = optIdx === lesson.quiz[currentQuestion].correctIndex;
+                  let btnClass = "w-full text-left justify-start py-3 px-4 border ";
+                  if (selectedAnswer !== null) {
+                    if (isCorrect) btnClass += "border-green-500 bg-green-500/10 text-green-300";
+                    else if (isSelected && !isCorrect) btnClass += "border-red-500 bg-red-500/10 text-red-300";
+                    else btnClass += "border-slate-700 text-slate-500";
+                  } else {
+                    btnClass += "border-slate-700 hover:border-amber-500/50 hover:bg-slate-700/50 text-slate-200";
+                  }
+
+                  return (
+                    <Button
+                      key={optIdx}
+                      variant="outline"
+                      className={btnClass}
+                      onClick={() => handleAnswer(optIdx)}
+                      disabled={selectedAnswer !== null}
+                      data-testid={`button-quiz-option-${optIdx}`}
+                    >
+                      <span className="mr-3 font-bold text-slate-500">
+                        {String.fromCharCode(65 + optIdx)}.
+                      </span>
+                      {option}
+                      {selectedAnswer !== null && isCorrect && (
+                        <CheckCircle2 className="h-5 w-5 ml-auto text-green-400" />
+                      )}
+                      {selectedAnswer !== null && isSelected && !isCorrect && (
+                        <XCircle className="h-5 w-5 ml-auto text-red-400" />
+                      )}
+                    </Button>
+                  );
+                })}
+              </div>
+              {showExplanation && (
+                <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mt-4">
+                  <p className="text-sm text-slate-300">
+                    {lesson.quiz[currentQuestion].explanation}
+                  </p>
+                </div>
+              )}
+              {selectedAnswer !== null && (
+                <Button
+                  onClick={handleNextQuestion}
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold mt-4"
+                  data-testid="button-next-question"
+                >
+                  {currentQuestion < lesson.quiz.length - 1 ? "Next Question" : "See Results"} <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function LatinCourse() {
-  const [activePhrase, setActivePhrase] = useState<number | null>(null);
   const [translatorInput, setTranslatorInput] = useState("");
-  const [translatorResult, setTranslatorResult] = useState<LatinPhrase | null>(null);
+  const [translatorResult, setTranslatorResult] = useState<any>(null);
   const [translating, setTranslating] = useState(false);
   
   const [prayerIntention, setPrayerIntention] = useState("");
   const [prayerDeity, setPrayerDeity] = useState("");
   const [prayerTone, setPrayerTone] = useState("reverent");
-  const [generatedPrayer, setGeneratedPrayer] = useState<LatinPhrase[]>([]);
+  const [generatedPrayer, setGeneratedPrayer] = useState<any[]>([]);
   const [generatingPrayer, setGeneratingPrayer] = useState(false);
 
   const [freeSpots, setFreeSpots] = useState<number | null>(null);
@@ -155,6 +359,10 @@ export default function LatinCourse() {
   const [freeLastName, setFreeLastName] = useState("");
   const [claiming, setClaiming] = useState(false);
   const [claimed, setClaimed] = useState(false);
+
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [filterCategory, setFilterCategory] = useState<string | null>(null);
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -243,13 +451,18 @@ export default function LatinCourse() {
     }
   };
 
+  const filteredLessons = filterCategory 
+    ? lessons.filter(l => l.category === filterCategory) 
+    : lessons;
+
+  const categories = Object.keys(categoryLabels);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
-      {/* Hero */}
       <div className="container px-4 py-12">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
-            New Course
+            20 Lessons + Quizzes
           </Badge>
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
             Sacred Latin Pronunciation
@@ -258,7 +471,7 @@ export default function LatinCourse() {
             Master the ancient tongue for invocations, prayers, and ritual work
           </p>
           <p className="text-slate-400 mb-8">
-            Visual emphasis guides + AI pronunciation + custom prayer builder
+            Nouns, verbs, declensions, conjugations + AI translator + custom prayer builder
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
@@ -298,92 +511,103 @@ export default function LatinCourse() {
           )}
 
           <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Cancel anytime</span>
+            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> 20 structured lessons</span>
+            <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Quizzes after each lesson</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> AI pronunciation</span>
             <span className="flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Custom prayers</span>
           </div>
         </div>
       </div>
 
-      {/* Main Content Tabs */}
       <div className="container px-4 pb-16">
         <Tabs defaultValue="lessons" className="max-w-4xl mx-auto">
           <TabsList className="grid w-full grid-cols-3 bg-slate-800 mb-8">
-            <TabsTrigger value="lessons" className="flex items-center gap-2">
+            <TabsTrigger value="lessons" className="flex items-center gap-2" data-testid="tab-lessons">
               <BookOpen className="h-4 w-4" /> Lessons
             </TabsTrigger>
-            <TabsTrigger value="translator" className="flex items-center gap-2">
+            <TabsTrigger value="translator" className="flex items-center gap-2" data-testid="tab-translator">
               <Languages className="h-4 w-4" /> Translator
             </TabsTrigger>
-            <TabsTrigger value="prayer" className="flex items-center gap-2">
+            <TabsTrigger value="prayer" className="flex items-center gap-2" data-testid="tab-prayer">
               <Heart className="h-4 w-4" /> Prayer Builder
             </TabsTrigger>
           </TabsList>
 
-          {/* Lessons Tab */}
           <TabsContent value="lessons" className="space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-amber-400">How It Works</CardTitle>
-                <CardDescription className="text-slate-400">
-                  Larger letters = stronger emphasis. Click any phrase, then press the speaker to hear it.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            {selectedLesson ? (
+              <LessonView 
+                lesson={selectedLesson} 
+                onBack={() => setSelectedLesson(null)} 
+              />
+            ) : (
+              <>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <Button
+                    variant={filterCategory === null ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setFilterCategory(null)}
+                    className={filterCategory === null ? "bg-amber-500 text-black" : "border-slate-600 text-slate-300"}
+                    data-testid="filter-all"
+                  >
+                    All ({lessons.length})
+                  </Button>
+                  {categories.map(cat => {
+                    const count = lessons.filter(l => l.category === cat).length;
+                    return (
+                      <Button
+                        key={cat}
+                        variant={filterCategory === cat ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFilterCategory(filterCategory === cat ? null : cat)}
+                        className={filterCategory === cat ? "bg-amber-500 text-black" : "border-slate-600 text-slate-300"}
+                        data-testid={`filter-${cat}`}
+                      >
+                        {categoryLabels[cat]} ({count})
+                      </Button>
+                    );
+                  })}
+                </div>
 
-            {samplePhrases.map((phrase, idx) => (
-              <Card 
-                key={idx} 
-                className={`bg-slate-800 border-slate-700 cursor-pointer transition-all hover:border-amber-500/50 ${activePhrase === idx ? 'border-amber-500 ring-1 ring-amber-500/30' : ''}`}
-                onClick={() => setActivePhrase(activePhrase === idx ? null : idx)}
-              >
-                <CardContent className="py-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-lg font-medium text-white">{phrase.latin}</p>
-                      <p className="text-sm text-slate-400">{phrase.meaning}</p>
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="text-amber-400 hover:bg-amber-500/20"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        speakLatin(phrase.latin);
-                      }}
-                    >
-                      <Volume2 className="h-5 w-5" />
-                    </Button>
-                  </div>
-                  {activePhrase === idx && (
-                    <div className="mt-4 pt-4 border-t border-slate-700 space-y-4">
-                      <div>
-                        <p className="text-xs text-slate-500 mb-2 uppercase tracking-wider">Pronunciation Guide</p>
-                        <div className="bg-black/50 rounded-lg p-6 text-center">
-                          <SyllableDisplay syllables={phrase.syllables} />
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-400">Phonetic: <span className="text-amber-300">{phrase.phonetic}</span></span>
-                        <Button 
-                          size="sm" 
-                          className="bg-amber-500 hover:bg-amber-600 text-black"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            speakLatin(phrase.latin);
-                          }}
-                        >
-                          <Play className="h-4 w-4 mr-1" /> Listen & Repeat
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+                <div className="space-y-3">
+                  {filteredLessons.map((lesson) => {
+                    const catColor = categoryColors[lesson.category] || "bg-slate-500/20 text-slate-300";
+                    return (
+                      <Card 
+                        key={lesson.id}
+                        className="bg-slate-800 border-slate-700 hover:border-amber-500/50 cursor-pointer transition-all"
+                        onClick={() => setSelectedLesson(lesson)}
+                        data-testid={`card-lesson-${lesson.id}`}
+                      >
+                        <CardContent className="py-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 font-bold text-sm shrink-0">
+                                {lesson.id}
+                              </div>
+                              <div>
+                                <h3 className="font-medium text-white">{lesson.title}</h3>
+                                <p className="text-sm text-slate-400">{lesson.subtitle}</p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <Badge className={`text-xs ${catColor}`}>
+                                    {categoryLabels[lesson.category]}
+                                  </Badge>
+                                  <span className="text-xs text-slate-500">
+                                    {lesson.phrases.length} phrase{lesson.phrases.length !== 1 ? "s" : ""} · {lesson.vocabulary.length} vocab · {lesson.quiz.length} quiz questions
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <ArrowRight className="h-5 w-5 text-slate-500" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </TabsContent>
 
-          {/* Translator Tab */}
           <TabsContent value="translator" className="space-y-6">
             <Card className="bg-slate-800 border-slate-700">
               <CardHeader>
@@ -401,13 +625,15 @@ export default function LatinCourse() {
                     placeholder="Enter phrase in English... (e.g., 'Protect this house')"
                     value={translatorInput}
                     onChange={(e) => setTranslatorInput(e.target.value)}
-                    className="bg-slate-900 border-slate-600"
+                    className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-500"
                     onKeyPress={(e) => e.key === "Enter" && handleTranslate()}
+                    data-testid="input-translator"
                   />
                   <Button 
                     onClick={handleTranslate}
                     disabled={translating || !translatorInput.trim()}
                     className="bg-amber-500 hover:bg-amber-600 text-black"
+                    data-testid="button-translate"
                   >
                     {translating ? <Loader2 className="h-4 w-4 animate-spin" /> : "Translate"}
                   </Button>
@@ -431,14 +657,18 @@ export default function LatinCourse() {
                         </Button>
                       </div>
                       
-                      <div className="bg-black/50 rounded-lg p-6 text-center">
-                        <SyllableDisplay syllables={translatorResult.syllables} />
-                      </div>
+                      {translatorResult.syllables && (
+                        <div className="bg-black/50 rounded-lg p-6 text-center">
+                          <SyllableDisplay syllables={translatorResult.syllables} />
+                        </div>
+                      )}
                       
-                      <div className="text-sm text-slate-400">
-                        <span>Phonetic: </span>
-                        <span className="text-amber-300">{translatorResult.phonetic}</span>
-                      </div>
+                      {translatorResult.phonetic && (
+                        <div className="text-sm text-slate-400">
+                          <span>Phonetic: </span>
+                          <span className="text-amber-300">{translatorResult.phonetic}</span>
+                        </div>
+                      )}
                       
                       {translatorResult.notes && (
                         <p className="text-xs text-slate-500 italic">{translatorResult.notes}</p>
@@ -450,7 +680,6 @@ export default function LatinCourse() {
             </Card>
           </TabsContent>
 
-          {/* Prayer Builder Tab */}
           <TabsContent value="prayer" className="space-y-6">
             <Card className="bg-slate-800 border-slate-700">
               <CardHeader>
@@ -469,7 +698,8 @@ export default function LatinCourse() {
                     placeholder="e.g., Hecate, Mars, Isis, Odin, the Ancestors, the Universe..."
                     value={prayerDeity}
                     onChange={(e) => setPrayerDeity(e.target.value)}
-                    className="bg-slate-900 border-slate-600"
+                    className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-500"
+                    data-testid="input-prayer-deity"
                   />
                   <p className="text-xs text-slate-500 mt-1">Leave blank for a general prayer</p>
                 </div>
@@ -477,11 +707,12 @@ export default function LatinCourse() {
                 <div>
                   <label className="text-sm text-slate-300 mb-2 block">Your Intention</label>
                   <Textarea
-                    placeholder="What is your prayer for? (e.g., 'Protection for my family', 'Guidance in a difficult decision', 'Gratitude for blessings received')"
+                    placeholder="What is your prayer for? (e.g., 'Protection for my family', 'Guidance in a difficult decision')"
                     value={prayerIntention}
                     onChange={(e) => setPrayerIntention(e.target.value)}
-                    className="bg-slate-900 border-slate-600"
+                    className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-500"
                     rows={3}
+                    data-testid="input-prayer-intention"
                   />
                 </div>
                 
@@ -506,6 +737,7 @@ export default function LatinCourse() {
                   onClick={handleGeneratePrayer}
                   disabled={generatingPrayer || !prayerIntention.trim()}
                   className="w-full bg-amber-500 hover:bg-amber-600 text-black"
+                  data-testid="button-generate-prayer"
                 >
                   {generatingPrayer ? (
                     <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Crafting your prayer...</>
@@ -520,7 +752,7 @@ export default function LatinCourse() {
                       <CardTitle className="text-lg text-amber-300">Your Prayer</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {generatedPrayer.map((phrase, idx) => (
+                      {generatedPrayer.map((phrase: any, idx: number) => (
                         <div key={idx} className="border-b border-slate-700 pb-4 last:border-0 last:pb-0">
                           <div className="flex items-center justify-between mb-2">
                             <p className="font-serif text-lg text-white">{phrase.latin}</p>
@@ -534,16 +766,18 @@ export default function LatinCourse() {
                             </Button>
                           </div>
                           <p className="text-sm text-slate-400 mb-2">{phrase.meaning}</p>
-                          <div className="bg-black/50 rounded p-3 text-center">
-                            <SyllableDisplay syllables={phrase.syllables} />
-                          </div>
+                          {phrase.syllables && (
+                            <div className="bg-black/50 rounded p-3 text-center">
+                              <SyllableDisplay syllables={phrase.syllables} />
+                            </div>
+                          )}
                         </div>
                       ))}
                       
                       <Button 
                         className="w-full bg-amber-500/20 text-amber-300 hover:bg-amber-500/30"
                         onClick={() => {
-                          generatedPrayer.forEach((phrase, idx) => {
+                          generatedPrayer.forEach((phrase: any, idx: number) => {
                             setTimeout(() => speakLatin(phrase.latin), idx * 3000);
                           });
                         }}
@@ -559,7 +793,6 @@ export default function LatinCourse() {
         </Tabs>
       </div>
 
-      {/* CTA */}
       <div className="bg-slate-800/50 py-12">
         <div className="container px-4 text-center">
           <h2 className="text-2xl font-bold mb-4">Ready to Master Sacred Latin?</h2>
