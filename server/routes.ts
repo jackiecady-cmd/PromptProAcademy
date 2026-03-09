@@ -262,8 +262,8 @@ export async function registerRoutes(
   app.get("/api/promo/latin-free-spots", async (_req, res) => {
     try {
       const count = await storage.countLatinFreePromoOrders();
-      const remaining = Math.max(0, 22 - count);
-      res.json({ total: 22, used: count, remaining });
+      const remaining = Math.max(0, 20 - count);
+      res.json({ total: 20, used: count, remaining });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -839,7 +839,7 @@ function getProductName(productType: string): string {
     heritage_book_deluxe: "Heritage Book - Deluxe Edition",
     heritage_book_legacy: "Heritage Book - Legacy Edition",
     // Sacred Latin Products
-    latin_course_free: "Sacred Latin Course (First 22 Free - Lifetime)",
+    latin_course_free: "Sacred Latin Course (First 20 Free - Lifetime)",
     // PromptPro Academy Products
     academy_starter: "PromptPro Academy - Starter Course",
     academy_foundation: "PromptPro Academy - Foundation Course",
@@ -860,7 +860,7 @@ function getProductDescription(productType: string): string {
     heritage_book_standard: "50+ page softcover family history book",
     heritage_book_deluxe: "100+ page hardcover premium family history book",
     heritage_book_legacy: "150+ page leather-bound archival family history book",
-    latin_course_free: "Sacred Latin course - Free lifetime access (First 22 promo)",
+    latin_course_free: "Sacred Latin course - Free lifetime access (First 20 promo)",
     academy_starter: "Learn AI basics through ancestry research",
     academy_foundation: "Master prompt engineering fundamentals",
     academy_professional: "Career-ready AI skills with certification",

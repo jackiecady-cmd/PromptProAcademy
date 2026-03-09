@@ -587,7 +587,7 @@ export default function LatinCourse() {
                 onClick={() => setFreeDialogOpen(true)}
                 data-testid="button-latin-free"
               >
-                <Gift className="h-5 w-5 mr-2" /> First 22 Get It FREE — Lifetime Access
+                <Gift className="h-5 w-5 mr-2" /> First 20 Get It FREE — Lifetime Access
               </Button>
             )}
             {claimed && (
@@ -611,7 +611,7 @@ export default function LatinCourse() {
           )}
           {freeSpots !== null && freeSpots === 0 && !claimed && (
             <p className="text-red-400 font-medium mb-4">
-              All 22 free spots have been claimed
+              All 20 free spots have been claimed
             </p>
           )}
 
@@ -976,7 +976,7 @@ export default function LatinCourse() {
               <Gift className="h-6 w-6" /> Claim Your FREE Lifetime Access
             </DialogTitle>
             <DialogDescription className="text-slate-300">
-              The first 22 people get the {medMode ? "Medical" : "Sacred"} Latin Course completely free — $0.00, forever. No credit card required.
+              The first 20 people get the {medMode ? "Medical" : "Sacred"} Latin Course completely free — $0.00, forever. No credit card required.
             </DialogDescription>
           </DialogHeader>
           {claimed ? (
