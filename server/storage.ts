@@ -244,8 +244,8 @@ class DatabaseStorage implements IStorage {
         );
       const currentCount = countResult[0]?.count ?? 0;
 
-      if (currentCount >= 20) {
-        return { success: false, error: "Sorry, all 20 free spots have been claimed!" };
+      if (currentCount >= 22) {
+        return { success: false, error: "Sorry, all 22 free spots have been claimed!" };
       }
 
       const existingResult = await tx
@@ -305,8 +305,8 @@ class DatabaseStorage implements IStorage {
         );
       const currentCount = countResult[0]?.count ?? 0;
 
-      if (currentCount >= 20) {
-        return { success: false, error: "Sorry, all 20 free lifetime spots have been claimed!" };
+      if (currentCount >= 22) {
+        return { success: false, error: "Sorry, all 22 free lifetime spots have been claimed!" };
       }
 
       const existingResult = await tx
