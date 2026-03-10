@@ -142,7 +142,7 @@ export default function LearnPromptEngineering() {
             </h1>
             <p className="text-lg text-blue-200 mb-4">Remote Work Training for the AI Era</p>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              You've already started using AI to discover your ancestry. 
+              You've already started using AI, now let's make it pay. 
               Now turn that skill into something bigger—a new career, side income, or work-from-home flexibility.
             </p>
           </div>
