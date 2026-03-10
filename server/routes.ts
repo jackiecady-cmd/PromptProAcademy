@@ -62,8 +62,9 @@ export async function registerRoutes(
       const { email, firstName, lastName, productType } = req.body;
 
       const allowedPrices: Record<string, number> = {
-        academy_foundation: 9900,
-        academy_professional: 24900,
+        academy_foundation: 3500,
+        academy_professional: 7500,
+        academy_bundle: 6000,
         base_analysis: 2900,
         royal_blood: 4900,
         holocaust_survivor: 4900,
@@ -1010,6 +1011,7 @@ function getProductName(productType: string): string {
     academy_professional: "PromptPro Academy - Professional Certification",
     academy_professional_free: "PromptPro Academy - Professional (First 5 Free)",
     academy_foundation_free: "PromptPro Academy - Foundation (First 5 Free)",
+    academy_bundle: "PromptPro Academy - Bundle Deal (Foundation + Professional)",
   };
   return names[productType] || "WhoamI Service";
 }
@@ -1033,6 +1035,7 @@ function getProductDescription(productType: string): string {
     academy_professional: "Career-ready AI skills with certification",
     academy_professional_free: "Professional AI certification - Free access (First 5 promo)",
     academy_foundation_free: "Foundation prompt engineering - Free access (First 5 promo)",
+    academy_bundle: "Foundation + Professional courses bundled at a discount",
   };
   return descriptions[productType] || "Premium service from WhoamI";
 }

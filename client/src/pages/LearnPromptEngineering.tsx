@@ -24,7 +24,7 @@ const courseTiers = [
     id: "foundation",
     name: "Foundation",
     subtitle: "Prompt Engineering Basics",
-    price: 99,
+    price: 35,
     description: "Master prompt engineering with 10 courses. Build skills employers are actively hiring for.",
     duration: "Self-paced",
     includes: [
@@ -48,7 +48,7 @@ const courseTiers = [
     id: "professional",
     name: "Professional",
     subtitle: "Career-Ready Skills",
-    price: 249,
+    price: 75,
     description: "Comprehensive training to work professionally with AI. Includes job placement support.",
     duration: "4 weeks",
     includes: [
@@ -67,6 +67,31 @@ const courseTiers = [
       "Portfolio of completed projects",
     ],
     color: "bg-accent",
+  },
+  {
+    id: "bundle",
+    name: "Bundle Deal",
+    subtitle: "Foundation + Professional",
+    price: 60,
+    originalPrice: 110,
+    description: "Get both courses together and save $50. The complete prompt engineering journey from basics to career-ready.",
+    duration: "Self-paced + 4 weeks",
+    includes: [
+      "Everything in Foundation",
+      "Everything in Professional",
+      "Save $50 vs buying separately",
+      "Full career-ready certification path",
+      "1-on-1 coaching session",
+      "Job search assistance",
+      "LinkedIn recommendation",
+    ],
+    outcomes: [
+      "Master prompt engineering end-to-end",
+      "Apply for AI-related remote jobs",
+      "Freelance as a prompt engineer",
+      "Portfolio of completed projects",
+    ],
+    color: "bg-gradient-to-br from-primary to-accent",
   },
 ];
 
@@ -197,9 +222,9 @@ export default function LearnPromptEngineering() {
                 )}
                 <CardHeader>
                   <div className={`w-12 h-12 rounded-lg ${tier.color} flex items-center justify-center text-white mb-4`}>
-                    {tier.id === 'starter' && <Star className="h-6 w-6" />}
                     {tier.id === 'foundation' && <GraduationCap className="h-6 w-6" />}
                     {tier.id === 'professional' && <Briefcase className="h-6 w-6" />}
+                    {tier.id === 'bundle' && <Award className="h-6 w-6" />}
                   </div>
                   <CardTitle>{tier.name}</CardTitle>
                   <CardDescription>{tier.subtitle}</CardDescription>
@@ -215,6 +240,19 @@ export default function LearnPromptEngineering() {
                               <Badge className="bg-green-600 text-white text-xs">
                                 <Gift className="h-3 w-3 mr-1" />
                                 {spots} free spot{spots !== 1 ? "s" : ""} left
+                              </Badge>
+                            </div>
+                          </div>
+                        );
+                      }
+                      if ('originalPrice' in tier && tier.originalPrice) {
+                        return (
+                          <div>
+                            <span className="text-3xl font-bold">${tier.price}</span>
+                            <span className="text-sm line-through text-muted-foreground ml-2">${tier.originalPrice}</span>
+                            <div className="mt-1">
+                              <Badge variant="secondary" className="text-xs">
+                                Save ${tier.originalPrice - tier.price}
                               </Badge>
                             </div>
                           </div>
@@ -246,10 +284,11 @@ export default function LearnPromptEngineering() {
                   {(() => {
                     const spots = tier.id === 'foundation' ? foundationFreeSpots : tier.id === 'professional' ? proFreeSpots : null;
                     const hasFreeSpots = spots !== null && spots > 0;
+                    const isBundle = tier.id === 'bundle';
                     return (
                       <Link href={`/academy/checkout?tier=${tier.id}`}>
-                        <Button className={`w-full ${hasFreeSpots ? 'bg-green-600 hover:bg-green-700' : tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`} variant={tier.popular && !hasFreeSpots ? 'default' : hasFreeSpots ? 'default' : 'outline'} data-testid={`btn-enroll-${tier.id}`}>
-                          {hasFreeSpots ? "Claim Free Spot" : "Enroll Now"}
+                        <Button className={`w-full ${hasFreeSpots ? 'bg-green-600 hover:bg-green-700' : isBundle ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white' : tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`} variant={hasFreeSpots || isBundle || tier.popular ? 'default' : 'outline'} data-testid={`btn-enroll-${tier.id}`}>
+                          {hasFreeSpots ? "Claim Free Spot" : isBundle ? "Get Bundle Deal" : "Enroll Now"}
                         </Button>
                       </Link>
                     );

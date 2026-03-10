@@ -25,8 +25,8 @@ const tierConfig: Record<string, {
   foundation: {
     name: "Foundation",
     subtitle: "Prompt Engineering Basics",
-    price: 99,
-    priceInCents: 9900,
+    price: 35,
+    priceInCents: 3500,
     productType: "academy_foundation",
     freeProductType: "academy_foundation_free",
     freeApiCheck: "/api/promo/academy-foundation-free",
@@ -44,8 +44,8 @@ const tierConfig: Record<string, {
   professional: {
     name: "Professional",
     subtitle: "Career-Ready Certification",
-    price: 249,
-    priceInCents: 24900,
+    price: 75,
+    priceInCents: 7500,
     productType: "academy_professional",
     freeProductType: "academy_professional_free",
     freeApiCheck: "/api/promo/academy-pro-free",
@@ -58,6 +58,26 @@ const tierConfig: Record<string, {
       "1-on-1 coaching session",
       "Job search assistance",
       "Professional Certificate",
+      "LinkedIn recommendation",
+    ],
+  },
+  bundle: {
+    name: "Bundle Deal",
+    subtitle: "Foundation + Professional",
+    price: 60,
+    priceInCents: 6000,
+    productType: "academy_bundle",
+    freeProductType: "",
+    freeApiCheck: "",
+    freeApiClaim: "",
+    icon: GraduationCap,
+    includes: [
+      "Everything in Foundation",
+      "Everything in Professional",
+      "Save $50 vs buying separately",
+      "Full career-ready certification path",
+      "1-on-1 coaching session",
+      "Job search assistance",
       "LinkedIn recommendation",
     ],
   },
@@ -78,10 +98,14 @@ export default function AcademyCheckout() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetch(tier.freeApiCheck)
-      .then(r => r.json())
-      .then(data => setFreeSpots(data.remaining))
-      .catch(() => setFreeSpots(0));
+    if (tier.freeApiCheck) {
+      fetch(tier.freeApiCheck)
+        .then(r => r.json())
+        .then(data => setFreeSpots(data.remaining))
+        .catch(() => setFreeSpots(0));
+    } else {
+      setFreeSpots(0);
+    }
   }, [tier.freeApiCheck]);
 
   const handleFreeClaim = async () => {
@@ -232,12 +256,23 @@ export default function AcademyCheckout() {
               </Card>
             )}
 
-            {freeSpots === 0 && (
+            {freeSpots === 0 && tier.freeApiCheck && (
               <Card className="border border-amber-300 bg-amber-50">
                 <CardContent className="py-4">
                   <div className="flex items-center gap-3">
                     <Sparkles className="h-5 w-5 text-amber-600 shrink-0" />
                     <p className="text-sm text-amber-800">All 5 free spots have been claimed. You can still enroll at ${tier.price} via Stripe.</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {tierParam === 'bundle' && (
+              <Card className="border-2 border-purple-300 bg-purple-50">
+                <CardContent className="py-4">
+                  <div className="flex items-center gap-3">
+                    <Sparkles className="h-5 w-5 text-purple-600 shrink-0" />
+                    <p className="text-sm text-purple-800 font-medium">Bundle & Save — Get both Foundation + Professional for just $60 (save $50 vs buying separately).</p>
                   </div>
                 </CardContent>
               </Card>

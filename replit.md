@@ -34,8 +34,9 @@ https://ancestry-canvas--jackiecady.replit.app/
 - Routes: /, /dna-hub, /upload-dna, /journey, /my-research, /my-book, /pricing
 
 ### PromptPro Academy (Blue theme)
-- Foundation: $99 - 10 prompt engineering courses + certificate (first 5 free, no Stripe)
-- Professional: $249 - Career-ready certification (first 5 free, no Stripe)
+- Foundation: $35 - 10 prompt engineering courses + certificate (first 5 free, no Stripe)
+- Professional: $75 - Career-ready certification (first 5 free, no Stripe)
+- Bundle Deal: $60 - Foundation + Professional together (save $50 vs $110 separately)
 - Starter tier removed (ancestry-focused courses deleted)
 - Free promo: First 5 claimants per tier pay $0.00, tracked via academy_foundation_free / academy_professional_free productTypes
 - API: GET /api/promo/academy-foundation-free, POST /api/checkout/academy-foundation-free
