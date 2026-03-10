@@ -14,7 +14,9 @@ import {
   Users,
   TrendingUp,
   Home,
-  Gift
+  Gift,
+  Sparkles,
+  ArrowRight
 } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
