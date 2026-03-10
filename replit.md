@@ -28,10 +28,11 @@ https://ancestry-canvas--jackiecady.replit.app/
 
 ## Three Businesses
 
-### WhoamI DNA & Genealogy (Burgundy theme)
-- DIY research with AI guidance
+### WhoamI DNA & Genealogy (Burgundy theme) — 100% FREE
+- DIY research with AI guidance — all DNA services are $0.00
 - Heritage Books: $99-$249 (print-on-demand via Blurb/Lulu)
-- Routes: /, /dna-hub, /upload-dna, /journey, /my-research, /my-book, /pricing
+- Homepage (/) is now a multi-business hub; DNA landing page at /dna
+- Routes: /dna, /dna-hub, /upload-dna, /journey, /my-research, /my-book, /pricing, /checkout
 
 ### PromptPro Academy (Blue theme)
 - Foundation: $35 - 10 prompt engineering courses + certificate (first 5 free, no Stripe)

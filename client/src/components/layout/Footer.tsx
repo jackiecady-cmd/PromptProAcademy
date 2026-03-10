@@ -23,7 +23,7 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="font-medium text-foreground">Services</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/pricing">Base Analysis ($20)</Link></li>
+              <li><Link href="/pricing">Base Analysis (Free)</Link></li>
               <li><Link href="/pricing">Royal Lineage Check</Link></li>
               <li><Link href="/pricing">Tribe & Clan Trace</Link></li>
               <li><Link href="/pricing">Holocaust Survivor Search</Link></li>

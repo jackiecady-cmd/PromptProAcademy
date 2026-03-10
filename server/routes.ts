@@ -65,11 +65,11 @@ export async function registerRoutes(
         academy_foundation: 3500,
         academy_professional: 7500,
         academy_bundle: 6000,
-        base_analysis: 2900,
-        royal_blood: 4900,
-        holocaust_survivor: 4900,
-        native_tribe: 4900,
-        ancient_dna: 4900,
+        base_analysis: 0,
+        royal_blood: 0,
+        holocaust_survivor: 0,
+        native_tribe: 0,
+        ancient_dna: 0,
         heritage_book_standard: 9900,
         heritage_book_deluxe: 17900,
         heritage_book_legacy: 24900,
@@ -86,7 +86,7 @@ export async function registerRoutes(
       const data = schema.parse({ email, firstName, lastName, productType });
 
       const serverAmount = allowedPrices[data.productType];
-      if (!serverAmount) {
+      if (serverAmount === undefined) {
         return res.status(400).json({ error: "Invalid product type" });
       }
 
@@ -229,9 +229,7 @@ export async function registerRoutes(
 
   app.get("/api/promo/free-spots", async (_req, res) => {
     try {
-      const count = await storage.countFreePromoOrders();
-      const remaining = Math.max(0, 20 - count);
-      res.json({ total: 20, used: count, remaining });
+      res.json({ total: 999999, used: 0, remaining: 999999 });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -258,14 +256,15 @@ export async function registerRoutes(
         });
       }
 
-      const result = await storage.claimFreePromoOrder(user.id, data.email);
+      const order = await storage.createOrder({
+        userId: user.id,
+        email: data.email,
+        productType: "base_analysis_free",
+        amount: 0,
+        status: "completed",
+      });
 
-      if (!result.success) {
-        const statusCode = result.error?.includes("already claimed") ? 409 : 410;
-        return res.status(statusCode).json({ error: result.error });
-      }
-
-      res.json({ success: true, orderId: result.orderId });
+      res.json({ success: true, orderId: order.id });
     } catch (error: any) {
       console.error("Free checkout error:", error);
       if (error.name === "ZodError") {

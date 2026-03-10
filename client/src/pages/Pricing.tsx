@@ -7,7 +7,7 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-background py-20">
       <div className="container px-4 md:px-6">
-        <div className="max-w-4xl mx-auto mb-10" data-testid="banner-first-20-free">
+        <div className="max-w-4xl mx-auto mb-10" data-testid="banner-dna-free">
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 p-8 md:p-10 text-white shadow-2xl shadow-emerald-500/20">
             <Sparkles className="absolute top-4 right-4 h-8 w-8 opacity-30 animate-pulse" />
             <Sparkles className="absolute bottom-4 left-4 h-6 w-6 opacity-20 animate-pulse" />
@@ -16,15 +16,15 @@ export default function Pricing() {
                 <Gift className="h-10 w-10 text-white" />
               </div>
               <div className="text-center md:text-left flex-1">
-                <h2 className="text-3xl md:text-4xl font-serif font-bold mb-2">First 20 Users Free!</h2>
+                <h2 className="text-3xl md:text-4xl font-serif font-bold mb-2">DNA Analysis is Free!</h2>
                 <p className="text-lg text-white/90">
-                  Be one of the first 20 users and get your Base Analysis completely free — 
+                  Our complete Base Analysis is now completely free — 
                   <span className="font-bold text-white"> $0.00</span>. No credit card required.
                 </p>
               </div>
               <div className="text-center flex-shrink-0">
                 <div className="text-5xl font-bold">$0.00</div>
-                <div className="text-sm text-white/80 mt-1">for first 20 users</div>
+                <div className="text-sm text-white/80 mt-1">always free</div>
               </div>
             </div>
           </div>
@@ -33,8 +33,7 @@ export default function Pricing() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6">Choose Your Depth of Discovery</h1>
           <p className="text-xl text-muted-foreground">
-            We offer a comprehensive base analysis with optional deep-dives into specific areas of your heritage.
-            Pay only for what you want to know.
+            Our base analysis is completely free. Add optional deep-dives into specific areas of your heritage.
           </p>
         </div>
 
@@ -42,17 +41,14 @@ export default function Pricing() {
           {/* Base Plan */}
           <Card className="border-2 border-emerald-500 shadow-xl scale-105 z-10 relative">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-1 rounded-full text-sm font-bold shadow-md">
-              First 20 Users Free
+              Always Free
             </div>
             <CardHeader>
               <CardTitle className="text-2xl font-bold">Base Analysis</CardTitle>
               <CardDescription>The essential starting point for everyone.</CardDescription>
               <div className="mt-4" data-testid="price-base-analysis">
                 <span className="text-4xl font-bold text-emerald-600">$0.00</span>
-                <span className="text-muted-foreground"> / free for first 20</span>
-                <div className="mt-1">
-                  <span className="text-sm text-muted-foreground line-through">$20 / one-time</span>
-                </div>
+                <span className="text-muted-foreground"> / free</span>
               </div>
             </CardHeader>
             <CardContent>
@@ -67,7 +63,7 @@ export default function Pricing() {
             </CardContent>
             <CardFooter>
               <Link href="/checkout" className="w-full">
-                <Button className="w-full h-12 text-lg bg-primary hover:bg-primary/90">Get Started</Button>
+                <Button className="w-full h-12 text-lg bg-primary hover:bg-primary/90" data-testid="button-get-started-free">Get Started — Free</Button>
               </Link>
             </CardFooter>
           </Card>
@@ -78,8 +74,8 @@ export default function Pricing() {
               <CardTitle className="text-2xl font-bold">Deep Heritage</CardTitle>
               <CardDescription>Specialized reports for specific interests.</CardDescription>
               <div className="mt-4">
-                <span className="text-4xl font-bold">$5-15</span>
-                <span className="text-muted-foreground"> / per report</span>
+                <span className="text-4xl font-bold text-emerald-600">$0.00</span>
+                <span className="text-muted-foreground"> / free</span>
               </div>
             </CardHeader>
             <CardContent>
@@ -87,24 +83,24 @@ export default function Pricing() {
                 <p className="text-sm font-medium mb-2">Available Plugins:</p>
                 <div className="p-3 bg-background rounded-lg border flex justify-between items-center">
                   <span>Royal Blood Check</span>
-                  <span className="font-bold">$10</span>
+                  <span className="font-bold text-emerald-600">Free</span>
                 </div>
                 <div className="p-3 bg-background rounded-lg border flex justify-between items-center">
                   <span>Holocaust Survivor Search</span>
-                  <span className="font-bold">$15</span>
+                  <span className="font-bold text-emerald-600">Free</span>
                 </div>
                 <div className="p-3 bg-background rounded-lg border flex justify-between items-center">
                   <span>Native Tribe Trace</span>
-                  <span className="font-bold">$15</span>
+                  <span className="font-bold text-emerald-600">Free</span>
                 </div>
                 <div className="p-3 bg-background rounded-lg border flex justify-between items-center">
                   <span>Ancient DNA Match</span>
-                  <span className="font-bold">$5</span>
+                  <span className="font-bold text-emerald-600">Free</span>
                 </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full h-12">Select in Dashboard</Button>
+              <Button variant="outline" className="w-full h-12" data-testid="button-select-dashboard">Select in Dashboard</Button>
             </CardFooter>
           </Card>
 
@@ -127,7 +123,7 @@ export default function Pricing() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button variant="secondary" className="w-full h-12">Book a Session</Button>
+              <Button variant="secondary" className="w-full h-12" data-testid="button-book-session">Book a Session</Button>
             </CardFooter>
           </Card>
         </div>
