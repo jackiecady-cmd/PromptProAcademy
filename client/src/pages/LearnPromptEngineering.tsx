@@ -21,36 +21,14 @@ import { useState, useEffect } from "react";
 
 const courseTiers = [
   {
-    id: "starter",
-    name: "Starter",
-    subtitle: "DIY Ancestry Research",
-    price: 0,
-    description: "Learn to use AI for your own family history research. 10 free courses — no credit card needed.",
-    duration: "Self-paced",
-    includes: [
-      "10 guided AI lessons with quizzes",
-      "Prompt templates library",
-      "Ancestry research prompts",
-      "AI safety & privacy guide",
-      "Email support",
-    ],
-    outcomes: [
-      "Confidently use ChatGPT, Claude, or Grok",
-      "Research your family history with AI",
-      "Understand what makes a good prompt",
-      "Control tone, format, and follow-ups",
-    ],
-    color: "bg-blue-500",
-  },
-  {
     id: "foundation",
     name: "Foundation",
     subtitle: "Prompt Engineering Basics",
-    price: 0,
-    description: "Master prompt engineering with 10 free courses. Build skills employers are actively hiring for.",
+    price: 99,
+    description: "Master prompt engineering with 10 courses. Build skills employers are actively hiring for.",
     duration: "Self-paced",
     includes: [
-      "10 advanced AI lessons with quizzes",
+      "10 guided AI lessons with quizzes",
       "Role assignment & chain prompting",
       "Fact-checking & verification skills",
       "AI writing partnership techniques",
@@ -112,12 +90,17 @@ const testimonials = [
 
 export default function LearnPromptEngineering() {
   const [proFreeSpots, setProFreeSpots] = useState<number | null>(null);
+  const [foundationFreeSpots, setFoundationFreeSpots] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("/api/promo/academy-pro-free")
       .then(r => r.json())
       .then(data => setProFreeSpots(data.remaining))
       .catch(() => setProFreeSpots(0));
+    fetch("/api/promo/academy-foundation-free")
+      .then(r => r.json())
+      .then(data => setFoundationFreeSpots(data.remaining))
+      .catch(() => setFoundationFreeSpots(0));
   }, []);
 
   return (
@@ -221,22 +204,24 @@ export default function LearnPromptEngineering() {
                   <CardTitle>{tier.name}</CardTitle>
                   <CardDescription>{tier.subtitle}</CardDescription>
                   <div className="mt-4">
-                    {tier.price === 0 ? (
-                      <span className="text-3xl font-bold text-green-600">Free</span>
-                    ) : tier.id === 'professional' && proFreeSpots !== null && proFreeSpots > 0 ? (
-                      <div>
-                        <span className="text-3xl font-bold text-green-600">Free</span>
-                        <span className="text-sm line-through text-muted-foreground ml-2">${tier.price}</span>
-                        <div className="mt-1">
-                          <Badge className="bg-green-600 text-white text-xs">
-                            <Gift className="h-3 w-3 mr-1" />
-                            {proFreeSpots} free spot{proFreeSpots !== 1 ? "s" : ""} left
-                          </Badge>
-                        </div>
-                      </div>
-                    ) : (
-                      <span className="text-3xl font-bold">${tier.price}</span>
-                    )}
+                    {(() => {
+                      const spots = tier.id === 'foundation' ? foundationFreeSpots : tier.id === 'professional' ? proFreeSpots : null;
+                      if (spots !== null && spots > 0) {
+                        return (
+                          <div>
+                            <span className="text-3xl font-bold text-green-600">Free</span>
+                            <span className="text-sm line-through text-muted-foreground ml-2">${tier.price}</span>
+                            <div className="mt-1">
+                              <Badge className="bg-green-600 text-white text-xs">
+                                <Gift className="h-3 w-3 mr-1" />
+                                {spots} free spot{spots !== 1 ? "s" : ""} left
+                              </Badge>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return <span className="text-3xl font-bold">${tier.price}</span>;
+                    })()}
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -258,11 +243,17 @@ export default function LearnPromptEngineering() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Link href={tier.price === 0 ? "/academy" : "/academy/checkout"}>
-                    <Button className={`w-full ${tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''} ${tier.id === 'professional' && proFreeSpots !== null && proFreeSpots > 0 ? 'bg-green-600 hover:bg-green-700' : ''}`} variant={tier.popular ? 'default' : 'outline'} data-testid={`btn-enroll-${tier.id}`}>
-                      {tier.price === 0 ? "Start Free" : tier.id === 'professional' && proFreeSpots !== null && proFreeSpots > 0 ? "Claim Free Spot" : "Enroll Now"}
-                    </Button>
-                  </Link>
+                  {(() => {
+                    const spots = tier.id === 'foundation' ? foundationFreeSpots : tier.id === 'professional' ? proFreeSpots : null;
+                    const hasFreeSpots = spots !== null && spots > 0;
+                    return (
+                      <Link href={`/academy/checkout?tier=${tier.id}`}>
+                        <Button className={`w-full ${hasFreeSpots ? 'bg-green-600 hover:bg-green-700' : tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`} variant={tier.popular && !hasFreeSpots ? 'default' : hasFreeSpots ? 'default' : 'outline'} data-testid={`btn-enroll-${tier.id}`}>
+                          {hasFreeSpots ? "Claim Free Spot" : "Enroll Now"}
+                        </Button>
+                      </Link>
+                    );
+                  })()}
                 </CardFooter>
               </Card>
             ))}

@@ -59,18 +59,35 @@ export async function registerRoutes(
         return res.status(503).json({ error: "Payment service not configured" });
       }
 
-      const { email, firstName, lastName, productType, amount } = req.body;
+      const { email, firstName, lastName, productType } = req.body;
 
-      // Validate input
+      const allowedPrices: Record<string, number> = {
+        academy_foundation: 9900,
+        academy_professional: 24900,
+        base_analysis: 2900,
+        royal_blood: 4900,
+        holocaust_survivor: 4900,
+        native_tribe: 4900,
+        ancient_dna: 4900,
+        heritage_book_standard: 9900,
+        heritage_book_deluxe: 17900,
+        heritage_book_legacy: 24900,
+        latin_lifetime: 1500,
+      };
+
       const schema = z.object({
         email: z.string().email(),
         firstName: z.string().min(1),
         lastName: z.string().min(1),
         productType: z.string(),
-        amount: z.number().positive(),
       });
 
-      const data = schema.parse({ email, firstName, lastName, productType, amount });
+      const data = schema.parse({ email, firstName, lastName, productType });
+
+      const serverAmount = allowedPrices[data.productType];
+      if (!serverAmount) {
+        return res.status(400).json({ error: "Invalid product type" });
+      }
 
       // Create or get user
       let user = await storage.getUserByEmail(data.email);
@@ -82,12 +99,11 @@ export async function registerRoutes(
         });
       }
 
-      // Create order
       const order = await storage.createOrder({
         userId: user.id,
         email: data.email,
         productType: data.productType,
-        amount: data.amount,
+        amount: serverAmount,
         status: "pending",
       });
 
@@ -107,7 +123,7 @@ export async function registerRoutes(
                 name: getProductName(data.productType),
                 description: getProductDescription(data.productType),
               },
-              unit_amount: data.amount,
+              unit_amount: serverAmount,
             },
             quantity: 1,
           },
@@ -351,6 +367,56 @@ export async function registerRoutes(
       res.json({ success: true, orderId: result.orderId });
     } catch (error: any) {
       console.error("Academy Pro free checkout error:", error);
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid input data" });
+      }
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Academy Foundation free promo - check spots
+  app.get("/api/promo/academy-foundation-free", async (_req, res) => {
+    try {
+      const count = await storage.countAcademyFoundationFreeOrders();
+      const remaining = Math.max(0, 5 - count);
+      res.json({ total: 5, used: count, remaining });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Academy Foundation free promo - claim
+  app.post("/api/checkout/academy-foundation-free", async (req, res) => {
+    try {
+      const { email, firstName, lastName } = req.body;
+
+      const schema = z.object({
+        email: z.string().email(),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+      });
+
+      const data = schema.parse({ email, firstName, lastName });
+
+      let user = await storage.getUserByEmail(data.email);
+      if (!user) {
+        user = await storage.createUser({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        });
+      }
+
+      const result = await storage.claimAcademyFoundationFree(user.id, data.email);
+
+      if (!result.success) {
+        const statusCode = result.error?.includes("already claimed") ? 409 : 410;
+        return res.status(statusCode).json({ error: result.error });
+      }
+
+      res.json({ success: true, orderId: result.orderId });
+    } catch (error: any) {
+      console.error("Academy Foundation free checkout error:", error);
       if (error.name === "ZodError") {
         return res.status(400).json({ error: "Invalid input data" });
       }
@@ -943,6 +1009,7 @@ function getProductName(productType: string): string {
     academy_foundation: "PromptPro Academy - Foundation Course",
     academy_professional: "PromptPro Academy - Professional Certification",
     academy_professional_free: "PromptPro Academy - Professional (First 5 Free)",
+    academy_foundation_free: "PromptPro Academy - Foundation (First 5 Free)",
   };
   return names[productType] || "WhoamI Service";
 }
@@ -965,6 +1032,7 @@ function getProductDescription(productType: string): string {
     academy_foundation: "Master prompt engineering fundamentals",
     academy_professional: "Career-ready AI skills with certification",
     academy_professional_free: "Professional AI certification - Free access (First 5 promo)",
+    academy_foundation_free: "Foundation prompt engineering - Free access (First 5 promo)",
   };
   return descriptions[productType] || "Premium service from WhoamI";
 }

@@ -4,13 +4,71 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Lock, Loader2, Briefcase, ArrowLeft, Gift, Sparkles, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, Lock, Loader2, Briefcase, GraduationCap, ArrowLeft, Gift, Sparkles, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createCheckoutSession } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
+
+const tierConfig: Record<string, {
+  name: string;
+  subtitle: string;
+  price: number;
+  priceInCents: number;
+  productType: string;
+  freeProductType: string;
+  freeApiCheck: string;
+  freeApiClaim: string;
+  icon: typeof Briefcase;
+  includes: string[];
+}> = {
+  foundation: {
+    name: "Foundation",
+    subtitle: "Prompt Engineering Basics",
+    price: 99,
+    priceInCents: 9900,
+    productType: "academy_foundation",
+    freeProductType: "academy_foundation_free",
+    freeApiCheck: "/api/promo/academy-foundation-free",
+    freeApiClaim: "/api/checkout/academy-foundation-free",
+    icon: GraduationCap,
+    includes: [
+      "10 guided AI lessons with quizzes",
+      "Role assignment & chain prompting",
+      "Fact-checking & verification skills",
+      "AI writing partnership techniques",
+      "Job-ready portfolio skills",
+      "Certificate of Completion",
+    ],
+  },
+  professional: {
+    name: "Professional",
+    subtitle: "Career-Ready Certification",
+    price: 249,
+    priceInCents: 24900,
+    productType: "academy_professional",
+    freeProductType: "academy_professional_free",
+    freeApiCheck: "/api/promo/academy-pro-free",
+    freeApiClaim: "/api/checkout/academy-pro-free",
+    icon: Briefcase,
+    includes: [
+      "Everything in Foundation",
+      "Advanced prompt techniques",
+      "Real-world project portfolio",
+      "1-on-1 coaching session",
+      "Job search assistance",
+      "Professional Certificate",
+      "LinkedIn recommendation",
+    ],
+  },
+};
 
 export default function AcademyCheckout() {
+  const searchString = useSearch();
+  const params = new URLSearchParams(searchString);
+  const tierParam = params.get("tier") || "foundation";
+  const tier = tierConfig[tierParam] || tierConfig.foundation;
+
   const [isLoading, setIsLoading] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -20,11 +78,11 @@ export default function AcademyCheckout() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetch("/api/promo/academy-pro-free")
+    fetch(tier.freeApiCheck)
       .then(r => r.json())
       .then(data => setFreeSpots(data.remaining))
       .catch(() => setFreeSpots(0));
-  }, []);
+  }, [tier.freeApiCheck]);
 
   const handleFreeClaim = async () => {
     if (!firstName || !lastName || !email) {
@@ -38,7 +96,7 @@ export default function AcademyCheckout() {
 
     setIsLoading(true);
     try {
-      const res = await fetch("/api/checkout/academy-pro-free", {
+      const res = await fetch(tier.freeApiClaim, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, firstName, lastName }),
@@ -58,7 +116,7 @@ export default function AcademyCheckout() {
       setFreeSpots(prev => prev !== null ? Math.max(0, prev - 1) : 0);
       toast({
         title: "You're in!",
-        description: "Professional course access claimed for free!",
+        description: `${tier.name} course access claimed for free!`,
       });
     } catch (error: any) {
       toast({
@@ -87,8 +145,8 @@ export default function AcademyCheckout() {
         email,
         firstName,
         lastName,
-        productType: "academy_professional",
-        amount: 24900,
+        productType: tier.productType,
+        amount: tier.priceInCents,
       });
 
       if (result.url) {
@@ -113,9 +171,9 @@ export default function AcademyCheckout() {
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 className="h-10 w-10 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold mb-2">You're In!</h2>
+            <h2 className="text-2xl font-bold mb-2" data-testid="text-claim-success">You're In!</h2>
             <p className="text-muted-foreground mb-6">
-              Your free Professional course access has been activated. Check your email ({email}) for details.
+              Your free {tier.name} course access has been activated. Check your email ({email}) for details.
             </p>
             <div className="flex flex-col gap-3">
               <Link href="/academy">
@@ -135,6 +193,8 @@ export default function AcademyCheckout() {
     );
   }
 
+  const Icon = tier.icon;
+
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <div className="container px-4 md:px-6 max-w-5xl">
@@ -148,9 +208,9 @@ export default function AcademyCheckout() {
           <div className="md:col-span-2 space-y-6">
             <div className="mb-6">
               <h1 className="text-3xl font-bold text-foreground">
-                <span className="text-blue-600">Prompt</span>Pro Academy — Professional
+                <span className="text-blue-600">Prompt</span>Pro Academy — {tier.name}
               </h1>
-              <p className="text-muted-foreground">Career-ready certification with coaching and job placement</p>
+              <p className="text-muted-foreground">{tier.subtitle}</p>
             </div>
 
             {freeSpots !== null && freeSpots > 0 && (
@@ -162,10 +222,10 @@ export default function AcademyCheckout() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-green-800">First 5 Get It FREE</span>
-                        <Badge className="bg-green-600 text-white">{freeSpots} spot{freeSpots !== 1 ? "s" : ""} left</Badge>
+                        <span className="font-bold text-green-800" data-testid="text-free-banner">First 5 Get It FREE</span>
+                        <Badge className="bg-green-600 text-white" data-testid="badge-free-spots">{freeSpots} spot{freeSpots !== 1 ? "s" : ""} left</Badge>
                       </div>
-                      <p className="text-sm text-green-700">Claim your free Professional access below — no credit card needed.</p>
+                      <p className="text-sm text-green-700">Claim your free {tier.name} access below — no credit card needed.</p>
                     </div>
                   </div>
                 </CardContent>
@@ -177,7 +237,7 @@ export default function AcademyCheckout() {
                 <CardContent className="py-4">
                   <div className="flex items-center gap-3">
                     <Sparkles className="h-5 w-5 text-amber-600 shrink-0" />
-                    <p className="text-sm text-amber-800">All 5 free spots have been claimed. You can still enroll at the regular price of $249 via Stripe.</p>
+                    <p className="text-sm text-amber-800">All 5 free spots have been claimed. You can still enroll at ${tier.price} via Stripe.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -256,7 +316,7 @@ export default function AcademyCheckout() {
                       disabled={isLoading}
                       data-testid="btn-stripe-checkout"
                     >
-                      Enroll Now — $249.00
+                      Enroll Now — ${tier.price}.00
                     </Button>
                   </>
                 ) : (
@@ -272,7 +332,7 @@ export default function AcademyCheckout() {
                         Processing...
                       </>
                     ) : (
-                      "Enroll Now — $249.00"
+                      `Enroll Now — $${tier.price}.00`
                     )}
                   </Button>
                 )}
@@ -292,25 +352,25 @@ export default function AcademyCheckout() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">Professional Course</p>
-                    <p className="text-sm text-muted-foreground">Career-Ready Certification</p>
+                    <p className="font-medium">{tier.name} Course</p>
+                    <p className="text-sm text-muted-foreground">{tier.subtitle}</p>
                   </div>
                   {freeSpots !== null && freeSpots > 0 ? (
                     <div className="text-right">
-                      <span className="text-sm line-through text-muted-foreground">$249.00</span>
-                      <span className="block font-bold text-green-600">FREE</span>
+                      <span className="text-sm line-through text-muted-foreground">${tier.price}.00</span>
+                      <span className="block font-bold text-green-600" data-testid="text-price-free">FREE</span>
                     </div>
                   ) : (
-                    <span className="font-bold">$249.00</span>
+                    <span className="font-bold" data-testid="text-price">${tier.price}.00</span>
                   )}
                 </div>
                 <Separator />
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
                   {freeSpots !== null && freeSpots > 0 ? (
-                    <span className="text-green-600">$0.00</span>
+                    <span className="text-green-600" data-testid="text-total-free">$0.00</span>
                   ) : (
-                    <span>$249.00</span>
+                    <span data-testid="text-total">${tier.price}.00</span>
                   )}
                 </div>
               </CardContent>
@@ -330,13 +390,9 @@ export default function AcademyCheckout() {
               <CardContent className="py-4">
                 <h4 className="font-semibold text-blue-800 mb-2">What You'll Get:</h4>
                 <ul className="text-sm space-y-1 text-muted-foreground">
-                  <li>✓ Everything in Starter & Foundation</li>
-                  <li>✓ Advanced prompt techniques</li>
-                  <li>✓ Real-world project portfolio</li>
-                  <li>✓ 1-on-1 coaching session</li>
-                  <li>✓ Job search assistance</li>
-                  <li>✓ Professional Certificate</li>
-                  <li>✓ LinkedIn recommendation</li>
+                  {tier.includes.map((item, idx) => (
+                    <li key={idx}>✓ {item}</li>
+                  ))}
                 </ul>
               </CardContent>
             </Card>

@@ -34,11 +34,15 @@ https://ancestry-canvas--jackiecady.replit.app/
 - Routes: /, /dna-hub, /upload-dna, /journey, /my-research, /my-book, /pricing
 
 ### PromptPro Academy (Blue theme)
-- Starter: FREE - 10 courses on AI basics through ancestry research
-- Foundation: FREE - 10 courses on prompt engineering + certificate
-- Professional: $249 - Career-ready certification (first 5 free, no Stripe needed)
-- Routes: /academy, /learn, /academy/tutor, /prompts, /academy/forum
-- Course content defined in AcademyDashboard.tsx lessons array
+- Foundation: $99 - 10 prompt engineering courses + certificate (first 5 free, no Stripe)
+- Professional: $249 - Career-ready certification (first 5 free, no Stripe)
+- Starter tier removed (ancestry-focused courses deleted)
+- Free promo: First 5 claimants per tier pay $0.00, tracked via academy_foundation_free / academy_professional_free productTypes
+- API: GET /api/promo/academy-foundation-free, POST /api/checkout/academy-foundation-free
+- API: GET /api/promo/academy-pro-free, POST /api/checkout/academy-pro-free
+- Advisory locks (pg_advisory_xact_lock 200/201) prevent race conditions on free claims
+- Routes: /academy, /learn, /academy/checkout?tier=foundation|professional, /academy/tutor, /prompts, /academy/forum
+- Course content defined in AcademyDashboard.tsx lessons array (10 Foundation lessons only)
 
 ### Sacred Latin Course (Purple theme)
 - $15 one-time lifetime purchase ($12 early-bird for first 10 buyers)
