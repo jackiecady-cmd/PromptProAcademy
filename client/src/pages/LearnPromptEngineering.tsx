@@ -347,6 +347,31 @@ export default function LearnPromptEngineering() {
         </div>
       </section>
 
+      {/* Prompt Library Callout */}
+      <section className="py-16 bg-blue-50">
+        <div className="container px-4 md:px-6 max-w-4xl">
+          <div className="flex flex-col md:flex-row items-center gap-8 bg-white rounded-2xl border-2 border-blue-200 p-8 shadow-sm">
+            <div className="shrink-0">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                <Sparkles className="h-10 w-10 text-white" />
+              </div>
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-2xl font-bold mb-2">Free AI Prompt Library</h3>
+              <p className="text-muted-foreground text-lg">
+                Don't know where to start? Browse our collection of ready-to-use prompts for writing, job searching, learning, and more. Copy, paste, and get results instantly.
+              </p>
+            </div>
+            <Link href="/prompts">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 shrink-0 text-lg px-8" data-testid="btn-browse-prompts-cta">
+                Browse Prompts
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-16 bg-gradient-to-r from-blue-800 to-indigo-800 text-white">
         <div className="container px-4 md:px-6 text-center">
@@ -357,12 +382,12 @@ export default function LearnPromptEngineering() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/">
               <Button size="lg" className="bg-white text-blue-800 hover:bg-white/90">
-                ← Back to WhoamI
+                ← Back Home
               </Button>
             </Link>
             <Link href="/prompts">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Browse AI Guides
+                Browse Prompt Library
               </Button>
             </Link>
           </div>

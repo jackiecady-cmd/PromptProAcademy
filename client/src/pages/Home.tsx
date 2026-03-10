@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, GraduationCap, BookOpen, Code2, Sparkles } from "lucide-react";
+import { ArrowRight, GraduationCap, BookOpen, Code2, Sparkles, Library } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const offerings = [
   {
@@ -66,6 +67,34 @@ export default function Home() {
               <OfferingCard key={offering.id} offering={offering} />
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-background">
+        <div className="container px-4 md:px-6 max-w-4xl">
+          <Card className="border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 overflow-hidden" data-testid="card-prompt-library-cta">
+            <CardContent className="py-8">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="shrink-0">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                    <Library className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <h3 className="text-xl font-bold mb-1">AI Prompt Library</h3>
+                  <p className="text-muted-foreground">
+                    Ready-to-use expert prompts for writing, career building, studying, and productivity. Copy, customize, and paste into any AI.
+                  </p>
+                </div>
+                <Link href="/prompts">
+                  <Button className="bg-blue-600 hover:bg-blue-700 shrink-0" size="lg" data-testid="button-cta-prompts">
+                    Browse Prompts
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

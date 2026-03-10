@@ -883,6 +883,19 @@ export default function AcademyDashboard() {
               </CardContent>
             </Card>
 
+            <Card className="bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-200">
+              <CardContent className="py-6 text-center">
+                <Sparkles className="h-8 w-8 mx-auto text-indigo-600 mb-3" />
+                <h3 className="font-bold mb-2">Prompt Library</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Ready-to-use prompts for writing, career, and more!
+                </p>
+                <Link href="/prompts">
+                  <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700" data-testid="btn-sidebar-prompts">Browse Prompts</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
             <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
               <CardContent className="py-6 text-center">
                 <Users className="h-8 w-8 mx-auto text-purple-600 mb-3" />
