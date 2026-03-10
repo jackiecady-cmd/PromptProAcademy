@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Dna, GraduationCap, BookOpen, Menu, ChevronDown, LogIn, LogOut, User, Code, Sparkles, X } from "lucide-react";
+import { GraduationCap, BookOpen, Menu, ChevronDown, LogIn, LogOut, User, Code, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -21,22 +21,6 @@ export function Navbar() {
   const { user, isLoading, isAuthenticated } = useAuth();
 
   const businesses = [
-    {
-      name: "DNA",
-      fullName: "DNA & Genealogy",
-      icon: Dna,
-      color: "text-[#8B1538]",
-      bgColor: "bg-[#8B1538]",
-      links: [
-        { href: "/dna", label: "DNA Home" },
-        { href: "/dna-hub", label: "DNA Tools Hub" },
-        { href: "/upload-dna", label: "Upload DNA" },
-        { href: "/journey", label: "DNA Journey" },
-        { href: "/my-research", label: "My Research" },
-        { href: "/my-book", label: "Heritage Book" },
-        { href: "/pricing", label: "Pricing" },
-      ],
-    },
     {
       name: "PromptPro",
       fullName: "PromptPro Academy",
@@ -140,8 +124,8 @@ export function Navbar() {
           className="flex items-center gap-2 font-serif text-xl font-bold text-[#8B1538] hover:opacity-90 transition-opacity"
           data-testid="link-home-logo"
         >
-          <Dna className="h-6 w-6 text-orange-500" />
-          <span>WhoamI</span>
+          <GraduationCap className="h-6 w-6 text-blue-600" />
+          <span>PromptPro</span>
         </Link>
 
         {/* Desktop Nav */}

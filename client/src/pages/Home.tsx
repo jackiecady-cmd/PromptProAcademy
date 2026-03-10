@@ -1,22 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Dna, GraduationCap, BookOpen, Code2, Sparkles } from "lucide-react";
-import heroImage from "@assets/generated_images/abstract_dna_helix_merging_with_tree_roots.png";
+import { ArrowRight, GraduationCap, BookOpen, Code2, Sparkles } from "lucide-react";
 
 const offerings = [
-  {
-    id: "dna",
-    title: "DNA & Genealogy",
-    subtitle: "100% Free",
-    description: "Upload your raw DNA and discover your deepest heritage. We aggregate data from Ancestry, 23andMe, FamilyTreeDNA, and more — all in one place.",
-    icon: Dna,
-    href: "/dna",
-    cta: "Explore DNA Tools",
-    gradient: "from-emerald-500 to-teal-600",
-    bgAccent: "bg-emerald-500/10",
-    textAccent: "text-emerald-600",
-    borderAccent: "border-emerald-500/20",
-  },
   {
     id: "academy",
     title: "PromptPro Academy",
@@ -48,27 +34,18 @@ const offerings = [
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <section className="relative w-full py-24 md:py-32 flex items-center justify-center overflow-hidden bg-slate-900">
-        <div className="absolute inset-0 z-0">
-          <img
-            src={heroImage}
-            alt="WhoamI Platform"
-            className="w-full h-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-background" />
-        </div>
-
+      <section className="relative w-full py-24 md:py-32 flex items-center justify-center overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800">
         <div className="container relative z-10 px-4 md:px-6 flex flex-col items-center text-center gap-6 max-w-4xl">
           <div className="inline-block rounded-full bg-primary/20 px-4 py-1.5 backdrop-blur-sm border border-primary/30">
             <span className="text-sm font-medium text-primary uppercase tracking-wide" data-testid="text-tagline">
-              Knowledge · Heritage · Discovery
+              Learn · Create · Grow
             </span>
           </div>
           <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tight text-white drop-shadow-sm" data-testid="text-hero-title">
-            Who am I?
+            Your Learning Platform
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 max-w-2xl font-light" data-testid="text-hero-subtitle">
-            Your platform for DNA discovery, AI mastery, and classical education — all in one place.
+            Master AI prompting, explore classical Latin, and unlock new skills — all in one place.
           </p>
         </div>
       </section>
@@ -80,11 +57,11 @@ export default function Home() {
               Explore Our Platform
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Three powerful tools designed to help you learn, discover, and grow.
+              Powerful tools designed to help you learn and grow.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {offerings.map((offering) => (
               <OfferingCard key={offering.id} offering={offering} />
             ))}

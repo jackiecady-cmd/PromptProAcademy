@@ -1,49 +1,36 @@
-# WhoamI - Multi-Business Learning Platform
+# PromptPro Academy & Sacred Latin Platform
 
 ## Overview
-A multi-business platform with three live offerings:
-1. **WhoamI DNA & Genealogy** - AI-guided DIY ancestry research with Heritage Books
-2. **PromptPro Academy** - Teaches prompt engineering to adults 40+ seeking remote work
-3. **Sacred Latin Course** - Latin pronunciation for ritual/spiritual practitioners ($15 lifetime, $12 early-bird for first 10)
+A learning platform with two live offerings and one coming soon:
+1. **PromptPro Academy** - Teaches prompt engineering to adults 40+ seeking remote work
+2. **Sacred Latin Course** - Latin pronunciation for ritual/spiritual practitioners ($15 lifetime, $12 early-bird for first 10)
+3. **Vibe Coding** - Coming soon: learn to build apps with AI
 
-**Note:** Vibe Code Academy and My Side of the Story have been removed from this codebase - they will be built as a separate website.
+**Note:** DNA/WhoamI features have been removed from this codebase and will live on a separate site.
 
 ## Recent Changes
-- Medical / Healthcare Mode toggle on Sacred Latin Course: Stethoscope toggle switch adds medical context when ON, reverts to original lessons when OFF. When ON: (1) ALL religious content removed — phrases, content, titles, subtitles, vocab, quiz items swapped to secular/medical alternatives via `healthcareOverrides` in `medicalRoots.ts`, (2) teal "Med Link" boxes appear after vocabulary with Latin-to-medical connections (e.g., cor→cardiology), (3) 2+ extra medical quiz questions per lesson, (4) "Med" badges on lesson cards, (5) Prayer Builder tab hidden, prayers category/lessons 17-20 all filtered out, (6) page-level text switches to "Medical Latin Pronunciation", (7) Lesson 21 (Arteri- Roots: Arteries in Shock) shown only in med mode with brutal hypovolemic shock quiz. Override system: `applyHealthcareOverride()` in LatinCourse.tsx merges field-level overrides from `healthcareOverrides` array. Med mode shows 17 lessons (1-16 + 21), general shows 20 (1-20).
+- DNA/WhoamI content fully removed — homepage is now a 2-offering hub with Vibe Coding teaser
+- Prompt Library rewritten with AI/career/productivity prompts (no DNA/genealogy)
+- Medical / Healthcare Mode toggle on Sacred Latin Course
 - Headline: "Latin for Witches & Med Pros" with subtitle "Toggle Modes — No Crossover."
-- Pricing: $15 one-time lifetime purchase, $12 early-bird for first 10 buyers. API: GET /api/promo/latin-earlybird, POST /api/checkout/latin-lifetime. Order tracked via latin_lifetime productType.
-- Sacred Latin Course: Complete 20-lesson curriculum in `client/src/data/latinLessons.ts` covering fundamentals (alphabet, vowels, consonants, pronouns, prepositions, numbers), nouns (1st/2nd/3rd declension, adjectives), verbs (present 1st-4th conjugation, esse, imperative, perfect, subjunctive), prayers (common prayers, blessings), and advanced (crafting prayers, full ritual practice). Each lesson has phrases with syllable-level pronunciation, vocabulary with type/gender/declension info, and a 4-question quiz. LessonView component with quiz UI, score tracking, category filtering.
-- Fixed translator input visibility: added `text-white` class to all Input elements on dark backgrounds.
-- Sacred Latin Course: First 20 free lifetime promo ($0.00, no Stripe charge). Green "First 20 Get It FREE" button on Latin page hero + bottom CTA. Claim dialog collects name/email, creates order with product_type="latin_course_free" at $0 amount. Tracked via countLatinFreePromoOrders/claimLatinFreePromo in storage. API: GET /api/promo/latin-free-spots, POST /api/checkout/latin-free.
-- Bulk import on My Research page — "Paste a List" imports multiple family members at once (name, relationship, birth year, birth place per line); "Paste DNA Results" imports multiple findings at once. Both support comma/tab/pipe-separated formats. Backend endpoints: POST /api/family/bulk and POST /api/findings/bulk.
-- Redesigned My Research page — person-centered with expandable cards showing each person's DNA findings underneath them. Findings linked to specific family members via familyMemberId. Quick links to FamilySearch, GEDmatch, DNAGenics, Ancestry. Deleting a member moves their findings to General Findings (no data loss).
-- DNA Tools Hub page (/dna-hub) — central dashboard connecting all internal tools and external DNA sites
-- "Back to DNA Tools Hub" links on Upload DNA, DNA Journey, and My Research pages for easy navigation
-- Dedicated Upload DNA page (/upload-dna) — prominent hero CTA and nav link for raw DNA .zip uploads
-- FAQ section on Home page with 5 accordion Q&A items
-- First 20 users free promo ($0.00 checkout bypassing Stripe, with atomic DB transaction)
+- Pricing: $15 one-time lifetime purchase, $12 early-bird for first 10 buyers
+- Sacred Latin Course: First 20 free lifetime promo ($0.00, no Stripe charge)
+- Vibe Coding Coming Soon announcement banner (dismissible, sessionStorage)
 
 ## Live URL
 https://ancestry-canvas--jackiecady.replit.app/
 
-## Three Businesses
-
-### WhoamI DNA & Genealogy (Burgundy theme) — 100% FREE
-- DIY research with AI guidance — all DNA services are $0.00
-- Heritage Books: $99-$249 (print-on-demand via Blurb/Lulu)
-- Homepage (/) is now a multi-business hub; DNA landing page at /dna
-- Routes: /dna, /dna-hub, /upload-dna, /journey, /my-research, /my-book, /pricing, /checkout
+## Offerings
 
 ### PromptPro Academy (Blue theme)
 - Foundation: $35 - 10 prompt engineering courses + certificate (first 5 free, no Stripe)
 - Professional: $75 - Career-ready certification (first 5 free, no Stripe)
 - Bundle Deal: $60 - Foundation + Professional together (save $50 vs $110 separately)
-- Starter tier removed (ancestry-focused courses deleted)
 - Free promo: First 5 claimants per tier pay $0.00, tracked via academy_foundation_free / academy_professional_free productTypes
 - API: GET /api/promo/academy-foundation-free, POST /api/checkout/academy-foundation-free
 - API: GET /api/promo/academy-pro-free, POST /api/checkout/academy-pro-free
 - Advisory locks (pg_advisory_xact_lock 200/201) prevent race conditions on free claims
-- Routes: /academy, /learn, /academy/checkout?tier=foundation|professional, /academy/tutor, /prompts, /academy/forum
+- Routes: /academy, /learn, /academy/checkout?tier=foundation|professional|bundle, /academy/tutor, /prompts, /academy/forum
 - Course content defined in AcademyDashboard.tsx lessons array (10 Foundation lessons only)
 
 ### Sacred Latin Course (Purple theme)
@@ -54,28 +41,30 @@ https://ancestry-canvas--jackiecady.replit.app/
 - Routes: /latin
 - API: GET /api/promo/latin-earlybird, POST /api/checkout/latin-lifetime
 
+### Vibe Coding (Coming Soon)
+- Announcement banner at top of site (gradient, dismissible)
+- Teaser section on homepage
+- No routes yet
+
 ## Project Architecture
 - **Frontend:** React with Wouter routing, Tailwind CSS v4
 - **Backend:** Express server with PostgreSQL database
 - **AI:** OpenAI via Replit AI Integrations
 - **Payment:** Stripe
+- **Auth:** Replit Login integration
 
 ## Database Schema
-- users, orders, dnaReports
+- users, orders
 - learnerProgress, earnedBadges (PromptPro Academy)
 - subscriptions (Latin Course)
 - conversations, messages (chatbot)
-- familyMembers, dnaFindings (DNA research)
-- vibeCodeSemesters, vibeCodeLessons, vibeCodeEnrollments, vibeCodeProgress, vibeCodeCertificates (Vibe Code Academy)
-- storyArchetypes, storyWriters, stories, storySubscriptions, storyReads (My Side of the Story)
 
 ## Navigation Structure
-Navbar has dropdown menus for each business:
-- DNA & Genealogy → Home, DNA Tools Hub, Upload DNA, DNA Journey, My Research, Heritage Book, Pricing
+Navbar has dropdown menus for each offering:
 - PromptPro Academy → Academy Home, Lessons, AI Tutor, Prompt Library, Community
 - Sacred Latin → Latin Course
 
 ## User Preferences
-- Burgundy/orange for DNA, Blue for PromptPro, Purple for Latin
+- Blue for PromptPro, Purple/amber for Latin
 - Teaching-focused mission for career changers
 - Simple, encouraging language for tech newcomers

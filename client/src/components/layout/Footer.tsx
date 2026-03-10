@@ -13,39 +13,28 @@ export function Footer() {
   return (
     <footer className="w-full border-t bg-muted/30 py-12 md:py-16 lg:py-20">
       <div className="container px-4 md:px-6">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
-            <h4 className="font-serif text-lg font-bold text-primary">WhoamI</h4>
+            <h4 className="font-serif text-lg font-bold text-primary">PromptPro</h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Unifying your DNA journey. We integrate data from top providers to give you the most comprehensive family history analysis available.
+              Your learning platform for AI prompt engineering, sacred Latin, and vibe coding. Master the skills of tomorrow, today.
             </p>
           </div>
           <div className="space-y-4">
-            <h4 className="font-medium text-foreground">Services</h4>
+            <h4 className="font-medium text-foreground">Academy</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/pricing">Base Analysis (Free)</Link></li>
-              <li><Link href="/pricing">Royal Lineage Check</Link></li>
-              <li><Link href="/pricing">Tribe & Clan Trace</Link></li>
-              <li><Link href="/pricing">Holocaust Survivor Search</Link></li>
+              <li><Link href="/academy">Academy Home</Link></li>
+              <li><Link href="/learn">Lessons</Link></li>
+              <li><Link href="/academy/tutor">AI Tutor</Link></li>
+              <li><Link href="/prompts">Prompt Library</Link></li>
+              <li><Link href="/academy/forum">Community</Link></li>
             </ul>
           </div>
           <div className="space-y-4">
             <h4 className="font-medium text-foreground">Resources</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/forum">Community Forum</Link></li>
-              <li><Link href="/prompts">AI Research Guides</Link></li>
-              <li><Link href="/learn">PromptPro Academy</Link></li>
-              <li><Link href="/latin">Latin Pronunciation</Link></li>
+              <li><Link href="/latin">Sacred Latin Course</Link></li>
               <li><Link href="/contact">Contact Us</Link></li>
-            </ul>
-          </div>
-          <div className="space-y-4">
-            <h4 className="font-medium text-foreground">Partners & Sources</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>FamilyTreeDNA</li>
-              <li>Ancestry.com</li>
-              <li>23andMe</li>
-              <li>MyTrueAncestry</li>
             </ul>
           </div>
           <div className="space-y-4">
@@ -76,7 +65,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 WhoamI. All rights reserved. Not affiliated directly with referenced DNA providers.</p>
+          <p>© 2025 PromptPro. All rights reserved.</p>
         </div>
       </div>
     </footer>

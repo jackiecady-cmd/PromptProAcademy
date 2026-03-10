@@ -1,40 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOrderSchema, insertFamilyMemberSchema, insertDnaFindingSchema } from "@shared/schema";
+import { insertOrderSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
-import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getDNAGuideResponse, getVibeCodeTutorResponse } from "./chatbot";
+import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getVibeCodeTutorResponse } from "./chatbot";
 import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-
-const uploadsDir = path.join(process.cwd(), "uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-const dnaUploadStorage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadsDir),
-  filename: (_req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `dna-${uniqueSuffix}${path.extname(file.originalname)}`);
-  },
-});
-
-const dnaUpload = multer({
-  storage: dnaUploadStorage,
-  limits: { fileSize: 50 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    if (ext === ".zip") {
-      cb(null, true);
-    } else {
-      cb(new Error("Only .zip files are accepted"));
-    }
-  },
-});
 
 export async function registerRoutes(
   httpServer: Server,
@@ -65,14 +36,6 @@ export async function registerRoutes(
         academy_foundation: 3500,
         academy_professional: 7500,
         academy_bundle: 6000,
-        base_analysis: 0,
-        royal_blood: 0,
-        holocaust_survivor: 0,
-        native_tribe: 0,
-        ancient_dna: 0,
-        heritage_book_standard: 9900,
-        heritage_book_deluxe: 17900,
-        heritage_book_legacy: 24900,
         latin_lifetime: 1500,
       };
 
@@ -130,8 +93,8 @@ export async function registerRoutes(
           },
         ],
         mode: "payment",
-        success_url: `${baseUrl}/dashboard?success=true&order_id=${order.id}`,
-        cancel_url: `${baseUrl}/checkout?canceled=true`,
+        success_url: `${baseUrl}/academy?success=true&order_id=${order.id}`,
+        cancel_url: `${baseUrl}/academy/checkout?canceled=true`,
         customer_email: data.email,
         metadata: {
           orderId: order.id,
@@ -226,53 +189,6 @@ export async function registerRoutes(
         console.log(`Unhandled event type ${event.type}`);
     }
   }
-
-  app.get("/api/promo/free-spots", async (_req, res) => {
-    try {
-      res.json({ total: 999999, used: 0, remaining: 999999 });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  app.post("/api/checkout/free", async (req, res) => {
-    try {
-      const { email, firstName, lastName } = req.body;
-
-      const schema = z.object({
-        email: z.string().email(),
-        firstName: z.string().min(1),
-        lastName: z.string().min(1),
-      });
-
-      const data = schema.parse({ email, firstName, lastName });
-
-      let user = await storage.getUserByEmail(data.email);
-      if (!user) {
-        user = await storage.createUser({
-          email: data.email,
-          firstName: data.firstName,
-          lastName: data.lastName,
-        });
-      }
-
-      const order = await storage.createOrder({
-        userId: user.id,
-        email: data.email,
-        productType: "base_analysis_free",
-        amount: 0,
-        status: "completed",
-      });
-
-      res.json({ success: true, orderId: order.id });
-    } catch (error: any) {
-      console.error("Free checkout error:", error);
-      if (error.name === "ZodError") {
-        return res.status(400).json({ error: "Invalid input data" });
-      }
-      res.status(400).json({ error: error.message });
-    }
-  });
 
   // Latin free promo - check spots
   app.get("/api/promo/latin-free-spots", async (_req, res) => {
@@ -458,16 +374,6 @@ export async function registerRoutes(
   });
 
   // Get user reports
-  app.get("/api/reports/user/:userId", async (req, res) => {
-    try {
-      const { userId } = req.params;
-      const reports = await storage.getReportsByUserId(userId);
-      res.json(reports);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
   // Health check
   app.get("/api/health", (req, res) => {
     res.json({ 
@@ -503,25 +409,6 @@ export async function registerRoutes(
       res.json({ response });
     } catch (error: any) {
       console.error("Tutor error:", error);
-      res.status(500).json({ error: "Failed to process message" });
-    }
-  });
-
-  // DNA Research Guide
-  app.post("/api/dna-guide", async (req, res) => {
-    try {
-      const { message, currentStep, history } = req.body;
-      if (!message || typeof message !== "string") {
-        return res.status(400).json({ error: "Message is required" });
-      }
-      const response = await getDNAGuideResponse(
-        message, 
-        currentStep || 1,
-        history || []
-      );
-      res.json({ response });
-    } catch (error: any) {
-      console.error("DNA Guide error:", error);
       res.status(500).json({ error: "Failed to process message" });
     }
   });
@@ -648,239 +535,6 @@ export async function registerRoutes(
     }
   });
 
-  // ========== Family Tree API ==========
-  
-  // Get family members
-  app.get("/api/family/:email", async (req, res) => {
-    try {
-      const { email } = req.params;
-      const members = await storage.getFamilyMembersByEmail(decodeURIComponent(email));
-      res.json(members);
-    } catch (error: any) {
-      console.error("Get family error:", error);
-      res.status(500).json({ error: "Failed to get family members" });
-    }
-  });
-
-  // Bulk add family members
-  app.post("/api/family/bulk", async (req, res) => {
-    try {
-      const { email, members } = req.body;
-      if (!email || !Array.isArray(members) || members.length === 0) {
-        return res.status(400).json({ error: "Email and members array required" });
-      }
-      const saved = [];
-      for (const m of members) {
-        if (!m.name || !m.relationship) continue;
-        const data = insertFamilyMemberSchema.parse({
-          email,
-          name: m.name,
-          relationship: m.relationship,
-          birthYear: m.birthYear || null,
-          birthPlace: m.birthPlace || null,
-          deathYear: m.deathYear || null,
-          notes: m.notes || null,
-        });
-        const member = await storage.createFamilyMember(data);
-        saved.push(member);
-      }
-      res.json({ saved: saved.length, members: saved });
-    } catch (error: any) {
-      console.error("Bulk add family error:", error);
-      res.status(500).json({ error: "Failed to bulk add family members" });
-    }
-  });
-
-  // Bulk add findings
-  app.post("/api/findings/bulk", async (req, res) => {
-    try {
-      const { email, findings: findingsData } = req.body;
-      if (!email || !Array.isArray(findingsData) || findingsData.length === 0) {
-        return res.status(400).json({ error: "Email and findings array required" });
-      }
-      const saved = [];
-      for (const f of findingsData) {
-        if (!f.title || !f.content) continue;
-        const data = insertDnaFindingSchema.parse({
-          email,
-          title: f.title,
-          category: f.category || "discovery",
-          content: f.content,
-          source: f.source || null,
-          familyMemberId: f.familyMemberId || null,
-        });
-        const finding = await storage.createDnaFinding(data);
-        saved.push(finding);
-      }
-      res.json({ saved: saved.length, findings: saved });
-    } catch (error: any) {
-      console.error("Bulk add findings error:", error);
-      res.status(500).json({ error: "Failed to bulk add findings" });
-    }
-  });
-
-  // Add family member
-  app.post("/api/family", async (req, res) => {
-    try {
-      const data = insertFamilyMemberSchema.parse(req.body);
-      const member = await storage.createFamilyMember(data);
-      res.json(member);
-    } catch (error: any) {
-      console.error("Add family member error:", error);
-      if (error.name === "ZodError") {
-        return res.status(400).json({ error: "Invalid data" });
-      }
-      res.status(500).json({ error: "Failed to add family member" });
-    }
-  });
-
-  // Update family member
-  app.put("/api/family/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      const member = await storage.updateFamilyMember(id, req.body);
-      if (!member) {
-        return res.status(404).json({ error: "Member not found" });
-      }
-      res.json(member);
-    } catch (error: any) {
-      console.error("Update family member error:", error);
-      res.status(500).json({ error: "Failed to update family member" });
-    }
-  });
-
-  // Delete family member
-  app.delete("/api/family/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      await storage.deleteFamilyMember(id);
-      res.json({ success: true });
-    } catch (error: any) {
-      console.error("Delete family member error:", error);
-      res.status(500).json({ error: "Failed to delete family member" });
-    }
-  });
-
-  // ========== DNA Findings API ==========
-
-  // Get findings
-  app.get("/api/findings/:email", async (req, res) => {
-    try {
-      const { email } = req.params;
-      const findings = await storage.getDnaFindingsByEmail(decodeURIComponent(email));
-      res.json(findings);
-    } catch (error: any) {
-      console.error("Get findings error:", error);
-      res.status(500).json({ error: "Failed to get findings" });
-    }
-  });
-
-  // Add finding
-  app.post("/api/findings", async (req, res) => {
-    try {
-      const data = insertDnaFindingSchema.parse(req.body);
-      const finding = await storage.createDnaFinding(data);
-      res.json(finding);
-    } catch (error: any) {
-      console.error("Add finding error:", error);
-      if (error.name === "ZodError") {
-        return res.status(400).json({ error: "Invalid data" });
-      }
-      res.status(500).json({ error: "Failed to add finding" });
-    }
-  });
-
-  // Delete finding
-  app.delete("/api/findings/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      await storage.deleteDnaFinding(id);
-      res.json({ success: true });
-    } catch (error: any) {
-      console.error("Delete finding error:", error);
-      res.status(500).json({ error: "Failed to delete finding" });
-    }
-  });
-
-  // ========== DNA Upload API ==========
-
-  app.post("/api/dna-upload", dnaUpload.single("dnaFile"), async (req, res) => {
-    try {
-      const file = req.file;
-      if (!file) {
-        return res.status(400).json({ error: "No file uploaded. Please select a .zip file." });
-      }
-
-      const email = req.body.email;
-      const source = req.body.source || "unknown";
-
-      if (!email) {
-        fs.unlinkSync(file.path);
-        return res.status(400).json({ error: "Email is required" });
-      }
-
-      const upload = await storage.createDnaUpload({
-        email,
-        originalFilename: file.originalname,
-        storedFilename: file.filename,
-        fileSize: file.size,
-        source,
-        status: "uploaded",
-      });
-
-      res.json({
-        success: true,
-        upload: {
-          id: upload.id,
-          originalFilename: upload.originalFilename,
-          fileSize: upload.fileSize,
-          source: upload.source,
-          status: upload.status,
-          uploadedAt: upload.uploadedAt,
-        },
-      });
-    } catch (error: any) {
-      console.error("DNA upload error:", error);
-      if (error.message === "Only .zip files are accepted") {
-        return res.status(400).json({ error: "Only .zip files are accepted. Please zip your raw DNA file first." });
-      }
-      res.status(500).json({ error: "Failed to upload DNA file" });
-    }
-  });
-
-  app.get("/api/dna-uploads/:email", async (req, res) => {
-    try {
-      const { email } = req.params;
-      const uploads = await storage.getDnaUploadsByEmail(decodeURIComponent(email));
-      res.json(uploads.map((u) => ({
-        id: u.id,
-        originalFilename: u.originalFilename,
-        fileSize: u.fileSize,
-        source: u.source,
-        status: u.status,
-        uploadedAt: u.uploadedAt,
-      })));
-    } catch (error: any) {
-      res.status(500).json({ error: "Failed to get uploads" });
-    }
-  });
-
-  app.delete("/api/dna-uploads/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      const upload = await storage.deleteDnaUpload(id);
-      if (upload) {
-        const filePath = path.join(uploadsDir, upload.storedFilename);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      }
-      res.json({ success: true });
-    } catch (error: any) {
-      res.status(500).json({ error: "Failed to delete upload" });
-    }
-  });
-
   // Vibe Code Academy - AI Tutor
   app.post("/api/vibe-code/tutor", async (req, res) => {
     try {
@@ -990,21 +644,8 @@ export async function registerRoutes(
 
 function getProductName(productType: string): string {
   const names: Record<string, string> = {
-    // WhoamI DNA Products
-    base_analysis: "Base DNA Analysis Package",
-    base_analysis_free: "Base DNA Analysis Package (First 20 Free)",
-    royal_blood: "Royal Blood Check",
-    holocaust_survivor: "Holocaust Survivor Search",
-    native_tribe: "Native Tribe Trace",
-    ancient_dna: "Ancient DNA Match",
-    heritage_book: "Heritage Book - Printed Family Story",
-    heritage_book_standard: "Heritage Book - Standard Edition",
-    heritage_book_deluxe: "Heritage Book - Deluxe Edition",
-    heritage_book_legacy: "Heritage Book - Legacy Edition",
-    // Sacred Latin Products
     latin_course_free: "Sacred Latin Course (First 20 Free - Lifetime)",
     latin_lifetime: "Sacred Latin Course — Lifetime Access",
-    // PromptPro Academy Products
     academy_starter: "PromptPro Academy - Starter Course",
     academy_foundation: "PromptPro Academy - Foundation Course",
     academy_professional: "PromptPro Academy - Professional Certification",
@@ -1012,29 +653,19 @@ function getProductName(productType: string): string {
     academy_foundation_free: "PromptPro Academy - Foundation (First 5 Free)",
     academy_bundle: "PromptPro Academy - Bundle Deal (Foundation + Professional)",
   };
-  return names[productType] || "WhoamI Service";
+  return names[productType] || "Service";
 }
 
 function getProductDescription(productType: string): string {
   const descriptions: Record<string, string> = {
-    base_analysis: "Unified DNA report from multiple providers",
-    base_analysis_free: "Unified DNA report - Free lifetime access (First 20 promo)",
-    royal_blood: "Trace your royal ancestry connections",
-    holocaust_survivor: "Connect with Holocaust survivor records",
-    native_tribe: "Discover your indigenous heritage",
-    ancient_dna: "Match with ancient DNA samples",
-    heritage_book: "Your family history in a beautiful printed book",
-    heritage_book_standard: "50+ page softcover family history book",
-    heritage_book_deluxe: "100+ page hardcover premium family history book",
-    heritage_book_legacy: "150+ page leather-bound archival family history book",
     latin_course_free: "Sacred Latin course - Free lifetime access (First 20 promo)",
     latin_lifetime: "Full Latin course - One-time lifetime purchase",
-    academy_starter: "Learn AI basics through ancestry research",
+    academy_starter: "Learn AI prompt engineering basics",
     academy_foundation: "Master prompt engineering fundamentals",
     academy_professional: "Career-ready AI skills with certification",
     academy_professional_free: "Professional AI certification - Free access (First 5 promo)",
     academy_foundation_free: "Foundation prompt engineering - Free access (First 5 promo)",
     academy_bundle: "Foundation + Professional courses bundled at a discount",
   };
-  return descriptions[productType] || "Premium service from WhoamI";
+  return descriptions[productType] || "Premium service";
 }
