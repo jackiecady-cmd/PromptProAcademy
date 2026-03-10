@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Dna, GraduationCap, BookOpen, Menu, ChevronDown, LogIn, LogOut, User } from "lucide-react";
+import { Dna, GraduationCap, BookOpen, Menu, ChevronDown, LogIn, LogOut, User, Code, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -15,6 +15,9 @@ import { useAuth } from "@/hooks/use-auth";
 export function Navbar() {
   const [location, setLocation] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [showBanner, setShowBanner] = useState(() => {
+    return sessionStorage.getItem("vibe-coding-banner-dismissed") !== "true";
+  });
   const { user, isLoading, isAuthenticated } = useAuth();
 
   const businesses = [
@@ -65,6 +68,28 @@ export function Navbar() {
   };
 
   return (
+    <>
+    {showBanner && (
+      <div className="relative z-50 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-amber-500 text-white" data-testid="banner-vibe-coding">
+        <div className="container flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium">
+          <Sparkles className="h-4 w-4 animate-pulse shrink-0" />
+          <span className="flex items-center gap-2 flex-wrap justify-center">
+            <Code className="h-4 w-4 shrink-0" />
+            <span className="font-bold">Vibe Coding</span> — Coming Soon!
+            <span className="hidden sm:inline text-white/80">Learn to build apps with AI, no coding experience needed.</span>
+          </span>
+          <Sparkles className="h-4 w-4 animate-pulse shrink-0" />
+          <button
+            onClick={() => { sessionStorage.setItem("vibe-coding-banner-dismissed", "true"); setShowBanner(false); }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-white/20 transition-colors"
+            aria-label="Dismiss announcement"
+            data-testid="btn-dismiss-banner"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    )}
     <nav className="sticky top-0 z-50 w-full bg-white shadow-sm">
       {/* Top bar with business tabs */}
       <div className="border-b bg-gray-50">
@@ -258,5 +283,6 @@ export function Navbar() {
         </div>
       </div>
     </nav>
+    </>
   );
 }
