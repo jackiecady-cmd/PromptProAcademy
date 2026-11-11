@@ -8,13 +8,13 @@ A learning platform with two live offerings and one coming soon:
 
 **GitHub is the source of truth** (`jackiecady-cmd/PromptProAcademy`) so Copilot, Grok, and other bots can work from the same files. Grok cannot see a **private** repo unless you connect it to GitHub or clone locally. Keep Stripe/OpenAI/database secrets in `.env` or host env vars, never in git.
 
-**Note:** Open Archive & Research Center is a **separate GitHub repo** (`jackiecady-cmd/OpenArchive`) with different collaborators. It is not in this codebase. Academy collaborators should not be given access to that repo; Archive collaborators should not be given access here.
+**Note:** Open Archive & Research Center is a **separate GitHub repo** (`jackiecady-cmd/archive-research-center`) with different collaborators. It is not in this codebase. Academy collaborators should not be given access to that repo; Archive collaborators should not be given access here.
 
 ### Split remaining steps (owner: jackiecady-cmd)
-1. Create GitHub repo `jackiecady-cmd/OpenArchive` (this Copilot session cannot create other repos — GitHub returned 403).
-2. Copy Archive/Research pages, DNA/family APIs, and schema into that repo (from git history on this branch if needed).
-3. Invite Archive collaborators only to OpenArchive. Keep PromptProAcademy limited to Academy collaborators.
-4. Deploy Open Archive as its own app (Replit or another host) with its own `DATABASE_URL` so student data and DNA/research data stay separate.
+1. Finish `jackiecady-cmd/archive-research-center` (Jackie is creating this repo).
+2. Copy Archive/Research pages, DNA/family APIs, and schema into that repo (from git history on this branch if needed: `494bd5f` / `6bf6d16`).
+3. Invite Archive collaborators only to archive-research-center. Keep PromptProAcademy limited to Academy collaborators.
+4. Deploy Open Archive as its own app with its own `DATABASE_URL` so student data and DNA/research data stay separate.
 5. After the Archive site is live, update `client/src/lib/open-archive.ts` (`OPEN_ARCHIVE_URL`) from the GitHub URL to the live app URL.
 
 ### Off Replit (this Academy app)

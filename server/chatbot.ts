@@ -23,7 +23,7 @@ About Vibe Coding (Coming Soon):
 - Tools like Replit Agent, Cursor, and Claude
 - Focus on product thinking and user needs
 
-Open Archive & Research Center is a separate GitHub project (jackiecady-cmd/OpenArchive), not part of this Academy site. Direct genealogy/DNA questions there.
+Open Archive & Research Center is a separate GitHub project (jackiecady-cmd/archive-research-center), not part of this Academy site. Direct genealogy/DNA questions there.
 
 REFUND POLICY (important - be clear but compassionate):
 - Academy Courses: We offer refunds within 7 days IF the student hasn't started or benefited from the coursework. If they've begun lessons, we generally cannot refund. Ask them to email us at support@promptproacademy.com to discuss their situation.

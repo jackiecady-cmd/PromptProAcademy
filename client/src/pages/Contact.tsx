@@ -23,7 +23,7 @@ const faqItems = [
   },
   {
     question: "Where is Open Archive & Research Center?",
-    answer: "That is a separate GitHub project (jackiecady-cmd/OpenArchive) with different collaborators. It is not part of this Academy site."
+    answer: "That is a separate GitHub project (jackiecady-cmd/archive-research-center) with different collaborators. It is not part of this Academy site."
   },
   {
     question: "How do I contact a person?",
