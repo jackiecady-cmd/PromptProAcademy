@@ -6,14 +6,22 @@ A learning platform with two live offerings and one coming soon:
 2. **Sacred Latin Course** - Latin pronunciation for ritual/spiritual practitioners ($15 lifetime, $12 early-bird for first 10)
 3. **Vibe Coding** - Coming soon: learn to build apps with AI
 
+**GitHub is the source of truth** (`jackiecady-cmd/PromptProAcademy`) so Copilot, Grok, and other bots can work from the same files. Grok cannot see a **private** repo unless you connect it to GitHub or clone locally. Keep Stripe/OpenAI/database secrets in `.env` or host env vars, never in git.
+
 **Note:** Open Archive & Research Center is a **separate GitHub repo** (`jackiecady-cmd/OpenArchive`) with different collaborators. It is not in this codebase. Academy collaborators should not be given access to that repo; Archive collaborators should not be given access here.
 
 ### Split remaining steps (owner: jackiecady-cmd)
 1. Create GitHub repo `jackiecady-cmd/OpenArchive` (this Copilot session cannot create other repos — GitHub returned 403).
 2. Copy Archive/Research pages, DNA/family APIs, and schema into that repo (from git history on this branch if needed).
 3. Invite Archive collaborators only to OpenArchive. Keep PromptProAcademy limited to Academy collaborators.
-4. Deploy Open Archive as its own Replit app with its own `DATABASE_URL` so student data and DNA/research data stay separate.
+4. Deploy Open Archive as its own app (Replit or another host) with its own `DATABASE_URL` so student data and DNA/research data stay separate.
 5. After the Archive site is live, update `client/src/lib/open-archive.ts` (`OPEN_ARCHIVE_URL`) from the GitHub URL to the live app URL.
+
+### Off Replit (this Academy app)
+- Local/GitHub: copy `.env.example` to `.env`, set `DATABASE_URL`, `SESSION_SECRET`, `APP_URL`, `OPENAI_API_KEY`.
+- Host the running site from this GitHub repo (Railway, Render, Fly, etc.). Set the same secrets on the host. `APP_URL` must be the public https URL.
+- Replit Auth stays available if `REPL_ID` is set. Without it, login is disabled and the rest of the site still runs.
+- See `README.md` for bot access and run commands.
 
 ## Recent Changes
 - DNA/WhoamI content fully removed — homepage is now a 2-offering hub with Vibe Coding teaser
@@ -56,9 +64,9 @@ https://ancestry-canvas--jackiecady.replit.app/
 ## Project Architecture
 - **Frontend:** React with Wouter routing, Tailwind CSS v4
 - **Backend:** Express server with PostgreSQL database
-- **AI:** OpenAI via Replit AI Integrations
+- **AI:** OpenAI (`OPENAI_API_KEY`, with fallback to Replit `AI_INTEGRATIONS_*`)
 - **Payment:** Stripe
-- **Auth:** Replit Login integration
+- **Auth:** Replit Login when `REPL_ID` is set; optional off Replit
 
 ## Database Schema
 - users, orders

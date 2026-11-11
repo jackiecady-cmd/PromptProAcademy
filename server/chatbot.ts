@@ -1,9 +1,6 @@
-import OpenAI from "openai";
+import { createOpenAIClient } from "./lib/openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-});
+const openai = createOpenAIClient();
 
 const SYSTEM_PROMPT = `You are a helpful customer service assistant for our learning platform. We offer PromptPro Academy, Sacred Latin courses, and an upcoming Vibe Coding program.
 

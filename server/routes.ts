@@ -6,6 +6,7 @@ import Stripe from "stripe";
 import { z } from "zod";
 import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getVibeCodeTutorResponse } from "./chatbot";
 import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
+import { getAppUrl } from "./lib/app-url";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -71,10 +72,7 @@ export async function registerRoutes(
         status: "pending",
       });
 
-      // Determine base URL
-      const baseUrl = process.env.REPL_SLUG && process.env.REPL_OWNER 
-        ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
-        : `http://localhost:${process.env.PORT || 5000}`;
+      const baseUrl = getAppUrl();
 
       // Create Stripe checkout session
       const session = await stripe.checkout.sessions.create({
@@ -492,9 +490,7 @@ export async function registerRoutes(
         status: "pending",
       });
 
-      const baseUrl = process.env.REPL_SLUG && process.env.REPL_OWNER 
-        ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
-        : `http://localhost:${process.env.PORT || 5000}`;
+      const baseUrl = getAppUrl();
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -591,12 +587,7 @@ export async function registerRoutes(
         status: "pending",
       });
 
-      // Determine base URL
-      const baseUrl = process.env.REPLIT_DEPLOYMENT === "1"
-        ? `https://${process.env.REPLIT_DEV_DOMAIN || ''}`
-        : process.env.REPL_SLUG && process.env.REPL_OWNER 
-          ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
-          : `http://localhost:${process.env.PORT || 5000}`;
+      const baseUrl = getAppUrl();
 
       // Create Stripe checkout session
       const session = await stripe.checkout.sessions.create({
