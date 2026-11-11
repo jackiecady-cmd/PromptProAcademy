@@ -8,6 +8,7 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
+import rateLimit from "express-rate-limit";
 import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getVibeCodeTutorResponse, getDnaGuideResponse } from "./chatbot";
 import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
 
@@ -540,6 +541,21 @@ export async function registerRoutes(
   });
 
   const dnaUploadDir = path.join(process.cwd(), "uploads", "dna");
+  const safeDnaFilename = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.zip$/i;
+  const resolveDnaFilePath = (filename: string | undefined): string | null => {
+    if (!filename) return null;
+    const base = path.basename(filename);
+    if (!safeDnaFilename.test(base)) return null;
+    return path.join(dnaUploadDir, base);
+  };
+  const dnaFsLimiter = rateLimit({
+    windowMs: 60_000,
+    limit: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: "Too many requests. Please wait and try again." },
+  });
+
   const dnaUpload = multer({
     storage: multer.diskStorage({
       destination: (_req, _file, cb) => {
@@ -708,7 +724,7 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/dna-upload", (req, res) => {
+  app.post("/api/dna-upload", dnaFsLimiter, (req, res) => {
     dnaUpload.single("dnaFile")(req, res, async (err) => {
       try {
         if (err) {
@@ -717,6 +733,10 @@ export async function registerRoutes(
         if (!req.file) {
           return res.status(400).json({ error: "A .zip DNA file is required" });
         }
+        const storedPath = resolveDnaFilePath(req.file.filename);
+        if (!storedPath) {
+          return res.status(400).json({ error: "Invalid stored filename" });
+        }
         const schema = z.object({
           email: z.string().email(),
           source: z.string().min(1),
@@ -724,16 +744,17 @@ export async function registerRoutes(
         const data = schema.parse(req.body);
         const upload = await storage.createDnaUpload({
           email: data.email,
-          originalFilename: req.file.originalname,
-          storedFilename: req.file.filename,
+          originalFilename: path.basename(req.file.originalname),
+          storedFilename: path.basename(req.file.filename),
           fileSize: req.file.size,
           source: data.source,
           status: "uploaded",
         });
         res.json(upload);
       } catch (error: any) {
-        if (req.file?.path) {
-          fs.unlink(req.file.path, () => {});
+        const storedPath = resolveDnaFilePath(req.file?.filename);
+        if (storedPath) {
+          fs.unlink(storedPath, () => {});
         }
         if (error.name === "ZodError") {
           return res.status(400).json({ error: "Email and source are required" });
@@ -764,15 +785,19 @@ export async function registerRoutes(
     }
   });
 
-  app.delete("/api/dna-uploads/:id", async (req, res) => {
+  app.delete("/api/dna-uploads/:id", dnaFsLimiter, async (req, res) => {
     try {
-      const deleted = await storage.deleteDnaUpload(req.params.id);
-      if (deleted?.storedFilename) {
-        const filePath = path.join(dnaUploadDir, path.basename(deleted.storedFilename));
+      const id = z.string().uuid().parse(req.params.id);
+      const deleted = await storage.deleteDnaUpload(id);
+      const filePath = resolveDnaFilePath(deleted?.storedFilename);
+      if (filePath) {
         fs.unlink(filePath, () => {});
       }
       res.json({ success: true });
     } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid upload id" });
+      }
       res.status(500).json({ error: error.message });
     }
   });
