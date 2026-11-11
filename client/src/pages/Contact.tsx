@@ -10,24 +10,24 @@ import { useToast } from "@/hooks/use-toast";
 
 const faqItems = [
   {
-    question: "How do I upload my DNA data?",
-    answer: "After purchasing, you'll receive instructions to download your raw DNA file from Ancestry, 23andMe, or other providers. Then upload it through your dashboard."
+    question: "What does PromptPro Academy teach?",
+    answer: "Prompt engineering and practical AI skills, especially for adults 40+ who want remote work. Start with lessons, the AI tutor, and the prompt library."
   },
   {
-    question: "How long does the analysis take?",
-    answer: "Base analysis typically takes 24-48 hours. Deep heritage add-ons may take 3-5 business days for thorough research."
+    question: "How do I enroll in a course?",
+    answer: "Open Academy Home or Lessons, choose a course, and complete checkout. Sacred Latin is a separate offering on this site."
   },
   {
     question: "Can I get a refund?",
-    answer: "Yes! We offer a 30-day satisfaction guarantee. If you're not happy with your report, contact us for a full refund."
+    answer: "Academy courses can be refunded within 7 days if you have not started or benefited from the coursework. Email support@promptproacademy.com so a human can review."
   },
   {
-    question: "What DNA providers do you support?",
-    answer: "We accept raw DNA files from Ancestry, 23andMe, FamilyTreeDNA, MyHeritage, and most other major providers."
+    question: "Where is Open Archive & Research Center?",
+    answer: "That is a separate GitHub project (jackiecady-cmd/OpenArchive) with different collaborators. It is not part of this Academy site."
   },
   {
-    question: "Is my DNA data secure?",
-    answer: "Absolutely. We use industry-standard encryption and never sell or share your genetic data. You can request deletion at any time."
+    question: "How do I contact a person?",
+    answer: "Use this form or email support@promptproacademy.com. We typically respond within 24 hours."
   }
 ];
 
@@ -63,7 +63,7 @@ export default function Contact() {
           <Badge className="mb-4">Beta</Badge>
           <h1 className="text-4xl font-serif font-bold text-foreground mb-4">Contact Us</h1>
           <p className="text-xl text-muted-foreground">
-            Questions about your ancestry journey? We're here to help.
+            Questions about Academy, Latin, or Vibe Coding? We're here to help.
           </p>
         </div>
 
@@ -168,7 +168,7 @@ export default function Contact() {
               <CardContent className="py-6 text-center">
                 <h3 className="font-bold mb-2">Need Personalized Help?</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Book a 1-on-1 consultation for complex research questions.
+                  Book a 1-on-1 consultation for course or career questions.
                 </p>
                 <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">
                   Book Consultation - $99/hr
