@@ -24,15 +24,6 @@ export const orders = pgTable("orders", {
   shippingAddress: text("shipping_address"),
 });
 
-export const dnaReports = pgTable("dna_reports", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  orderId: varchar("order_id").references(() => orders.id).notNull(),
-  reportType: text("report_type").notNull(), // 'base', 'royal', 'tribe', etc.
-  reportData: text("report_data"), // JSON stringified report data
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
 // PromptPro Academy - Learning Progress
 export const learnerProgress = pgTable("learner_progress", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -57,11 +48,6 @@ export const insertOrderSchema = createInsertSchema(orders).omit({
   completedAt: true,
 });
 
-export const insertDnaReportSchema = createInsertSchema(dnaReports).omit({
-  id: true,
-  createdAt: true,
-});
-
 export const insertLearnerProgressSchema = createInsertSchema(learnerProgress).omit({
   id: true,
   completedAt: true,
@@ -75,9 +61,6 @@ export const insertEarnedBadgeSchema = createInsertSchema(earnedBadges).omit({
 // Types
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type Order = typeof orders.$inferSelect;
-
-export type InsertDnaReport = z.infer<typeof insertDnaReportSchema>;
-export type DnaReport = typeof dnaReports.$inferSelect;
 
 export type InsertLearnerProgress = z.infer<typeof insertLearnerProgressSchema>;
 export type LearnerProgress = typeof learnerProgress.$inferSelect;
@@ -134,67 +117,6 @@ export type Conversation = typeof conversations.$inferSelect;
 export type InsertConversation = z.infer<typeof insertConversationSchema>;
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
-
-// DNA Uploads - Raw DNA zip files
-export const dnaUploads = pgTable("dna_uploads", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: text("email").notNull(),
-  originalFilename: text("original_filename").notNull(),
-  storedFilename: text("stored_filename").notNull(),
-  fileSize: integer("file_size").notNull(),
-  source: text("source").notNull(),
-  status: text("status").notNull().default("uploaded"),
-  uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
-});
-
-export const insertDnaUploadSchema = createInsertSchema(dnaUploads).omit({
-  id: true,
-  uploadedAt: true,
-});
-
-export type InsertDnaUpload = z.infer<typeof insertDnaUploadSchema>;
-export type DnaUpload = typeof dnaUploads.$inferSelect;
-
-// Family Tree - Store family members
-export const familyMembers = pgTable("family_members", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: text("email").notNull(),
-  name: text("name").notNull(),
-  relationship: text("relationship").notNull(),
-  birthYear: text("birth_year"),
-  birthPlace: text("birth_place"),
-  deathYear: text("death_year"),
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-// DNA Findings - Save discoveries from research
-export const dnaFindings = pgTable("dna_findings", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: text("email").notNull(),
-  familyMemberId: varchar("family_member_id"),
-  title: text("title").notNull(),
-  category: text("category").notNull(),
-  content: text("content").notNull(),
-  source: text("source"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-export const insertFamilyMemberSchema = createInsertSchema(familyMembers).omit({
-  id: true,
-  createdAt: true,
-});
-
-export const insertDnaFindingSchema = createInsertSchema(dnaFindings).omit({
-  id: true,
-  createdAt: true,
-});
-
-export type InsertFamilyMember = z.infer<typeof insertFamilyMemberSchema>;
-export type FamilyMember = typeof familyMembers.$inferSelect;
-
-export type InsertDnaFinding = z.infer<typeof insertDnaFindingSchema>;
-export type DnaFinding = typeof dnaFindings.$inferSelect;
 
 // Vibe Code Academy - Semesters/Courses
 export const vibeCodeSemesters = pgTable("vibe_code_semesters", {

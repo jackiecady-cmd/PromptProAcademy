@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Instagram } from "lucide-react";
+import { OPEN_ARCHIVE_URL } from "@/lib/open-archive";
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -17,7 +18,7 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="font-serif text-lg font-bold text-primary">PromptPro</h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              A host for separate projects: PromptPro Academy, Sacred Latin, Open Archive, and Research Center.
+              Your learning platform for AI prompt engineering, sacred Latin, and vibe coding. Master the skills of tomorrow, today.
             </p>
           </div>
           <div className="space-y-4">
@@ -34,8 +35,11 @@ export function Footer() {
             <h4 className="font-medium text-foreground">Resources</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/latin">Sacred Latin Course</Link></li>
-              <li><Link href="/archive">Open Archive</Link></li>
-              <li><Link href="/research">Research Center</Link></li>
+              <li>
+                <a href={OPEN_ARCHIVE_URL} target="_blank" rel="noopener noreferrer">
+                  Open Archive (separate repo)
+                </a>
+              </li>
               <li><Link href="/contact">Contact Us</Link></li>
             </ul>
           </div>

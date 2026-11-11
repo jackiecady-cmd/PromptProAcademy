@@ -14,14 +14,6 @@ import AcademyCheckout from "@/pages/AcademyCheckout";
 import AcademyForum from "@/pages/AcademyForum";
 import AcademyTutor from "@/pages/AcademyTutor";
 import LatinCourse from "@/pages/LatinCourse";
-import OpenArchive from "@/pages/OpenArchive";
-import ResearchCenter from "@/pages/ResearchCenter";
-import MyResearch from "@/pages/MyResearch";
-import DNAHub from "@/pages/DNAHub";
-import DNAJourney from "@/pages/DNAJourney";
-import UploadDNA from "@/pages/UploadDNA";
-import Forum from "@/pages/Forum";
-import HeritageBookPreview from "@/pages/HeritageBookPreview";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -40,14 +32,6 @@ function Router() {
           <Route path="/academy/forum" component={AcademyForum} />
           <Route path="/academy/tutor" component={AcademyTutor} />
           <Route path="/latin" component={LatinCourse} />
-          <Route path="/archive" component={OpenArchive} />
-          <Route path="/research" component={ResearchCenter} />
-          <Route path="/research/forum" component={Forum} />
-          <Route path="/my-research" component={MyResearch} />
-          <Route path="/dna-hub" component={DNAHub} />
-          <Route path="/journey" component={DNAJourney} />
-          <Route path="/upload-dna" component={UploadDNA} />
-          <Route path="/my-book" component={HeritageBookPreview} />
           <Route path="/contact" component={Contact} />
           <Route path="/admin" component={AdminSettings} />
           <Route component={NotFound} />

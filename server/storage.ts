@@ -3,22 +3,10 @@ import pg from "pg";
 import {
   users,
   orders,
-  dnaReports,
-  dnaUploads,
-  familyMembers,
-  dnaFindings,
   type User,
   type InsertUser,
   type Order,
   type InsertOrder,
-  type DnaReport,
-  type InsertDnaReport,
-  type DnaUpload,
-  type InsertDnaUpload,
-  type FamilyMember,
-  type InsertFamilyMember,
-  type DnaFinding,
-  type InsertDnaFinding,
 } from "@shared/schema";
 import { eq, desc, and, sql } from "drizzle-orm";
 
@@ -39,28 +27,6 @@ export interface IStorage {
   updateOrderStatus(id: string, status: string, completedAt?: Date): Promise<Order | undefined>;
   updateOrderStripeInfo(id: string, paymentIntentId?: string, sessionId?: string): Promise<Order | undefined>;
   updateOrderFulfillment(id: string, fulfillmentStatus: string, vendorCost?: number): Promise<Order | undefined>;
-
-  // DNA Reports
-  getDnaReport(id: string): Promise<DnaReport | undefined>;
-  getReportsByUserId(userId: string): Promise<DnaReport[]>;
-  createDnaReport(report: InsertDnaReport): Promise<DnaReport>;
-
-  // Family Tree
-  getFamilyMembersByEmail(email: string): Promise<FamilyMember[]>;
-  createFamilyMember(member: InsertFamilyMember): Promise<FamilyMember>;
-  updateFamilyMember(id: string, member: Partial<InsertFamilyMember>): Promise<FamilyMember | undefined>;
-  deleteFamilyMember(id: string): Promise<void>;
-
-  // DNA Uploads
-  createDnaUpload(upload: InsertDnaUpload): Promise<DnaUpload>;
-  getDnaUploadsByEmail(email: string): Promise<DnaUpload[]>;
-  deleteDnaUpload(id: string): Promise<DnaUpload | undefined>;
-
-  // DNA Findings
-  getDnaFindingsByEmail(email: string): Promise<DnaFinding[]>;
-  getDnaFindingsByMember(familyMemberId: string): Promise<DnaFinding[]>;
-  createDnaFinding(finding: InsertDnaFinding): Promise<DnaFinding>;
-  deleteDnaFinding(id: string): Promise<void>;
 
   // Promo
   countFreePromoOrders(): Promise<number>;
@@ -154,73 +120,6 @@ class DatabaseStorage implements IStorage {
       .where(eq(orders.id, id))
       .returning();
     return result[0];
-  }
-
-  // DNA Reports
-  async getDnaReport(id: string): Promise<DnaReport | undefined> {
-    const result = await this.db.select().from(dnaReports).where(eq(dnaReports.id, id)).limit(1);
-    return result[0];
-  }
-
-  async getReportsByUserId(userId: string): Promise<DnaReport[]> {
-    return await this.db.select().from(dnaReports).where(eq(dnaReports.userId, userId)).orderBy(desc(dnaReports.createdAt));
-  }
-
-  async createDnaReport(report: InsertDnaReport): Promise<DnaReport> {
-    const result = await this.db.insert(dnaReports).values(report).returning();
-    return result[0];
-  }
-
-  // Family Tree
-  async getFamilyMembersByEmail(email: string): Promise<FamilyMember[]> {
-    return await this.db.select().from(familyMembers).where(eq(familyMembers.email, email)).orderBy(familyMembers.createdAt);
-  }
-
-  async createFamilyMember(member: InsertFamilyMember): Promise<FamilyMember> {
-    const result = await this.db.insert(familyMembers).values(member).returning();
-    return result[0];
-  }
-
-  async updateFamilyMember(id: string, member: Partial<InsertFamilyMember>): Promise<FamilyMember | undefined> {
-    const result = await this.db.update(familyMembers).set(member).where(eq(familyMembers.id, id)).returning();
-    return result[0];
-  }
-
-  async deleteFamilyMember(id: string): Promise<void> {
-    await this.db.update(dnaFindings).set({ familyMemberId: null }).where(eq(dnaFindings.familyMemberId, id));
-    await this.db.delete(familyMembers).where(eq(familyMembers.id, id));
-  }
-
-  // DNA Findings
-  async getDnaFindingsByEmail(email: string): Promise<DnaFinding[]> {
-    return await this.db.select().from(dnaFindings).where(eq(dnaFindings.email, email)).orderBy(desc(dnaFindings.createdAt));
-  }
-
-  async getDnaFindingsByMember(familyMemberId: string): Promise<DnaFinding[]> {
-    return await this.db.select().from(dnaFindings).where(eq(dnaFindings.familyMemberId, familyMemberId)).orderBy(desc(dnaFindings.createdAt));
-  }
-
-  async createDnaFinding(finding: InsertDnaFinding): Promise<DnaFinding> {
-    const result = await this.db.insert(dnaFindings).values(finding).returning();
-    return result[0];
-  }
-
-  async createDnaUpload(upload: InsertDnaUpload): Promise<DnaUpload> {
-    const result = await this.db.insert(dnaUploads).values(upload).returning();
-    return result[0];
-  }
-
-  async getDnaUploadsByEmail(email: string): Promise<DnaUpload[]> {
-    return await this.db.select().from(dnaUploads).where(eq(dnaUploads.email, email)).orderBy(desc(dnaUploads.uploadedAt));
-  }
-
-  async deleteDnaUpload(id: string): Promise<DnaUpload | undefined> {
-    const result = await this.db.delete(dnaUploads).where(eq(dnaUploads.id, id)).returning();
-    return result[0];
-  }
-
-  async deleteDnaFinding(id: string): Promise<void> {
-    await this.db.delete(dnaFindings).where(eq(dnaFindings.id, id));
   }
 
   async countFreePromoOrders(): Promise<number> {

@@ -5,7 +5,7 @@ const openai = new OpenAI({
   baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
 });
 
-const SYSTEM_PROMPT = `You are a helpful customer service assistant for a site that hosts several separate projects. We offer PromptPro Academy, Sacred Latin courses, an upcoming Vibe Coding program, and a separate Open Archive & Research Center project.
+const SYSTEM_PROMPT = `You are a helpful customer service assistant for our learning platform. We offer PromptPro Academy, Sacred Latin courses, and an upcoming Vibe Coding program.
 
 About PromptPro Academy:
 - Teaches people (especially those 40+) how to work with AI
@@ -26,10 +26,7 @@ About Vibe Coding (Coming Soon):
 - Tools like Replit Agent, Cursor, and Claude
 - Focus on product thinking and user needs
 
-About Open Archive & Research Center (separate from PromptPro Academy):
-- Open Archive: free historical records, newspapers, and heritage collections
-- Research Center: workspace to save family members, findings, and DNA uploads
-- Routes: /archive, /research, /my-research, /journey, /dna-hub, /upload-dna
+Open Archive & Research Center is a separate GitHub project (jackiecady-cmd/OpenArchive), not part of this Academy site. Direct genealogy/DNA questions there.
 
 REFUND POLICY (important - be clear but compassionate):
 - Academy Courses: We offer refunds within 7 days IF the student hasn't started or benefited from the coursework. If they've begun lessons, we generally cannot refund. Ask them to email us at support@promptproacademy.com to discuss their situation.
@@ -80,47 +77,6 @@ export async function getChatbotResponse(userMessage: string): Promise<string> {
   } catch (error) {
     console.error("Chatbot error:", error);
     return "I'm having trouble connecting right now. Please try again in a moment, or feel free to email us at support@promptproacademy.com";
-  }
-}
-
-const DNA_GUIDE_PROMPT = `You are a research guide for Open Archive & Research Center, a family-history project that is separate from PromptPro Academy.
-
-Help users:
-- Start a family tree on FamilySearch
-- Understand DNA testing and raw DNA uploads
-- Use GEDmatch, DNAGenics, and other free tools
-- Search Open Archive collections (FamilySearch, Yad Vashem, JewishGen, Arolsen Archives, newspapers, national archives)
-- Save findings in My Research
-
-Be patient, clear, and encouraging. Use simple language. Give concrete next steps and links when useful. If asked about PromptPro Academy courses, mention they are a separate offering on this site.`;
-
-export async function getDnaGuideResponse(
-  userMessage: string,
-  currentStep?: number,
-  history?: { role: string; content: string }[],
-): Promise<string> {
-  try {
-    const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
-      { role: "system", content: `${DNA_GUIDE_PROMPT}\nThe user is currently on research step ${currentStep || 1} of 6.` },
-    ];
-    for (const item of (history || []).slice(-6)) {
-      if (item.role === "user" || item.role === "assistant") {
-        messages.push({ role: item.role, content: item.content });
-      }
-    }
-    messages.push({ role: "user", content: userMessage });
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages,
-      max_tokens: 700,
-      temperature: 0.7,
-    });
-
-    return response.choices[0]?.message?.content || "I'm sorry, I couldn't process that. Please try again.";
-  } catch (error) {
-    console.error("DNA guide error:", error);
-    return "I'm having trouble connecting right now. Please try again in a moment.";
   }
 }
 

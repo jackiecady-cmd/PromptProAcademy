@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, GraduationCap, BookOpen, Code2, Sparkles, Library, Archive, Search } from "lucide-react";
+import { ArrowRight, GraduationCap, BookOpen, Code2, Sparkles, Library, Archive, ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { OPEN_ARCHIVE_URL } from "@/lib/open-archive";
 
 const offerings = [
   {
@@ -30,32 +31,6 @@ const offerings = [
     textAccent: "text-amber-600",
     borderAccent: "border-amber-500/20",
   },
-  {
-    id: "archive",
-    title: "Open Archive",
-    subtitle: "Separate Project",
-    description: "Free historical records, newspapers, and heritage collections. A research archive — not part of PromptPro Academy.",
-    icon: Archive,
-    href: "/archive",
-    cta: "Browse Archives",
-    gradient: "from-[#7D0A24] to-[#9B1B30]",
-    bgAccent: "bg-[#7D0A24]/10",
-    textAccent: "text-[#7D0A24]",
-    borderAccent: "border-[#7D0A24]/20",
-  },
-  {
-    id: "research",
-    title: "Research Center",
-    subtitle: "Separate Project",
-    description: "Save family members, findings, and DNA discoveries. Your workspace alongside Open Archive.",
-    icon: Search,
-    href: "/research",
-    cta: "Enter Research Center",
-    gradient: "from-amber-700 to-orange-800",
-    bgAccent: "bg-amber-700/10",
-    textAccent: "text-amber-800",
-    borderAccent: "border-amber-700/20",
-  },
 ];
 
 export default function Home() {
@@ -72,7 +47,7 @@ export default function Home() {
             Your Learning Platform
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 max-w-2xl font-light" data-testid="text-hero-subtitle">
-            Master AI prompting, explore classical Latin, and research family history — all hosted here, as separate projects.
+            Master AI prompting, explore classical Latin, and unlock new skills — all in one place.
           </p>
         </div>
       </section>
@@ -88,11 +63,39 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {offerings.map((offering) => (
               <OfferingCard key={offering.id} offering={offering} />
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="py-8 bg-background">
+        <div className="container px-4 md:px-6 max-w-4xl">
+          <Card className="border-2 border-[#7D0A24]/20 bg-gradient-to-r from-amber-50 to-orange-50 overflow-hidden" data-testid="card-open-archive-cta">
+            <CardContent className="py-8">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="shrink-0">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#7D0A24] to-[#9B1B30] flex items-center justify-center shadow-lg">
+                    <Archive className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <h3 className="text-xl font-bold mb-1">Open Archive &amp; Research Center</h3>
+                  <p className="text-muted-foreground">
+                    A separate project with different collaborators. Family history, public records, and DNA research live in their own GitHub repo.
+                  </p>
+                </div>
+                <a href={OPEN_ARCHIVE_URL} target="_blank" rel="noopener noreferrer">
+                  <Button className="bg-[#7D0A24] hover:bg-[#6d082f] shrink-0" size="lg" data-testid="button-cta-archive">
+                    Open Archive repo
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </Button>
+                </a>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

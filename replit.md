@@ -5,9 +5,15 @@ A learning platform with two live offerings and one coming soon:
 1. **PromptPro Academy** - Teaches prompt engineering to adults 40+ seeking remote work
 2. **Sacred Latin Course** - Latin pronunciation for ritual/spiritual practitioners ($15 lifetime, $12 early-bird for first 10)
 3. **Vibe Coding** - Coming soon: learn to build apps with AI
-4. **Open Archive & Research Center** - Separate project (not part of PromptPro Academy): public records archive plus a family-history research workspace
 
-**Note:** Open Archive and Research Center is a separate project from PromptPro Academy, hosted on the same site. DNA/WhoamI tooling lives under Research Center rather than Academy.
+**Note:** Open Archive & Research Center is a **separate GitHub repo** (`jackiecady-cmd/OpenArchive`) with different collaborators. It is not in this codebase. Academy collaborators should not be given access to that repo; Archive collaborators should not be given access here.
+
+### Split remaining steps (owner: jackiecady-cmd)
+1. Create GitHub repo `jackiecady-cmd/OpenArchive` (this Copilot session cannot create other repos — GitHub returned 403).
+2. Copy Archive/Research pages, DNA/family APIs, and schema into that repo (from git history on this branch if needed).
+3. Invite Archive collaborators only to OpenArchive. Keep PromptProAcademy limited to Academy collaborators.
+4. Deploy Open Archive as its own Replit app with its own `DATABASE_URL` so student data and DNA/research data stay separate.
+5. After the Archive site is live, update `client/src/lib/open-archive.ts` (`OPEN_ARCHIVE_URL`) from the GitHub URL to the live app URL.
 
 ## Recent Changes
 - DNA/WhoamI content fully removed — homepage is now a 2-offering hub with Vibe Coding teaser
@@ -47,13 +53,6 @@ https://ancestry-canvas--jackiecady.replit.app/
 - Teaser section on homepage
 - No routes yet
 
-### Open Archive & Research Center (separate project)
-- Not part of PromptPro Academy — hosted on the same site as its own offering
-- Open Archive (`/archive`): searchable public records and heritage collections
-- Research Center (`/research`): workspace hub for family research and DNA tools
-- Routes: /archive, /research, /my-research, /journey, /dna-hub, /upload-dna, /research/forum, /my-book
-- API: /api/family, /api/findings, /api/dna-upload, /api/dna-uploads
-
 ## Project Architecture
 - **Frontend:** React with Wouter routing, Tailwind CSS v4
 - **Backend:** Express server with PostgreSQL database
@@ -66,13 +65,12 @@ https://ancestry-canvas--jackiecady.replit.app/
 - learnerProgress, earnedBadges (PromptPro Academy)
 - subscriptions (Latin Course)
 - conversations, messages (chatbot)
-- familyMembers, dnaFindings, dnaUploads (Research Center)
 
 ## Navigation Structure
 Navbar has dropdown menus for each offering:
 - PromptPro Academy → Academy Home, Lessons, AI Tutor, Prompt Library, Community
 - Sacred Latin → Latin Course
-- Open Archive & Research Center → Open Archive, Research Center, My Research, Research Guide, DNA Tools Hub, Upload DNA, Community
+- Open Archive is linked as an external project (`OPEN_ARCHIVE_URL`), not in-app routes
 
 ## User Preferences
 - Blue for PromptPro, Purple/amber for Latin

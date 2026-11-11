@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
-import { GraduationCap, BookOpen, Menu, ChevronDown, LogIn, LogOut, User, Code, Sparkles, X, Archive } from "lucide-react";
+import { GraduationCap, BookOpen, Menu, ChevronDown, LogIn, LogOut, User, Code, Sparkles, X, Archive, ExternalLink } from "lucide-react";
+import { OPEN_ARCHIVE_URL } from "@/lib/open-archive";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -43,22 +44,6 @@ export function Navbar() {
       bgColor: "bg-purple-700",
       links: [
         { href: "/latin", label: "Latin Course" },
-      ],
-    },
-    {
-      name: "Archive",
-      fullName: "Open Archive & Research Center",
-      icon: Archive,
-      color: "text-[#7D0A24]",
-      bgColor: "bg-[#7D0A24]",
-      links: [
-        { href: "/archive", label: "Open Archive" },
-        { href: "/research", label: "Research Center" },
-        { href: "/my-research", label: "My Research" },
-        { href: "/journey", label: "Research Guide" },
-        { href: "/dna-hub", label: "DNA Tools Hub" },
-        { href: "/upload-dna", label: "Upload DNA" },
-        { href: "/research/forum", label: "Community" },
       ],
     },
   ];
@@ -146,6 +131,18 @@ export function Navbar() {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-3">
+          <a href={OPEN_ARCHIVE_URL} target="_blank" rel="noopener noreferrer">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-[#7D0A24] border-[#7D0A24]/30"
+              data-testid="link-open-archive"
+            >
+              <Archive className="h-4 w-4 mr-1.5" />
+              Open Archive
+              <ExternalLink className="h-3 w-3 ml-1.5" />
+            </Button>
+          </a>
           <Link href="/contact">
             <Button 
               variant="outline" 
@@ -236,6 +233,13 @@ export function Navbar() {
                     </div>
                   );
                 })}
+                <a href={OPEN_ARCHIVE_URL} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full text-[#7D0A24]" variant="outline" data-testid="mobile-link-open-archive">
+                    <Archive className="h-4 w-4 mr-2" />
+                    Open Archive (separate repo)
+                    <ExternalLink className="h-3 w-3 ml-2" />
+                  </Button>
+                </a>
                 <Link href="/contact" onClick={() => setIsOpen(false)}>
                   <Button className="w-full" variant="outline" data-testid="mobile-link-contact">
                     Contact Us
