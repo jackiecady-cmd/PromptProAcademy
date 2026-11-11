@@ -12,7 +12,7 @@ interface Message {
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "Hi! I'm here to help with questions about PromptPro Academy, Sacred Latin, or Vibe Coding. What can I help you with?" }
+    { role: "assistant", content: "Hi! I can help with PromptPro Academy, Sacred Latin, Vibe Coding, or the separate Open Archive & Research Center project. What can I help you with?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);

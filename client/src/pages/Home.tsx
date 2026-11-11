@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, GraduationCap, BookOpen, Code2, Sparkles, Library } from "lucide-react";
+import { ArrowRight, GraduationCap, BookOpen, Code2, Sparkles, Library, Archive, Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const offerings = [
@@ -30,6 +30,32 @@ const offerings = [
     textAccent: "text-amber-600",
     borderAccent: "border-amber-500/20",
   },
+  {
+    id: "archive",
+    title: "Open Archive",
+    subtitle: "Separate Project",
+    description: "Free historical records, newspapers, and heritage collections. A research archive — not part of PromptPro Academy.",
+    icon: Archive,
+    href: "/archive",
+    cta: "Browse Archives",
+    gradient: "from-[#7D0A24] to-[#9B1B30]",
+    bgAccent: "bg-[#7D0A24]/10",
+    textAccent: "text-[#7D0A24]",
+    borderAccent: "border-[#7D0A24]/20",
+  },
+  {
+    id: "research",
+    title: "Research Center",
+    subtitle: "Separate Project",
+    description: "Save family members, findings, and DNA discoveries. Your workspace alongside Open Archive.",
+    icon: Search,
+    href: "/research",
+    cta: "Enter Research Center",
+    gradient: "from-amber-700 to-orange-800",
+    bgAccent: "bg-amber-700/10",
+    textAccent: "text-amber-800",
+    borderAccent: "border-amber-700/20",
+  },
 ];
 
 export default function Home() {
@@ -46,7 +72,7 @@ export default function Home() {
             Your Learning Platform
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 max-w-2xl font-light" data-testid="text-hero-subtitle">
-            Master AI prompting, explore classical Latin, and unlock new skills — all in one place.
+            Master AI prompting, explore classical Latin, and research family history — all hosted here, as separate projects.
           </p>
         </div>
       </section>
@@ -62,7 +88,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {offerings.map((offering) => (
               <OfferingCard key={offering.id} offering={offering} />
             ))}

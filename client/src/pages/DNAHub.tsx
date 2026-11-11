@@ -184,13 +184,13 @@ export default function DNAHub() {
         <div className="bg-red-50 border-2 border-red-400 rounded-xl p-5 flex items-start gap-3" data-testid="disclaimer-external-sites">
           <span className="text-2xl flex-shrink-0">⚠️</span>
           <p className="text-sm">
-            <strong className="text-red-600 text-base">WhoamI does not charge you for using any of these external tools.</strong>{" "}
-            <span className="text-red-700">Some outside sites listed below are completely free (like GEDmatch and FamilySearch). Others may charge their own fees for DNA testing kits or premium features. WhoamI has no control over third-party pricing. We simply connect you to the best resources available.</span>
+            <strong className="text-red-600 text-base">Open Archive &amp; Research Center does not charge you for using any of these external tools.</strong>{" "}
+            <span className="text-red-700">Some outside sites listed below are completely free (like GEDmatch and FamilySearch). Others may charge their own fees for DNA testing kits or premium features. This project has no control over third-party pricing. We simply connect you to the best resources available.</span>
           </p>
         </div>
 
         <section data-testid="section-your-tools">
-          <h2 className="text-2xl font-serif font-bold text-[#7D0A24] mb-2">Your WhoamI Tools</h2>
+          <h2 className="text-2xl font-serif font-bold text-[#7D0A24] mb-2">Your Research Center Tools</h2>
           <p className="text-muted-foreground mb-5">Everything on our platform — upload DNA, research, and create your book</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {internalTools.map((tool) => {

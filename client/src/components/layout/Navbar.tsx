@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { GraduationCap, BookOpen, Menu, ChevronDown, LogIn, LogOut, User, Code, Sparkles, X } from "lucide-react";
+import { GraduationCap, BookOpen, Menu, ChevronDown, LogIn, LogOut, User, Code, Sparkles, X, Archive } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -43,6 +43,22 @@ export function Navbar() {
       bgColor: "bg-purple-700",
       links: [
         { href: "/latin", label: "Latin Course" },
+      ],
+    },
+    {
+      name: "Archive",
+      fullName: "Open Archive & Research Center",
+      icon: Archive,
+      color: "text-[#7D0A24]",
+      bgColor: "bg-[#7D0A24]",
+      links: [
+        { href: "/archive", label: "Open Archive" },
+        { href: "/research", label: "Research Center" },
+        { href: "/my-research", label: "My Research" },
+        { href: "/journey", label: "Research Guide" },
+        { href: "/dna-hub", label: "DNA Tools Hub" },
+        { href: "/upload-dna", label: "Upload DNA" },
+        { href: "/research/forum", label: "Community" },
       ],
     },
   ];

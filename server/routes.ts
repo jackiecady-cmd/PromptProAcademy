@@ -1,10 +1,14 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOrderSchema } from "@shared/schema";
+import { insertOrderSchema, insertFamilyMemberSchema, insertDnaFindingSchema } from "@shared/schema";
 import Stripe from "stripe";
 import { z } from "zod";
-import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getVibeCodeTutorResponse } from "./chatbot";
+import multer from "multer";
+import fs from "fs";
+import path from "path";
+import { randomUUID } from "crypto";
+import { getChatbotResponse, getTutorResponse, translateToLatin, generateLatinPrayer, getVibeCodeTutorResponse, getDnaGuideResponse } from "./chatbot";
 import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
 
 export async function registerRoutes(
@@ -532,6 +536,244 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Invalid input data" });
       }
       res.status(400).json({ error: error.message });
+    }
+  });
+
+  const dnaUploadDir = path.join(process.cwd(), "uploads", "dna");
+  const dnaUpload = multer({
+    storage: multer.diskStorage({
+      destination: (_req, _file, cb) => {
+        fs.mkdirSync(dnaUploadDir, { recursive: true });
+        cb(null, dnaUploadDir);
+      },
+      filename: (_req, file, cb) => {
+        cb(null, `${randomUUID()}${path.extname(file.originalname).toLowerCase()}`);
+      },
+    }),
+    limits: { fileSize: 50 * 1024 * 1024 },
+    fileFilter: (_req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase();
+      if (ext !== ".zip") {
+        cb(new Error("Only .zip files are allowed"));
+        return;
+      }
+      cb(null, true);
+    },
+  });
+
+  app.get("/api/family/:email", async (req, res) => {
+    try {
+      const email = z.string().email().parse(req.params.email);
+      const members = await storage.getFamilyMembersByEmail(email);
+      res.json(members);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid email" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/family", async (req, res) => {
+    try {
+      const data = insertFamilyMemberSchema.parse(req.body);
+      const member = await storage.createFamilyMember(data);
+      res.json(member);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid family member data" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/family/bulk", async (req, res) => {
+    try {
+      const schema = z.object({
+        email: z.string().email(),
+        members: z.array(z.object({
+          name: z.string().min(1),
+          relationship: z.string().min(1),
+          birthYear: z.string().nullish(),
+          birthPlace: z.string().nullish(),
+          deathYear: z.string().nullish(),
+        })).min(1).max(100),
+      });
+      const data = schema.parse(req.body);
+      const saved = [];
+      for (const member of data.members) {
+        saved.push(await storage.createFamilyMember({
+          email: data.email,
+          name: member.name,
+          relationship: member.relationship,
+          birthYear: member.birthYear ?? undefined,
+          birthPlace: member.birthPlace ?? undefined,
+          deathYear: member.deathYear ?? undefined,
+        }));
+      }
+      res.json({ saved: saved.length, members: saved });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid bulk family data" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/family/:id", async (req, res) => {
+    try {
+      await storage.deleteFamilyMember(req.params.id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/findings/:email", async (req, res) => {
+    try {
+      const email = z.string().email().parse(req.params.email);
+      const findings = await storage.getDnaFindingsByEmail(email);
+      res.json(findings);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid email" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/findings", async (req, res) => {
+    try {
+      const data = insertDnaFindingSchema.parse(req.body);
+      const finding = await storage.createDnaFinding(data);
+      res.json(finding);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid finding data" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/findings/bulk", async (req, res) => {
+    try {
+      const schema = z.object({
+        email: z.string().email(),
+        findings: z.array(z.object({
+          title: z.string().min(1),
+          content: z.string().min(1),
+          category: z.string().min(1),
+          source: z.string().nullish(),
+        })).min(1).max(100),
+      });
+      const data = schema.parse(req.body);
+      const saved = [];
+      for (const finding of data.findings) {
+        saved.push(await storage.createDnaFinding({
+          email: data.email,
+          title: finding.title,
+          content: finding.content,
+          category: finding.category,
+          source: finding.source ?? undefined,
+        }));
+      }
+      res.json({ saved: saved.length, findings: saved });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid bulk findings data" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/findings/:id", async (req, res) => {
+    try {
+      await storage.deleteDnaFinding(req.params.id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/dna-uploads/:email", async (req, res) => {
+    try {
+      const email = z.string().email().parse(req.params.email);
+      const uploads = await storage.getDnaUploadsByEmail(email);
+      res.json(uploads);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Invalid email" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/dna-upload", (req, res) => {
+    dnaUpload.single("dnaFile")(req, res, async (err) => {
+      try {
+        if (err) {
+          return res.status(400).json({ error: err.message || "Upload failed" });
+        }
+        if (!req.file) {
+          return res.status(400).json({ error: "A .zip DNA file is required" });
+        }
+        const schema = z.object({
+          email: z.string().email(),
+          source: z.string().min(1),
+        });
+        const data = schema.parse(req.body);
+        const upload = await storage.createDnaUpload({
+          email: data.email,
+          originalFilename: req.file.originalname,
+          storedFilename: req.file.filename,
+          fileSize: req.file.size,
+          source: data.source,
+          status: "uploaded",
+        });
+        res.json(upload);
+      } catch (error: any) {
+        if (req.file?.path) {
+          fs.unlink(req.file.path, () => {});
+        }
+        if (error.name === "ZodError") {
+          return res.status(400).json({ error: "Email and source are required" });
+        }
+        res.status(500).json({ error: error.message });
+      }
+    });
+  });
+
+  app.post("/api/dna-guide", async (req, res) => {
+    try {
+      const schema = z.object({
+        message: z.string().min(1),
+        currentStep: z.number().optional(),
+        history: z.array(z.object({
+          role: z.string(),
+          content: z.string(),
+        })).optional(),
+      });
+      const data = schema.parse(req.body);
+      const response = await getDnaGuideResponse(data.message, data.currentStep, data.history);
+      res.json({ response });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: "Message is required" });
+      }
+      res.status(500).json({ error: "Failed to process message" });
+    }
+  });
+
+  app.delete("/api/dna-uploads/:id", async (req, res) => {
+    try {
+      const deleted = await storage.deleteDnaUpload(req.params.id);
+      if (deleted?.storedFilename) {
+        const filePath = path.join(dnaUploadDir, path.basename(deleted.storedFilename));
+        fs.unlink(filePath, () => {});
+      }
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   });
 

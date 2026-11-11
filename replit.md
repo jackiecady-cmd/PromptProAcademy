@@ -5,8 +5,9 @@ A learning platform with two live offerings and one coming soon:
 1. **PromptPro Academy** - Teaches prompt engineering to adults 40+ seeking remote work
 2. **Sacred Latin Course** - Latin pronunciation for ritual/spiritual practitioners ($15 lifetime, $12 early-bird for first 10)
 3. **Vibe Coding** - Coming soon: learn to build apps with AI
+4. **Open Archive & Research Center** - Separate project (not part of PromptPro Academy): public records archive plus a family-history research workspace
 
-**Note:** DNA/WhoamI features have been removed from this codebase and will live on a separate site.
+**Note:** Open Archive and Research Center is a separate project from PromptPro Academy, hosted on the same site. DNA/WhoamI tooling lives under Research Center rather than Academy.
 
 ## Recent Changes
 - DNA/WhoamI content fully removed — homepage is now a 2-offering hub with Vibe Coding teaser
@@ -46,6 +47,13 @@ https://ancestry-canvas--jackiecady.replit.app/
 - Teaser section on homepage
 - No routes yet
 
+### Open Archive & Research Center (separate project)
+- Not part of PromptPro Academy — hosted on the same site as its own offering
+- Open Archive (`/archive`): searchable public records and heritage collections
+- Research Center (`/research`): workspace hub for family research and DNA tools
+- Routes: /archive, /research, /my-research, /journey, /dna-hub, /upload-dna, /research/forum, /my-book
+- API: /api/family, /api/findings, /api/dna-upload, /api/dna-uploads
+
 ## Project Architecture
 - **Frontend:** React with Wouter routing, Tailwind CSS v4
 - **Backend:** Express server with PostgreSQL database
@@ -58,11 +66,13 @@ https://ancestry-canvas--jackiecady.replit.app/
 - learnerProgress, earnedBadges (PromptPro Academy)
 - subscriptions (Latin Course)
 - conversations, messages (chatbot)
+- familyMembers, dnaFindings, dnaUploads (Research Center)
 
 ## Navigation Structure
 Navbar has dropdown menus for each offering:
 - PromptPro Academy → Academy Home, Lessons, AI Tutor, Prompt Library, Community
 - Sacred Latin → Latin Course
+- Open Archive & Research Center → Open Archive, Research Center, My Research, Research Guide, DNA Tools Hub, Upload DNA, Community
 
 ## User Preferences
 - Blue for PromptPro, Purple/amber for Latin
